@@ -1,0 +1,19 @@
+/* Doggo - Contacto */
+
+.card-doggo {
+  color: #fff;
+}
+
+.map-embed {
+  width: 100%;
+  height: 320px;
+  border: 0;
+  border-radius: var(--radius);
+}
+
+@media (max-width: 576px) {
+  .map-embed {
+    height: 220px;
+  }
+}
+

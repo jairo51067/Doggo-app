@@ -1,0 +1,95 @@
+<!-- views/contacto.html -->
+<section class="py-4">
+  <div class="row g-4 justify-content-center">
+    <div class="col-12 col-lg-5">
+      <div class="card-doggo p-4 h-100">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="badge badge-doggo p-2"><i class="fas fa-map-marker-alt"></i></span>
+          <h1 class="h4 m-0 fw-black">Contáctanos</h1>
+        </div>
+
+        <div class="mb-3" style="color: var(--muted);">
+          Mensajes directos, dudas y pedidos especiales.
+        </div>
+
+        <div class="info-row mb-3" style="display:flex; align-items:center; gap:12px;">
+          <i class="fas fa-location-dot text-accent"></i>
+          <a
+            class="text-decoration-none"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://maps.app.goo.gl/P8MEMF6eEjJ2bYfv6"
+          >
+            Ver ubicación en Maps
+          </a>
+        </div>
+
+        <div class="info-row mb-3" style="display:flex; align-items:center; gap:12px;">
+          <i class="fas fa-phone text-accent"></i>
+          <a class="text-decoration-none" href="tel:+584220364460">+58 422-0364460</a>
+        </div>
+
+        <div class="info-row mb-4" style="display:flex; align-items:center; gap:12px;">
+          <i class="fas fa-envelope text-accent"></i>
+          <a class="text-decoration-none" href="mailto:info.doggosc@gmail.com">info.doggosc@gmail.com</a>
+        </div>
+
+        <div class="d-flex gap-3">
+          <a
+            class="btn btn-ghost"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.instagram.com/doggo.sc/"
+            aria-label="Instagram"
+          >
+            <i class="fab fa-instagram me-2"></i>Instagram
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-7">
+      <div class="card-doggo p-4 p-md-5">
+        <h2 class="h4 fw-black">Ubicación</h2>
+        <div style="margin-top:12px;">
+          <iframe
+            class="map-embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Doggo&output=embed"
+          ></iframe>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <h2 class="h4 fw-black">Escríbenos</h2>
+        <p class="m-0" style="color: var(--muted);">Este formulario es referencial; puedes conectarlo a tu CRM/servicio.</p>
+
+
+        <form class="mt-4" action="" method="post">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold" for="contact-name">Nombre completo</label>
+              <input id="contact-name" class="form-control" type="text" placeholder="Tu nombre" required />
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold" for="contact-email">Email</label>
+              <input id="contact-email" class="form-control" type="email" placeholder="tuemail@gmail.com" required />
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-bold" for="contact-msg">Mensaje</label>
+              <textarea id="contact-msg" class="form-control" rows="4" placeholder="Escribe tu mensaje..." required></textarea>
+            </div>
+            <div class="col-12 d-grid d-md-flex gap-3 justify-content-md-end">
+              <button class="btn btn-accent" type="submit">
+                <i class="fas fa-paper-plane me-2"></i>Enviar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+

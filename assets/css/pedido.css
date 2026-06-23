@@ -1,0 +1,35 @@
+/* Doggo - Pedido */
+
+.card-doggo {
+  backdrop-filter: blur(6px);
+}
+
+.list-group-item {
+  transition: transform 0.08s ease;
+}
+
+.list-group-item:active {
+  transform: scale(0.995);
+}
+
+.form-control {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: rgba(244,196,48,0.65);
+  box-shadow: 0 0 0 0.25rem rgba(244,196,48,0.18);
+}
+
+textarea.form-control {
+  min-height: 96px;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+

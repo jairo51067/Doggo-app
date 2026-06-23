@@ -1,0 +1,171 @@
+/* Doggo App - Global Styles (SDD) */
+
+:root {
+  --bg-primary: #6B1D1A; /* borgoña terracota */
+  --bg-primary-2: #4c1414;
+  --accent: #F4C430; /* amarillo mostaza */
+  --text: #FFFFFF;
+  --muted: rgba(255, 255, 255, 0.78);
+
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  background: var(--bg-primary);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+}
+
+/* Navbar */
+.app-navbar {
+  background: var(--bg-primary);
+  border-bottom: 1px solid rgba(244, 196, 48, 0.18);
+}
+
+.navbar-brand {
+  color: var(--accent) !important;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 700;
+}
+
+.nav-link.active {
+  color: var(--accent) !important;
+}
+
+/* Footer */
+.app-footer {
+  background: #120707;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.app-footer .muted {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Reusable components */
+.card-doggo {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(244, 196, 48, 0.2);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Mobile navbar: menú hamburguesa */
+#nav-toggle {
+  border-radius: 10px;
+}
+
+#mobile-nav a {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(244, 196, 48, 0.12);
+}
+
+@media (max-width: 576px) {
+  #main-nav {
+    display: none !important;
+  }
+
+  #nav-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* carrito (Confirmar) a la izquierda y menú a la derecha */
+  header .d-flex.justify-content-between {
+    justify-content: space-between;
+  }
+
+  /* Panel menú móvil tipo “fullscreen overlay” */
+  #mobile-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    z-index: 1050;
+    padding: 84px 18px 18px;
+    margin: 0;
+
+    background: var(--bg-primary);
+    backdrop-filter: blur(8px);
+    overflow-y: auto;
+
+    border-top: 1px solid rgba(244, 196, 48, 0.18);
+
+    /* animación */
+    transform: translateY(-8px);
+    opacity: 0;
+    transition: opacity 220ms ease, transform 220ms ease;
+  }
+
+  #mobile-nav.d-none {
+    pointer-events: none;
+  }
+
+  #mobile-nav:not(.d-none) {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  #mobile-nav a {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(244, 196, 48, 0.12);
+  }
+}
+
+
+.btn-accent {
+
+  background: var(--accent);
+  color: #1b120c;
+  border: none;
+  font-weight: 900;
+}
+
+.btn-accent:hover {
+  filter: brightness(0.98);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(244, 196, 48, 0.45);
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.text-accent {
+  color: var(--accent) !important;
+}
+
+.badge-doggo {
+  border: 1px solid rgba(244, 196, 48, 0.35);
+  background: rgba(244, 196, 48, 0.12);
+  color: var(--accent);
+}
+
