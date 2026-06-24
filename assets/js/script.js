@@ -1,8 +1,8 @@
 // ============================================
-// DOGGO-APP SPA ROUTER - Versión Final con Limpieza y Emojis
+// DOGGO-APP SPA ROUTER - VERSIÓN CORREGIDA v1.8.0
 // ============================================
 
-// Configuración del Router
+// 1. PRIMERO: Configuración
 const ROUTER_CONFIG = {
     defaultView: 'home',
     viewsPath: 'views/',
@@ -15,12 +15,12 @@ const ROUTER_CONFIG = {
     }
 };
 
-// ============================================
-// 1. GESTOR DE ESTILOS DINÁMICOS
-// ============================================
+console.log('📋 Configuración cargada');
 
+// 2. SEGUNDO: StyleManager (DEFINIDO ANTES DE SER USADO)
 class StyleManager {
     constructor() {
+        console.log('🎨 StyleManager creado');
         this.loadedStyles = new Set();
         this.baseStyles = ['global'];
         this.dynamicStyles = [];
@@ -84,12 +84,12 @@ class StyleManager {
     }
 }
 
-// ============================================
-// 2. SISTEMA DE RUTAS Y NAVEGACIÓN
-// ============================================
+console.log('✅ StyleManager definido');
 
+// 3. TERCERO: Router (USA StyleManager, QUE YA ESTÁ DEFINIDO)
 class Router {
     constructor() {
+        console.log('🚀 Iniciando Router...');
         this.appContent = document.getElementById('app-content');
         this.styleManager = new StyleManager();
         this.currentView = null;
@@ -103,10 +103,12 @@ class Router {
     }
 
     init() {
+        console.log('🔧 Inicializando Router...');
         window.addEventListener('hashchange', this.handleHashChange);
         document.addEventListener('click', this.handleLinkClick);
         
         const initialHash = window.location.hash || '#/home';
+        console.log(`📍 Hash inicial: ${initialHash}`);
         this.processRoute(initialHash);
         this.updateActiveLink(initialHash);
     }
@@ -114,12 +116,14 @@ class Router {
     processRoute(hash) {
         const route = hash.replace('#/', '').split('?')[0] || ROUTER_CONFIG.defaultView;
         const viewName = route || ROUTER_CONFIG.defaultView;
+        console.log(`🔄 Procesando ruta: ${viewName}`);
         this.currentView = viewName;
         this.navigate(viewName);
     }
 
     handleHashChange(event) {
         const newHash = event.newURL.split('#')[1] || '#/home';
+        console.log(`🔄 Hash cambiado a: ${newHash}`);
         this.processRoute(newHash);
         this.updateActiveLink(newHash);
     }
@@ -130,6 +134,7 @@ class Router {
 
         event.preventDefault();
         const href = link.getAttribute('href');
+        console.log(`🔗 Navegando a: ${href}`);
         window.location.hash = href;
     }
 
@@ -142,6 +147,7 @@ class Router {
     }
 
     async navigate(viewName) {
+        console.log(`📄 Navegando a vista: ${viewName}`);
         try {
             this.showLoadingState();
 
@@ -257,6 +263,7 @@ class Router {
     }
 
     initViewComponents(viewName) {
+        console.log(`🔍 Inicializando componentes para: ${viewName}`);
         if (viewName === 'pedido') {
             this.initPedidoForm();
         }
@@ -269,17 +276,20 @@ class Router {
     }
 
     // ============================================
-    // 3. COMPONENTE DE PEDIDO (Carrito + Cantidades + Delivery + Limpieza)
+    // 3. COMPONENTE DE PEDIDO
     // ============================================
 
     initPedidoForm() {
+        console.log('🔍 initPedidoForm() ejecutado');
+        
         const form = document.getElementById('pedido-form');
         if (!form) {
-            console.warn('Formulario de pedido no encontrado');
+            console.error('❌ Formulario de pedido NO encontrado');
             return;
         }
+        console.log('✅ Formulario encontrado');
 
-        // Estado del pedido como propiedad de la instancia
+        // Estado del pedido
         this.orderState = {
             currentStep: 1,
             totalSteps: 4,
@@ -320,6 +330,8 @@ class Router {
         // Cargar estado desde localStorage
         this.loadOrderState();
 
+        console.log('📦 Estado inicial:', this.orderState);
+
         // Inicializar componentes
         this.initStepper(form);
         this.initDoggoQuantities(form);
@@ -327,31 +339,37 @@ class Router {
         this.initDeliveryOption(form);
         this.initBebidaSelection(form);
         this.initLeadFields(form);
-        this.initClearCartButtons(form);
+        this.initClearCart(form);
         this.initFormSubmit(form);
         
         // Actualizar resumen inicial
         this.updateSummary();
+        
+        console.log('✅ PedidoForm inicializado correctamente');
     }
 
     // --- Stepper ---
+      // --- Stepper (VERSIÓN CORREGIDA CON SELECTOR MEJORADO) ---
+       // --- Stepper (VERSIÓN CON addEventListener) ---
     initStepper(form) {
+        console.log('🔍 initStepper() ejecutado');
+        
         const steps = form.querySelectorAll('.step-content');
         const indicators = document.querySelectorAll('.step-indicator');
-        const nextBtns = form.querySelectorAll('.btn-next');
-        const prevBtns = form.querySelectorAll('.btn-prev');
 
         const showStep = (stepNumber) => {
+            console.log(`🔄 Mostrando paso ${stepNumber}`);
+            
             if (stepNumber > this.orderState.currentStep) {
-                if (!this.validateCurrentStep(this.orderState.currentStep, form)) {
-                    return;
-                }
+                const isValid = this.validateCurrentStep(this.orderState.currentStep, form);
+                if (!isValid) return;
             }
 
             this.orderState.currentStep = stepNumber;
             
             steps.forEach(step => {
-                step.classList.toggle('active', parseInt(step.dataset.step) === stepNumber);
+                const stepNum = parseInt(step.dataset.step);
+                step.classList.toggle('active', stepNum === stepNumber);
             });
 
             indicators.forEach(indicator => {
@@ -372,24 +390,39 @@ class Router {
             form.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        nextBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const nextStep = parseInt(btn.dataset.next);
-                if (nextStep <= this.orderState.totalSteps) {
-                    showStep(nextStep);
-                }
-            });
+        // 🔥 USANDO addEventListener CON BIND
+        const nextBtns = form.querySelectorAll('.btn-next');
+        nextBtns.forEach((btn) => {
+            const step = parseInt(btn.dataset.next);
+            // Remover listeners antiguos
+            btn.replaceWith(btn.cloneNode(true));
+            const newBtn = form.querySelector(`.btn-next[data-next="${step}"]`);
+            if (newBtn) {
+                newBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(`🖱️ Click en botón (listener) -> paso ${step}`);
+                    showStep(step);
+                });
+            }
         });
 
-        prevBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const prevStep = parseInt(btn.dataset.prev);
-                if (prevStep >= 1) {
-                    showStep(prevStep);
-                }
-            });
+        const prevBtns = form.querySelectorAll('.btn-prev');
+        prevBtns.forEach((btn) => {
+            const step = parseInt(btn.dataset.prev);
+            btn.replaceWith(btn.cloneNode(true));
+            const newBtn = form.querySelector(`.btn-prev[data-prev="${step}"]`);
+            if (newBtn) {
+                newBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(`🖱️ Click en botón atrás -> paso ${step}`);
+                    showStep(step);
+                });
+            }
         });
 
+        // Click en indicadores
         indicators.forEach(indicator => {
             indicator.addEventListener('click', () => {
                 const step = parseInt(indicator.dataset.step);
@@ -399,14 +432,19 @@ class Router {
             });
         });
 
+        console.log(`📍 Mostrando paso inicial: ${this.orderState.currentStep}`);
         showStep(this.orderState.currentStep);
     }
 
+    
     // --- Validación por pasos ---
     validateCurrentStep(step, form) {
+        console.log(`🔍 Validando paso ${step}`);
         switch(step) {
             case 1:
-                return this.validateLeadFields(form);
+                const result = this.validateLeadFields(form);
+                console.log(`📊 Resultado validación paso 1: ${result}`);
+                return result;
             case 2:
                 return this.validateDoggos();
             case 3:
@@ -417,22 +455,32 @@ class Router {
     }
 
     validateLeadFields(form) {
+        console.log('🔍 Validando campos de lead');
+        
         const inputs = form.querySelectorAll('.step-content[data-step="1"] input[required]');
+        console.log(`📊 Campos requeridos: ${inputs.length}`);
+        
         let isValid = true;
 
         inputs.forEach(input => {
-            if (!input.value.trim()) {
+            const value = input.value.trim();
+            console.log(`📝 Campo ${input.id}: "${value}"`);
+            
+            if (!value) {
+                console.log(`❌ Campo ${input.id} vacío`);
                 isValid = false;
                 this.validateField(input);
             } else if (input.type === 'email') {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(input.value)) {
+                if (!emailRegex.test(value)) {
+                    console.log(`❌ Email inválido: ${value}`);
                     isValid = false;
                     this.validateField(input);
                 }
             } else if (input.type === 'tel') {
                 const phoneRegex = /^(\+?\d{1,3}[-.]?)?\d{10,14}$/;
-                if (!phoneRegex.test(input.value.replace(/\s/g, ''))) {
+                if (!phoneRegex.test(value.replace(/\s/g, ''))) {
+                    console.log(`❌ Teléfono inválido: ${value}`);
                     isValid = false;
                     this.validateField(input);
                 }
@@ -440,6 +488,7 @@ class Router {
         });
 
         if (!isValid) {
+            console.warn('⚠️ Validación de campos fallida');
             const firstError = form.querySelector('.step-content[data-step="1"] .error');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -462,7 +511,6 @@ class Router {
     // --- Cantidades de Doggos ---
     initDoggoQuantities(form) {
         const cards = form.querySelectorAll('.doggo-card');
-
         cards.forEach(card => {
             const value = card.dataset.value;
             const qtyDisplay = card.querySelector('.qty-value');
@@ -506,7 +554,6 @@ class Router {
     // --- Cantidades de Extras ---
     initExtraQuantities(form) {
         const chips = form.querySelectorAll('.extra-chip');
-
         chips.forEach(chip => {
             const value = chip.dataset.value;
             const qtyDisplay = chip.querySelector('.qty-value-mini');
@@ -550,7 +597,6 @@ class Router {
     // --- Opción de Delivery ---
     initDeliveryOption(form) {
         const cards = form.querySelectorAll('.delivery-card');
-
         cards.forEach(card => {
             card.addEventListener('click', () => {
                 cards.forEach(c => c.classList.remove('selected'));
@@ -585,7 +631,6 @@ class Router {
     // --- Campos de Lead ---
     initLeadFields(form) {
         const fields = ['nombre', 'email', 'whatsapp'];
-        
         fields.forEach(fieldName => {
             const input = form.querySelector(`#${fieldName}`);
             if (input) {
@@ -606,42 +651,70 @@ class Router {
         });
     }
 
-    // --- Botón Vaciar Carrito ---
-    initClearCartButtons(form) {
+    // --- Vaciar Carrito ---
+    initClearCart(form) {
         const clearButtons = form.querySelectorAll('.btn-clear-cart');
-        
         clearButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (confirm('¿Seguro que quieres vaciar todo tu pedido? Esta acción no se puede deshacer.')) {
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', () => {
+                if (confirm('¿Seguro que quieres vaciar todo tu pedido?')) {
                     this.clearCart();
-                    // Recargar la vista para actualizar la UI
-                    this.initPedidoForm();
                 }
             });
         });
     }
 
     clearCart() {
-        // Limpiar estado
         this.orderState.doggos = {};
         this.orderState.extras = {};
         this.orderState.bebida = 'Sin bebida';
         this.orderState.delivery = 'pickup';
-        this.orderState.leadData = {
-            nombre: '',
-            email: '',
-            whatsapp: ''
-        };
+        this.orderState.leadData = { nombre: '', email: '', whatsapp: '' };
         this.orderState.currentStep = 1;
         
-        // Limpiar localStorage
         localStorage.removeItem('doggo_order_state');
         
-        // Actualizar resumen
-        this.updateSummary();
+        const form = document.getElementById('pedido-form');
+        if (form) {
+            const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
+            inputs.forEach(input => {
+                input.value = '';
+                input.classList.remove('success', 'error');
+                const feedback = input.closest('.form-group')?.querySelector('.field-feedback');
+                if (feedback) {
+                    feedback.innerHTML = '';
+                    feedback.className = 'field-feedback';
+                }
+            });
+
+            const bebidaSelect = form.querySelector('#bebida');
+            if (bebidaSelect) bebidaSelect.value = 'Sin bebida';
+
+            form.querySelectorAll('.doggo-card').forEach(card => {
+                card.classList.remove('has-items');
+                const qty = card.querySelector('.qty-value');
+                if (qty) qty.textContent = '0';
+            });
+
+            form.querySelectorAll('.extra-chip').forEach(chip => {
+                chip.classList.remove('has-items');
+                const qty = chip.querySelector('.qty-value-mini');
+                if (qty) qty.textContent = '0';
+            });
+
+            form.querySelectorAll('.delivery-card').forEach(card => {
+                card.classList.remove('selected');
+                if (card.dataset.value === 'pickup') card.classList.add('selected');
+            });
+        }
         
-        console.log('🗑️ Carrito vaciado correctamente');
-        alert('✅ Carrito vaciado. Puedes comenzar un nuevo pedido.');
+        this.updateSummary();
+        const formElement = document.getElementById('pedido-form');
+        if (formElement) this.initStepper(formElement);
+        
+        alert('✅ Carrito vaciado. Todos los datos han sido reiniciados.');
     }
 
     // --- Envío del Formulario ---
@@ -649,30 +722,41 @@ class Router {
         const submitBtn = document.getElementById('submit-pedido');
         if (!submitBtn) return;
 
-        form.addEventListener('submit', async (e) => {
+        const newForm = form.cloneNode(true);
+        form.parentNode.replaceChild(newForm, form);
+        const newSubmitBtn = newForm.querySelector('#submit-pedido');
+
+        newForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!this.validateLeadFields(form)) {
+            if (!this.validateLeadFields(newForm)) {
                 this.orderState.currentStep = 1;
-                this.initStepper(form);
+                this.initStepper(newForm);
                 return;
             }
 
             if (!this.validateDoggos()) {
                 this.orderState.currentStep = 2;
-                this.initStepper(form);
+                this.initStepper(newForm);
                 return;
             }
 
-            // Construir mensaje sin emojis para máxima compatibilidad
+            const nombreInput = newForm.querySelector('#nombre');
+            const emailInput = newForm.querySelector('#email');
+            const whatsappInput = newForm.querySelector('#whatsapp');
+            
+            if (nombreInput) this.orderState.leadData.nombre = nombreInput.value.trim();
+            if (emailInput) this.orderState.leadData.email = emailInput.value.trim();
+            if (whatsappInput) this.orderState.leadData.whatsapp = whatsappInput.value.trim();
+
             let doggosList = [];
             for (const [tipo, cantidad] of Object.entries(this.orderState.doggos)) {
-                doggosList.push(`${cantidad}x ${tipo}`);
+                if (cantidad > 0) doggosList.push(`${cantidad}x ${tipo}`);
             }
 
             let extrasList = [];
             for (const [extra, cantidad] of Object.entries(this.orderState.extras)) {
-                extrasList.push(`${cantidad}x ${extra}`);
+                if (cantidad > 0) extrasList.push(`${cantidad}x ${extra}`);
             }
 
             const deliveryText = this.orderState.delivery === 'pickup' 
@@ -680,21 +764,20 @@ class Router {
                 : 'Envio a domicilio (+$1.5 USD)';
 
             const leadData = {
-                nombre: this.orderState.leadData.nombre,
-                email: this.orderState.leadData.email,
-                whatsapp: this.orderState.leadData.whatsapp,
-                doggos: doggosList.join(', '),
+                nombre: this.orderState.leadData.nombre || 'No especificado',
+                email: this.orderState.leadData.email || 'No especificado',
+                whatsapp: this.orderState.leadData.whatsapp || 'No especificado',
+                doggos: doggosList.length > 0 ? doggosList.join(', ') : 'Ninguno',
                 extras: extrasList.length > 0 ? extrasList.join(', ') : 'Ninguno',
-                bebida: this.orderState.bebida,
+                bebida: this.orderState.bebida || 'Sin bebida',
                 delivery: deliveryText
             };
 
             const mensaje = this.buildWhatsAppMessage(leadData);
 
-            // Mostrar estado de carga
-            submitBtn.disabled = true;
-            const btnText = submitBtn.querySelector('.btn-text');
-            const btnLoader = submitBtn.querySelector('.btn-loader');
+            newSubmitBtn.disabled = true;
+            const btnText = newSubmitBtn.querySelector('.btn-text');
+            const btnLoader = newSubmitBtn.querySelector('.btn-loader');
             if (btnText) btnText.style.display = 'none';
             if (btnLoader) btnLoader.style.display = 'inline';
 
@@ -705,19 +788,17 @@ class Router {
                 await new Promise(resolve => setTimeout(resolve, 800));
                 this.openWhatsApp(mensaje);
                 
-                // ✅ LIMPIAR CARRITO DESPUÉS DE ENVIAR
                 this.clearCart();
-                // Recargar la vista para actualizar la UI
                 this.initPedidoForm();
                 
-                alert('✅ ¡Pedido enviado! El carrito ha sido vaciado. ¿Quieres hacer otro pedido?');
+                alert('✅ ¡Pedido enviado! El carrito ha sido vaciado.');
                 
             } catch (error) {
-                console.error('Error al procesar pedido:', error);
-                alert('Hubo un error al procesar tu pedido. Intenta nuevamente.');
+                console.error('Error:', error);
+                alert('Hubo un error al procesar tu pedido.');
             } finally {
                 setTimeout(() => {
-                    submitBtn.disabled = false;
+                    newSubmitBtn.disabled = false;
                     if (btnText) btnText.style.display = 'inline';
                     if (btnLoader) btnLoader.style.display = 'none';
                 }, 1000);
@@ -813,19 +894,15 @@ class Router {
         const totalElement = document.getElementById('order-total');
         if (totalElement) {
             let total = 0;
-            
             for (const [tipo, cantidad] of Object.entries(this.orderState.doggos)) {
                 total += (this.PRICES.doggos[tipo] || 0) * cantidad;
             }
-            
             for (const [extra, cantidad] of Object.entries(this.orderState.extras)) {
                 total += (this.PRICES.extras[extra] || 0) * cantidad;
             }
-
             if (this.orderState.delivery === 'delivery') {
                 total += this.PRICES.delivery * 1000;
             }
-            
             totalElement.textContent = `$${total.toLocaleString()}`;
         }
     }
@@ -833,15 +910,14 @@ class Router {
     // --- Guardar y Cargar Estado ---
     saveOrderState() {
         try {
-            const stateToSave = {
+            localStorage.setItem('doggo_order_state', JSON.stringify({
                 currentStep: this.orderState.currentStep,
                 doggos: this.orderState.doggos,
                 extras: this.orderState.extras,
                 leadData: this.orderState.leadData,
                 bebida: this.orderState.bebida,
                 delivery: this.orderState.delivery
-            };
-            localStorage.setItem('doggo_order_state', JSON.stringify(stateToSave));
+            }));
         } catch (e) {
             console.warn('No se pudo guardar el estado:', e);
         }
@@ -867,40 +943,31 @@ class Router {
     saveLeadToLocalStorage(leadData) {
         try {
             const leads = JSON.parse(localStorage.getItem('doggo_leads') || '[]');
-            leads.push({
-                ...leadData,
-                timestamp: new Date().toISOString()
-            });
+            leads.push({ ...leadData, timestamp: new Date().toISOString() });
             localStorage.setItem('doggo_leads', JSON.stringify(leads));
-            console.log('💾 Lead guardado en localStorage');
         } catch (e) {
             console.warn('No se pudo guardar el lead:', e);
         }
     }
 
-    // --- WhatsApp con Emojis Compatibles ---
+    // --- WhatsApp ---
     buildWhatsAppMessage(data) {
         const { nombre, email, whatsapp, doggos, extras, bebida, delivery } = data;
-        
-        let mensaje = `[NUEVO PEDIDO DOGGO]%0A%0A`;
-        mensaje += `Cliente: ${nombre}%0A`;
-        mensaje += `Email: ${email}%0A`;
-        mensaje += `WhatsApp: ${whatsapp}%0A%0A`;
-        mensaje += `Pedido:%0A`;
-        mensaje += `- Doggos: ${doggos}%0A`;
-        mensaje += `- Extras: ${extras}%0A`;
-        mensaje += `- Bebida: ${bebida}%0A`;
-        mensaje += `- Entrega: ${delivery}%0A%0A`;
-        mensaje += `Listo para preparar!`;
-
-        return mensaje;
+        return `[NUEVO PEDIDO DOGGO]%0A%0A` +
+               `Cliente: ${nombre || 'No especificado'}%0A` +
+               `Email: ${email || 'No especificado'}%0A` +
+               `WhatsApp: ${whatsapp || 'No especificado'}%0A%0A` +
+               `Pedido:%0A` +
+               `- Doggos: ${doggos || 'Ninguno'}%0A` +
+               `- Extras: ${extras || 'Ninguno'}%0A` +
+               `- Bebida: ${bebida || 'Sin bebida'}%0A` +
+               `- Entrega: ${delivery || 'No especificada'}%0A%0A` +
+               `Listo para preparar!`;
     }
 
     openWhatsApp(mensaje) {
-        // ✅ Número actualizado
         const phoneNumber = '584245231898';
-        const url = `https://wa.me/${phoneNumber}?text=${mensaje}`;
-        window.open(url, '_blank');
+        window.open(`https://wa.me/${phoneNumber}?text=${mensaje}`, '_blank');
     }
 
     // --- Validación de Campos ---
@@ -925,13 +992,13 @@ class Router {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(field.value.trim())) {
                 isValid = false;
-                errorMessage = 'Ingresa un email válido (ej: usuario@dominio.com)';
+                errorMessage = 'Ingresa un email válido';
             }
         } else if (field.type === 'tel' && field.value.trim()) {
             const phoneRegex = /^(\+?\d{1,3}[-.]?)?\d{10,14}$/;
             if (!phoneRegex.test(field.value.replace(/\s/g, ''))) {
                 isValid = false;
-                errorMessage = 'Ingresa un número de WhatsApp válido (ej: 584245231898)';
+                errorMessage = 'Ingresa un número válido (ej: 584245231898)';
             }
         }
 
@@ -955,9 +1022,7 @@ class Router {
     initVideoHero() {
         const video = document.querySelector('.hero-video');
         if (video) {
-            video.play().catch(() => {
-                console.log('Video autoplay prevented, user interaction needed');
-            });
+            video.play().catch(() => console.log('Video autoplay prevented'));
         }
     }
 
@@ -983,32 +1048,19 @@ class Router {
 }
 
 // ============================================
-// 6. INICIALIZACIÓN DE LA APLICACIÓN
+// 6. INICIALIZACIÓN
 // ============================================
 
+console.log('📦 Esperando DOM...');
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 DOM cargado, iniciando app...');
     const app = new Router();
     
     window.__DOGGO_APP__ = {
         router: app,
-        version: '1.4.0'
+        version: '1.8.0'
     };
 
-    console.log('🐕 ¡Doggo App iniciada!');
-    console.log('📱 Versión SPA Profesional v1.4.0 (Carrito + Cantidades + Delivery + Limpieza)');
+    console.log('🐕 ¡Doggo App iniciada! v1.8.0');
+    console.log('💡 Para depuración, ejecuta: __DOGGO_APP__.router');
 });
-
-// ============================================
-// 7. SERVICIO DE LOGGING
-// ============================================
-
-const Logger = {
-    info: (message, ...args) => console.info(`[INFO] ${message}`, ...args),
-    warn: (message, ...args) => console.warn(`[WARN] ${message}`, ...args),
-    error: (message, ...args) => console.error(`[ERROR] ${message}`, ...args),
-    debug: (message, ...args) => {
-        if (localStorage.getItem('doggo_debug') === 'true') {
-            console.debug(`[DEBUG] ${message}`, ...args);
-        }
-    }
-};
