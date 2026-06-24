@@ -11,6 +11,7 @@
     --color-accent-light: #F7D65A; /* Amarillo más claro */
     --color-accent-dark: #D4A820;  /* Amarillo más oscuro */
     --color-text: #FFFFFF;         /* Blanco puro */
+    --color-text-dark: #000000;    /* Negro puro */
     --color-text-secondary: #E0E0E0; /* Blanco suave */
     --color-background: #2C1810;   /* Fondo oscuro alternativo */
     --color-card: rgba(107, 29, 26, 0.95); /* Fondo tarjetas */

@@ -1,339 +1,104 @@
-<!-- views/pedido.html -->
-<section class="py-3">
-  <div class="card-doggo p-4 p-md-5">
-    <div class="text-center mb-4">
-      <div class="d-flex justify-content-center">
-        <span class="badge badge-doggo p-2 fs-6">
-          <i class="fas fa-bolt me-2"></i>SDD WhatsApp Conversion
-        </span>
-      </div>
-      <h1 class="mt-3 fw-black">Crea tu pedido</h1>
-      <p class="m-0" style="color: var(--muted);">
-        Primero tus datos (lead). Luego tu pedido preformateado para WhatsApp.
-      </p>
-    </div>
+<!-- ============================================ -->
+<!-- DOGGO - VISTA DE PEDIDO (Alta Conversión)    -->
+<!-- ============================================ -->
 
-    <form id="pedido-lead-form" class="row g-4" action="#" method="post">
-      <!-- LEAD DATA -->
-      <div class="col-12">
-        <h2 class="h5 mb-3 text-accent fw-black">
-          Datos para enviarte el pedido
-        </h2>
-        <div class="row g-3">
-          <div class="col-12 col-md-6">
-            <label class="form-label fw-bold" for="lead-nombre">Nombre completo</label>
-            <input
-              id="lead-nombre"
-              name="lead-nombre"
-              type="text"
-              class="form-control"
-              placeholder="Ej: Juan Pérez"
-              required
-              autocomplete="name"
-            />
-          </div>
-          <div class="col-12 col-md-6">
-            <label class="form-label fw-bold" for="lead-email">Email (Gmail)</label>
-            <input
-              id="lead-email"
-              name="lead-email"
-              type="email"
-              class="form-control"
-              placeholder="tuemail@gmail.com"
-              required
-              autocomplete="email"
-            />
-          </div>
-          <div class="col-12 col-md-6">
-            <label class="form-label fw-bold" for="lead-whatsapp">Número de WhatsApp</label>
-            <input
-              id="lead-whatsapp"
-              name="lead-whatsapp"
-              type="tel"
-              class="form-control"
-              placeholder="Ej: 573001112233"
-              required
-              autocomplete="tel"
-              inputmode="numeric"
-            />
-          </div>
-          <div class="col-12 col-md-6 d-flex align-items-end">
-            <div class="alert alert-warning mb-0" role="note" style="border-radius: 12px;">
-              <i class="fab fa-whatsapp me-2"></i>
-              Al confirmar, abrimos WhatsApp con tu pedido listo.
-            </div>
-          </div>
-        </div>
-      </div>
+<div class="pedido-container">
+    <header class="pedido-header">
+        <h1 class="pedido-title">🔥 Arma tu <span class="highlight">Movida</span></h1>
+        <p class="pedido-subtitle">Personaliza tu perro caliente y confirma por WhatsApp</p>
+    </header>
 
-      <!-- MENU -->
-      <div class="col-12">
-        <h2 class="h5 mb-3 text-accent fw-black">Selecciona tus productos</h2>
+    <form id="pedido-form" class="pedido-form" novalidate>
+        <!-- SECCIÓN 1: DATOS DEL CLIENTE (LEAD) -->
+        <section class="form-section lead-section">
+            <h2 class="section-title">📋 Tus datos</h2>
+            <p class="section-description">Completa esta información para recibir promociones exclusivas</p>
 
-        <div class="row g-4">
-          <div class="col-12 col-lg-6">
-            <h3 class="h6 text-white-50 mb-3 fw-black">Pizzas</h3>
-            <div class="list-group">
-              <label class="list-group-item bg-transparent border-secondary" for="margarita">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <input class="form-check-input me-2" type="checkbox" id="margarita" />
-                    <strong>Pizza Margarita</strong>
-                    <span class="text-white-50">($10.00)</span>
-                  </div>
-                  <div style="width: 130px;">
-                    <input type="number" id="margarita-qty" min="0" value="0" class="form-control form-control-sm" />
-                  </div>
-                </div>
-              </label>
-
-              <label class="list-group-item bg-transparent border-secondary" for="pepperoni">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <input class="form-check-input me-2" type="checkbox" id="pepperoni" />
-                    <strong>Pizza Pepperoni</strong>
-                    <span class="text-white-50">($12.00)</span>
-                  </div>
-                  <div style="width: 130px;">
-                    <input type="number" id="pepperoni-qty" min="0" value="0" class="form-control form-control-sm" />
-                  </div>
-                </div>
-              </label>
-
-              <label class="list-group-item bg-transparent border-secondary" for="cuatro-quesos">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <input class="form-check-input me-2" type="checkbox" id="cuatro-quesos" />
-                    <strong>Pizza Cuatro Quesos</strong>
-                    <span class="text-white-50">($14.00)</span>
-                  </div>
-                  <div style="width: 130px;">
-                    <input type="number" id="cuatro-quesos-qty" min="0" value="0" class="form-control form-control-sm" />
-                  </div>
-                </div>
-              </label>
-
-              <label class="list-group-item bg-transparent border-secondary" for="vegetariana">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <input class="form-check-input me-2" type="checkbox" id="vegetariana" />
-                    <strong>Pizza Vegetariana</strong>
-                    <span class="text-white-50">($11.00)</span>
-                  </div>
-                  <div style="width: 130px;">
-                    <input type="number" id="vegetariana-qty" min="0" value="0" class="form-control form-control-sm" />
-                  </div>
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <div class="col-12 col-lg-6">
-            <h3 class="h6 text-white-50 mb-3 fw-black">Bebidas</h3>
-            <div class="list-group">
-              <label class="list-group-item bg-transparent border-secondary" for="coca-cola">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <input class="form-check-input me-2" type="checkbox" id="coca-cola" />
-                    <strong>Coca-Cola</strong>
-                    <span class="text-white-50">($3.00)</span>
-                  </div>
-                  <div style="width: 130px;">
-                    <input type="number" id="coca-cola-qty" min="0" value="0" class="form-control form-control-sm" />
-                  </div>
-                </div>
-              </label>
-
-              <label class="list-group-item bg-transparent border-secondary" for="fanta">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <input class="form-check-input me-2" type="checkbox" id="fanta" />
-                    <strong>Fanta</strong>
-                    <span class="text-white-50">($3.00)</span>
-                  </div>
-                  <div style="width: 130px;">
-                    <input type="number" id="fanta-qty" min="0" value="0" class="form-control form-control-sm" />
-                  </div>
-                </div>
-              </label>
-
-              <label class="list-group-item bg-transparent border-secondary" for="agua">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <input class="form-check-input me-2" type="checkbox" id="agua" />
-                    <strong>Agua Mineral</strong>
-                    <span class="text-white-50">($1.50)</span>
-                  </div>
-                  <div style="width: 130px;">
-                    <input type="number" id="agua-qty" min="0" value="0" class="form-control form-control-sm" />
-                  </div>
-                </div>
-              </label>
+            <div class="form-group">
+                <label for="nombre">Nombre completo *</label>
+                <input type="text" id="nombre" name="nombre" 
+                       placeholder="Ej: Jairo Cárdenas" 
+                       required
+                       minlength="3"
+                       maxlength="100"
+                       autocomplete="name">
+                <div class="field-feedback"></div>
             </div>
 
-            <div class="mt-4">
-              <h3 class="h6 text-white-50 mb-2 fw-black">Extras</h3>
-              <div id="additional-ingredients" class="list-group">
-                <label class="list-group-item bg-transparent border-secondary" for="champinones">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                      <input type="checkbox" class="form-check-input" id="champinones" value="1.50" />
-                      <span class="fw-bold">Champiñones</span>
-                      <span class="text-white-50">($1.50)</span>
-                    </div>
-                    <div style="width: 120px;">
-                      <input type="number" id="champinones-qty" min="0" value="0" class="form-control form-control-sm" />
-                    </div>
-                  </div>
-                </label>
-
-                <label class="list-group-item bg-transparent border-secondary" for="aceitunas">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                      <input type="checkbox" class="form-check-input" id="aceitunas" value="1.50" />
-                      <span class="fw-bold">Aceitunas</span>
-                      <span class="text-white-50">($1.50)</span>
-                    </div>
-                    <div style="width: 120px;">
-                      <input type="number" id="aceitunas-qty" min="0" value="0" class="form-control form-control-sm" />
-                    </div>
-                  </div>
-                </label>
-
-                <label class="list-group-item bg-transparent border-secondary" for="bacon">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                      <input type="checkbox" class="form-check-input" id="bacon" value="2.00" />
-                      <span class="fw-bold">Bacon</span>
-                      <span class="text-white-50">($2.00)</span>
-                    </div>
-                    <div style="width: 120px;">
-                      <input type="number" id="bacon-qty" min="0" value="0" class="form-control form-control-sm" />
-                    </div>
-                  </div>
-                </label>
-
-                <label class="list-group-item bg-transparent border-secondary" for="italianos">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                      <input type="checkbox" class="form-check-input" id="italianos" value="2.00" />
-                      <span class="fw-bold">Embutidos italianos</span>
-                      <span class="text-white-50">($2.00)</span>
-                    </div>
-                    <div style="width: 120px;">
-                      <input type="number" id="italianos-qty" min="0" value="0" class="form-control form-control-sm" />
-                    </div>
-                  </div>
-                </label>
-
-                <label class="list-group-item bg-transparent border-secondary" for="picantes">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                      <input type="checkbox" class="form-check-input" id="picantes" value="2.00" />
-                      <span class="fw-bold">Embutidos picantes</span>
-                      <span class="text-white-50">($2.00)</span>
-                    </div>
-                    <div style="width: 120px;">
-                      <input type="number" id="picantes-qty" min="0" value="0" class="form-control form-control-sm" />
-                    </div>
-                  </div>
-                </label>
-
-                <label class="list-group-item bg-transparent border-secondary" for="vegetales">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                      <input type="checkbox" class="form-check-input" id="vegetales" value="2.00" />
-                      <span class="fw-bold">Vegetales encurtidos</span>
-                      <span class="text-white-50">($2.00)</span>
-                    </div>
-                    <div style="width: 120px;">
-                      <input type="number" id="vegetales-qty" min="0" value="0" class="form-control form-control-sm" />
-                    </div>
-                  </div>
-                </label>
-              </div>
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" 
+                       placeholder="tucorreo@gmail.com" 
+                       required
+                       autocomplete="email">
+                <div class="field-feedback"></div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- DESPACHO -->
-      <div class="col-12">
-        <h2 class="h5 mb-3 text-accent fw-black">Despacho</h2>
-
-        <div class="row g-3">
-          <div class="col-12 col-md-6">
-            <div class="card-doggo p-3">
-              <div class="d-flex align-items-center gap-2">
-                <input class="form-check-input" type="radio" name="tipo-despacho" id="despacho-delivery" value="delivery" checked />
-                <label class="form-label m-0" for="despacho-delivery"><strong>Delivery</strong></label>
-              </div>
-              <div class="small" style="color: var(--muted); margin-top: 6px;">
-                Costo de envío: <strong>$1.5</strong>
-              </div>
+            <div class="form-group">
+                <label for="whatsapp">WhatsApp *</label>
+                <input type="tel" id="whatsapp" name="whatsapp" 
+                       placeholder="Ej: 584141234567" 
+                       required
+                       autocomplete="tel">
+                <small class="field-hint">Incluye código de país sin el símbolo + (ej: 58414...)</small>
+                <div class="field-feedback"></div>
             </div>
-          </div>
+        </section>
 
-          <div class="col-12 col-md-6">
-            <div class="card-doggo p-3">
-              <div class="d-flex align-items-center gap-2">
-                <input class="form-check-input" type="radio" name="tipo-despacho" id="despacho-tienda" value="tienda" />
-                <label class="form-label m-0" for="despacho-tienda"><strong>Buscar en tienda</strong></label>
-              </div>
-              <div class="small" style="color: var(--muted); margin-top: 6px;">
-                Costo de envío: <strong>$0</strong>
-              </div>
+        <!-- SECCIÓN 2: SELECCIÓN DEL PEDIDO -->
+        <section class="form-section order-section">
+            <h2 class="section-title">🌭 Elige tu Doggo</h2>
+
+            <div class="form-group">
+                <label for="tipo">Tipo de perro caliente *</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Selecciona tu favorito...</option>
+                    <option value="Clásico">Clásico (Salchicha, pan, papitas)</option>
+                    <option value="Americano">Americano (Con chili con carne)</option>
+                    <option value="Mexicano">Mexicano (Guacamole, jalapeños, cebolla)</option>
+                    <option value="Bacon">Bacon & Queso (Con tiras de bacon)</option>
+                    <option value="Veggie">Veggie (Salchicha vegetal, aguacate)</option>
+                </select>
+                <div class="field-feedback"></div>
             </div>
-          </div>
 
-          <div class="col-12" id="delivery-fields">
-            <div class="card-doggo p-3">
-              <h3 class="h6 fw-black mb-3">Dirección de envío</h3>
-
-              <div class="row g-3">
-                <div class="col-12 col-md-6">
-                  <label class="form-label fw-bold" for="envio-direccion">Dirección</label>
-                  <input id="envio-direccion" class="form-control" type="text" placeholder="Ej: Av. Siempre Viva, Urb. ..." />
+            <div class="form-group">
+                <label>Extras (elige hasta 3)</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="extras" value="Queso extra"> 🧀 Queso extra</label>
+                    <label><input type="checkbox" name="extras" value="Bacon"> 🥓 Bacon</label>
+                    <label><input type="checkbox" name="extras" value="Jalapeños"> 🌶️ Jalapeños</label>
+                    <label><input type="checkbox" name="extras" value="Guacamole"> 🥑 Guacamole</label>
+                    <label><input type="checkbox" name="extras" value="Champiñones"> 🍄 Champiñones</label>
+                    <label><input type="checkbox" name="extras" value="Cebolla caramelizada"> 🧅 Cebolla caramelizada</label>
                 </div>
-                <div class="col-12 col-md-6">
-                  <label class="form-label fw-bold" for="envio-referencias">Referencias</label>
-                  <input id="envio-referencias" class="form-control" type="text" placeholder="Ej: cerca al ..." />
-                </div>
-              </div>
-
-              <div class="small" style="color: var(--muted); margin-top: 8px;">
-                Estos campos son obligatorios si eliges <strong>Delivery</strong>.
-              </div>
+                <div class="field-feedback"></div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- NOTES -->
-      <div class="col-12">
-        <h2 class="h5 mb-2 text-accent fw-black">Notas / Preferencias</h2>
-        <textarea id="notas" class="form-control" rows="3" placeholder="Ej: sin cebolla, extra salsa..."></textarea>
-      </div>
+            <div class="form-group">
+                <label for="bebida">Bebida</label>
+                <select id="bebida" name="bebida">
+                    <option value="Sin bebida">Sin bebida</option>
+                    <option value="Refresco">🥤 Refresco</option>
+                    <option value="Agua">💧 Agua</option>
+                    <option value="Cerveza">🍺 Cerveza</option>
+                    <option value="Malteada">🥛 Malteada</option>
+                </select>
+            </div>
+        </section>
 
-      <!-- TOTAL -->
-      <div class="col-12">
-        <div id="total" class="alert" style="background: rgba(244,196,48,0.14); border: 1px solid rgba(244,196,48,0.35); color: #fff; border-radius: 14px;">
-          <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2">
-            <strong>Total a cancelar:</strong>
-            <h3 class="m-0 fw-black">$<span id="precioTotal">0.00</span></h3>
-          </div>
-        </div>
-      </div>
+        <!-- SECCIÓN 3: RESUMEN Y ACCIÓN -->
+        <section class="form-section summary-section">
+            <h2 class="section-title">📝 Resumen de tu pedido</h2>
+            <div id="order-summary" class="order-summary">
+                <p class="empty-summary">Aún no has seleccionado nada. ¡Arma tu movida!</p>
+            </div>
 
-
-      <!-- CTA -->
-      <div class="col-12 d-grid gap-3 d-md-flex justify-content-md-between">
-        <button type="submit" class="btn btn-accent px-4">
-          <i class="fab fa-whatsapp me-2"></i>Confirmar Pedido
-        </button>
-        <a class="btn btn-ghost px-4" href="#/home">Volver - Home</a>
-      </div>
+            <button type="submit" class="btn-submit" id="submit-pedido">
+                <span class="btn-text">🚀 Confirmar Pedido por WhatsApp</span>
+                <span class="btn-loader" style="display:none;">Enviando...</span>
+            </button>
+            <p class="form-disclaimer">Al enviar, aceptas que tus datos sean utilizados para fines de marketing y promociones.</p>
+        </section>
     </form>
-  </div>
-</section>
-
+</div>

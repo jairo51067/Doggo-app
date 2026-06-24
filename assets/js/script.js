@@ -22,32 +22,24 @@ const ROUTER_CONFIG = {
 class StyleManager {
     constructor() {
         this.loadedStyles = new Set();
-        this.baseStyles = ['global']; // CSS que siempre debe estar cargado
+        this.baseStyles = ['global'];
         this.dynamicStyles = [];
     }
 
-    /**
-     * Carga una hoja de estilos CSS dinámicamente
-     * @param {string} styleName - Nombre del archivo CSS (sin extensión)
-     * @returns {Promise<HTMLLinkElement>}
-     */
     loadStyle(styleName) {
         return new Promise((resolve, reject) => {
             const href = `${ROUTER_CONFIG.cssPath}${styleName}.css`;
             
-            // Verificar si ya está cargado
             if (this.loadedStyles.has(href)) {
                 return resolve(document.querySelector(`link[href="${href}"]`));
             }
 
-            // Crear elemento link
             const link = document.createElement('link');
             link.rel = 'stylesheet';
             link.href = href;
             link.dataset.dynamic = 'true';
             link.dataset.styleName = styleName;
 
-            // Eventos de carga/error
             link.onload = () => {
                 this.loadedStyles.add(href);
                 this.dynamicStyles.push(href);
@@ -59,14 +51,10 @@ class StyleManager {
                 reject(new Error(`Failed to load style: ${href}`));
             };
 
-            // Añadir al head
             document.head.appendChild(link);
         });
     }
 
-    /**
-     * Elimina todos los estilos dinámicos excepto los base
-     */
     unloadDynamicStyles() {
         const dynamicLinks = document.querySelectorAll('link[data-dynamic="true"]');
         dynamicLinks.forEach(link => {
@@ -77,20 +65,12 @@ class StyleManager {
         });
     }
 
-    /**
-     * Cambia a un nuevo conjunto de estilos
-     * @param {string} viewName - Nombre de la vista actual
-     */
     async switchToViewStyle(viewName) {
         try {
-            // 1. Limpiar estilos dinámicos anteriores
             this.unloadDynamicStyles();
-
-            // 2. Cargar estilo de la nueva vista
             if (viewName !== 'home') {
                 await this.loadStyle(viewName);
             }
-
             return true;
         } catch (error) {
             console.error('Error al cambiar estilos:', error);
@@ -98,11 +78,6 @@ class StyleManager {
         }
     }
 
-    /**
-     * Verifica si un estilo está cargado
-     * @param {string} styleName 
-     * @returns {boolean}
-     */
     isStyleLoaded(styleName) {
         const href = `${ROUTER_CONFIG.cssPath}${styleName}.css`;
         return this.loadedStyles.has(href);
@@ -120,34 +95,22 @@ class Router {
         this.currentView = null;
         this.viewCache = new Map();
         
-        // Bindear eventos
         this.handleHashChange = this.handleHashChange.bind(this);
         this.handleLinkClick = this.handleLinkClick.bind(this);
         this.navigate = this.navigate.bind(this);
         
-        // Inicializar
         this.init();
     }
 
     init() {
-        // Escuchar cambios en el hash
         window.addEventListener('hashchange', this.handleHashChange);
-        
-        // Escuchar clicks en links
         document.addEventListener('click', this.handleLinkClick);
         
-        // Cargar vista inicial
         const initialHash = window.location.hash || '#/home';
         this.processRoute(initialHash);
-        
-        // Marcar enlace activo
         this.updateActiveLink(initialHash);
     }
 
-    /**
-     * Procesa el hash de la URL y determina la vista
-     * @param {string} hash 
-     */
     processRoute(hash) {
         const route = hash.replace('#/', '').split('?')[0] || ROUTER_CONFIG.defaultView;
         const viewName = route || ROUTER_CONFIG.defaultView;
@@ -155,35 +118,21 @@ class Router {
         this.navigate(viewName);
     }
 
-    /**
-     * Maneja el evento hashchange
-     * @param {HashChangeEvent} event 
-     */
     handleHashChange(event) {
         const newHash = event.newURL.split('#')[1] || '#/home';
         this.processRoute(newHash);
         this.updateActiveLink(newHash);
     }
 
-    /**
-     * Maneja clicks en links para navegación SPA
-     * @param {MouseEvent} event 
-     */
     handleLinkClick(event) {
         const link = event.target.closest('a[href^="#/"]');
         if (!link) return;
 
-        // Prevenir comportamiento por defecto
         event.preventDefault();
-        
         const href = link.getAttribute('href');
         window.location.hash = href;
     }
 
-    /**
-     * Actualiza el enlace activo en el navbar
-     * @param {string} hash 
-     */
     updateActiveLink(hash) {
         const activeLink = hash.replace('#/', '');
         document.querySelectorAll('.nav-link').forEach(link => {
@@ -192,37 +141,18 @@ class Router {
         });
     }
 
-    /**
-     * Navega a una vista específica
-     * @param {string} viewName 
-     */
     async navigate(viewName) {
         try {
-            // Mostrar estado de carga
             this.showLoadingState();
 
-            // 1. Cargar y renderizar la vista
             const html = await this.fetchView(viewName);
-            
-            // 2. Cambiar estilos dinámicos
             await this.styleManager.switchToViewStyle(viewName);
-            
-            // 3. Inyectar contenido
             await this.renderView(html, viewName);
-            
-            // 4. Actualizar título
             this.updateTitle(viewName);
-            
-            // 5. Disparar eventos específicos de la vista
             this.dispatchViewEvent(viewName);
-            
-            // 6. Inicializar componentes de la vista
             this.initViewComponents(viewName);
-            
-            // 7. Ocultar estado de carga
             this.hideLoadingState();
 
-            // 8. Scroll suave al inicio
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             console.log(`✅ Vista "${viewName}" cargada exitosamente`);
@@ -233,15 +163,9 @@ class Router {
         }
     }
 
-    /**
-     * Obtiene el HTML de una vista (con caché)
-     * @param {string} viewName 
-     * @returns {Promise<string>}
-     */
     async fetchView(viewName) {
         const cacheKey = `view_${viewName}`;
         
-        // Verificar caché
         if (this.viewCache.has(cacheKey)) {
             return this.viewCache.get(cacheKey);
         }
@@ -256,34 +180,22 @@ class Router {
             }
             
             const html = await response.text();
-            
-            // Guardar en caché
             this.viewCache.set(cacheKey, html);
-            
             return html;
         } catch (error) {
             console.error('Error en fetch:', error);
-            // Intentar cargar vista 404
-            const fallbackHtml = await this.fetch404View();
-            return fallbackHtml;
+            return await this.fetch404View();
         }
     }
 
-    /**
-     * Obtiene el HTML de la vista 404
-     * @returns {Promise<string>}
-     */
     async fetch404View() {
         try {
             const response = await fetch(`${ROUTER_CONFIG.viewsPath}404.html`);
             if (response.ok) {
                 return await response.text();
             }
-        } catch (e) {
-            // Fallback inline
-        }
-        
-        // Fallback HTML básico
+        } catch (e) {}
+
         return `
             <div class="error-container">
                 <h1>404 - Página no encontrada</h1>
@@ -293,14 +205,8 @@ class Router {
         `;
     }
 
-    /**
-     * Renderiza el contenido en el DOM
-     * @param {string} html 
-     * @param {string} viewName 
-     */
     renderView(html, viewName) {
         return new Promise((resolve) => {
-            // Transición suave
             this.appContent.style.opacity = '0';
             
             setTimeout(() => {
@@ -311,11 +217,7 @@ class Router {
         });
     }
 
-    /**
-     * Muestra el estado de carga
-     */
     showLoadingState() {
-        // Añadir clase de carga si existe el loader
         const loader = this.appContent.querySelector('.loader');
         if (loader) {
             loader.style.display = 'block';
@@ -323,9 +225,6 @@ class Router {
         this.appContent.classList.add('loading');
     }
 
-    /**
-     * Oculta el estado de carga
-     */
     hideLoadingState() {
         this.appContent.classList.remove('loading');
         const loader = this.appContent.querySelector('.loader');
@@ -334,10 +233,6 @@ class Router {
         }
     }
 
-    /**
-     * Muestra el estado de error
-     * @param {string} viewName 
-     */
     showErrorState(viewName) {
         this.appContent.innerHTML = `
             <div class="error-container">
@@ -350,18 +245,10 @@ class Router {
         `;
     }
 
-    /**
-     * Actualiza el título de la página
-     * @param {string} viewName 
-     */
     updateTitle(viewName) {
         document.title = ROUTER_CONFIG.titles[viewName] || 'Doggo - No es un perro, es una movida';
     }
 
-    /**
-     * Dispara un evento personalizado para la vista
-     * @param {string} viewName 
-     */
     dispatchViewEvent(viewName) {
         const event = new CustomEvent('viewLoaded', { 
             detail: { viewName } 
@@ -369,176 +256,296 @@ class Router {
         document.dispatchEvent(event);
     }
 
-    /**
-     * Inicializa componentes específicos de la vista
-     * @param {string} viewName 
-     */
     initViewComponents(viewName) {
-        // Si es la vista de pedido, inicializar el formulario
         if (viewName === 'pedido') {
             this.initPedidoForm();
         }
         
-        // Si es la vista de home, inicializar video
         if (viewName === 'home') {
             this.initVideoHero();
         }
 
-        // Inicializar navbar toggle para responsive
         this.initNavbarToggle();
     }
 
-    /**
-     * Inicializa el formulario de pedido
-     */
+    // ============================================
+    // 3. COMPONENTE DE PEDIDO
+    // ============================================
+
     initPedidoForm() {
         const form = document.getElementById('pedido-form');
-        if (!form) return;
+        if (!form) {
+            console.warn('Formulario de pedido no encontrado');
+            return;
+        }
 
-        // Prevenir envío múltiple
+        const submitBtn = document.getElementById('submit-pedido');
+        if (!submitBtn) {
+            console.warn('Botón de envío no encontrado');
+            return;
+        }
+
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoader = submitBtn.querySelector('.btn-loader');
+        
         let isSubmitting = false;
 
+        // --- Validación en tiempo real ---
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => this.validateField(input));
+            input.addEventListener('blur', () => this.validateField(input));
+            input.addEventListener('change', () => {
+                this.validateField(input);
+                this.updateOrderSummary(form);
+            });
+        });
+
+        // Extras: actualizar resumen al cambiar
+        form.querySelectorAll('input[name="extras"]').forEach(cb => {
+            cb.addEventListener('change', () => this.updateOrderSummary(form));
+        });
+
+        // --- Envío del formulario ---
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             if (isSubmitting) return;
-            isSubmitting = true;
 
+            // 1. Validar todos los campos
+            let isValid = true;
+            const allInputs = form.querySelectorAll('input, select');
+            allInputs.forEach(input => {
+                if (input.required && !input.value.trim()) {
+                    isValid = false;
+                    this.validateField(input);
+                }
+                if (input.type === 'email' && input.value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(input.value)) {
+                        isValid = false;
+                        this.validateField(input);
+                    }
+                }
+                if (input.type === 'tel' && input.value) {
+                    const phoneRegex = /^(\+?\d{1,3}[-.]?)?\d{10,14}$/;
+                    if (!phoneRegex.test(input.value.replace(/\s/g, ''))) {
+                        isValid = false;
+                        this.validateField(input);
+                    }
+                }
+            });
+
+            if (!isValid) {
+                const firstError = form.querySelector('.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+                return;
+            }
+
+            // 2. Recopilar datos
+            const formData = new FormData(form);
+            const leadData = {
+                nombre: formData.get('nombre').trim(),
+                email: formData.get('email').trim(),
+                whatsapp: formData.get('whatsapp').trim(),
+                tipo: formData.get('tipo'),
+                extras: formData.getAll('extras'),
+                bebida: formData.get('bebida')
+            };
+
+            // 3. Construir mensaje de WhatsApp
+            const mensaje = this.buildWhatsAppMessage(leadData);
+
+            // 4. Mostrar estado de carga
+            isSubmitting = true;
+            submitBtn.disabled = true;
+            if (btnText) btnText.style.display = 'none';
+            if (btnLoader) btnLoader.style.display = 'inline';
+
+            // 5. Procesar y abrir WhatsApp
             try {
-                // Aquí irá la lógica de validación y envío
-                // (Lo implementaremos en el Paso 3)
-                console.log('📝 Formulario de pedido interceptado');
+                console.log('📩 Lead capturado:', leadData);
                 
-                // Simular procesamiento
+                // Aquí iría la llamada a tu CRM/API
                 await new Promise(resolve => setTimeout(resolve, 500));
                 
-                // Mostrar mensaje de éxito temporal
-                const button = form.querySelector('button[type="submit"]');
-                const originalText = button.textContent;
-                button.textContent = '✅ ¡Pedido listo!';
-                setTimeout(() => {
-                    button.textContent = originalText;
-                }, 2000);
-                
-                // Aquí se abrirá WhatsApp (Paso 3)
+                this.openWhatsApp(mensaje);
                 
             } catch (error) {
                 console.error('Error al procesar pedido:', error);
                 alert('Hubo un error al procesar tu pedido. Intenta nuevamente.');
             } finally {
-                isSubmitting = false;
+                setTimeout(() => {
+                    isSubmitting = false;
+                    submitBtn.disabled = false;
+                    if (btnText) btnText.style.display = 'inline';
+                    if (btnLoader) btnLoader.style.display = 'none';
+                }, 1000);
             }
         });
 
-        // Validación en tiempo real
-        const inputs = form.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                this.validateField(input);
-            });
-            input.addEventListener('blur', () => {
-                this.validateField(input);
-            });
-        });
+        // Actualizar resumen inicial
+        this.updateOrderSummary(form);
     }
 
-    /**
-     * Valida un campo individual del formulario
-     * @param {HTMLElement} field 
-     */
+    buildWhatsAppMessage(data) {
+        const { nombre, email, whatsapp, tipo, extras, bebida } = data;
+        
+        let mensaje = `🍔 *NUEVO PEDIDO DOGGO*%0A%0A`;
+        mensaje += `👤 *Cliente:* ${nombre}%0A`;
+        mensaje += `📧 *Email:* ${email}%0A`;
+        mensaje += `📱 *WhatsApp:* ${whatsapp}%0A%0A`;
+        mensaje += `🌭 *Pedido:*%0A`;
+        mensaje += `- Tipo: *${tipo}*%0A`;
+        
+        if (extras && extras.length > 0) {
+            mensaje += `- Extras: ${extras.join(', ')}%0A`;
+        } else {
+            mensaje += `- Extras: Ninguno%0A`;
+        }
+        
+        mensaje += `- Bebida: ${bebida || 'Sin bebida'}%0A%0A`;
+        mensaje += `_¡Listo para preparar!_ 🚀`;
+
+        return mensaje;
+    }
+
+    openWhatsApp(mensaje) {
+        // Reemplaza con el número real de WhatsApp del negocio
+        const phoneNumber = '584245231898'; 
+        const url = `https://wa.me/${phoneNumber}?text=${mensaje}`;
+        window.open(url, '_blank');
+    }
+
+    updateOrderSummary(form) {
+        const summaryContainer = document.getElementById('order-summary');
+        if (!summaryContainer) return;
+
+        const formData = new FormData(form);
+        const tipo = formData.get('tipo');
+        const extras = formData.getAll('extras');
+        const bebida = formData.get('bebida');
+
+        if (!tipo) {
+            summaryContainer.innerHTML = `<p class="empty-summary">Aún no has seleccionado nada. ¡Arma tu movida!</p>`;
+            return;
+        }
+
+        let html = `<div class="summary-item"><strong>🌭 Tipo:</strong> ${tipo}</div>`;
+        
+        if (extras.length > 0) {
+            html += `<div class="summary-item"><strong>🧩 Extras:</strong> ${extras.join(', ')}</div>`;
+        }
+        
+        html += `<div class="summary-item"><strong>🥤 Bebida:</strong> ${bebida || 'Sin bebida'}</div>`;
+        html += `<div class="summary-total">🔥 ¡Tu Doggo está listo para pedir!</div>`;
+
+        summaryContainer.innerHTML = html;
+    }
+
     validateField(field) {
-        // Eliminar mensaje de error anterior
         const parent = field.closest('.form-group');
         if (!parent) return;
         
-        const oldError = parent.querySelector('.error-message');
-        if (oldError) oldError.remove();
+        const feedback = parent.querySelector('.field-feedback');
+        if (feedback) {
+            feedback.innerHTML = '';
+            feedback.className = 'field-feedback';
+        }
         field.classList.remove('error', 'success');
 
-        // Validar según tipo
         let isValid = true;
         let errorMessage = '';
 
         if (field.required && !field.value.trim()) {
             isValid = false;
             errorMessage = 'Este campo es obligatorio';
-        } else if (field.type === 'email' && field.value) {
+        } else if (field.type === 'email' && field.value.trim()) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(field.value)) {
+            if (!emailRegex.test(field.value.trim())) {
                 isValid = false;
-                errorMessage = 'Ingresa un email válido';
+                errorMessage = 'Ingresa un email válido (ej: usuario@dominio.com)';
             }
-        } else if (field.type === 'tel' && field.value) {
+        } else if (field.type === 'tel' && field.value.trim()) {
             const phoneRegex = /^(\+?\d{1,3}[-.]?)?\d{10,14}$/;
             if (!phoneRegex.test(field.value.replace(/\s/g, ''))) {
                 isValid = false;
-                errorMessage = 'Ingresa un número de WhatsApp válido';
+                errorMessage = 'Ingresa un número de WhatsApp válido (ej: 584141234567)';
             }
+        } else if (field.tagName === 'SELECT' && field.required && !field.value) {
+            isValid = false;
+            errorMessage = 'Selecciona una opción';
         }
 
-        // Mostrar resultado
-        if (!isValid && field.value) {
+        if (!isValid) {
             field.classList.add('error');
-            const errorEl = document.createElement('div');
-            errorEl.className = 'error-message';
-            errorEl.textContent = errorMessage;
-            parent.appendChild(errorEl);
-        } else if (isValid && field.value) {
+            if (feedback) {
+                feedback.innerHTML = `<span class="error-msg">⚠️ ${errorMessage}</span>`;
+            }
+        } else if (field.value.trim() && field.required) {
             field.classList.add('success');
+            if (feedback) {
+                feedback.innerHTML = `<span class="success-msg">✅ Correcto</span>`;
+            }
         }
     }
 
-    /**
-     * Inicializa el video del hero
-     */
+    // ============================================
+    // 4. COMPONENTE DE HOME
+    // ============================================
+
     initVideoHero() {
         const video = document.querySelector('.hero-video');
         if (video) {
-            // Asegurar reproducción
             video.play().catch(() => {
                 console.log('Video autoplay prevented, user interaction needed');
             });
         }
     }
 
-    /**
-     * Inicializa el toggle del navbar en móvil
-     */
+    // ============================================
+    // 5. COMPONENTE DE NAVBAR
+    // ============================================
+
     initNavbarToggle() {
         const toggle = document.querySelector('.nav-toggle');
         const navMenu = document.querySelector('.nav-menu');
         
         if (toggle && navMenu) {
-            toggle.addEventListener('click', () => {
+            // Remover listeners anteriores para evitar duplicados
+            toggle.replaceWith(toggle.cloneNode(true));
+            const newToggle = document.querySelector('.nav-toggle');
+            
+            newToggle.addEventListener('click', () => {
                 const isOpen = navMenu.classList.toggle('active');
-                toggle.classList.toggle('active');
-                toggle.setAttribute('aria-expanded', isOpen);
+                newToggle.classList.toggle('active');
+                newToggle.setAttribute('aria-expanded', isOpen);
             });
         }
     }
 }
 
 // ============================================
-// 3. INICIALIZACIÓN DE LA APLICACIÓN
+// 6. INICIALIZACIÓN DE LA APLICACIÓN
 // ============================================
 
-// Esperar a que el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar el router
     const app = new Router();
     
-    // Exponer funciones globales si es necesario (para debugging)
     window.__DOGGO_APP__ = {
         router: app,
-        version: '1.0.0'
+        version: '1.0.1'
     };
 
     console.log('🐕 ¡Doggo App iniciada!');
-    console.log('📱 Versión SPA Profesional');
+    console.log('📱 Versión SPA Profesional v1.0.1');
 });
 
 // ============================================
-// 4. SERVICIO DE LOGGING (Opcional)
+// 7. SERVICIO DE LOGGING
 // ============================================
 
 const Logger = {
@@ -551,5 +558,3 @@ const Logger = {
         }
     }
 };
-
-// Para activar modo debug: localStorage.setItem('doggo_debug', 'true')
