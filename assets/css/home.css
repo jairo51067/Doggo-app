@@ -1,42 +1,46 @@
 /* ============================================
-   DOGGO - HOME (VERSIÓN UNIFICADA Y PRO)
+   HOME - VERSIÓN DEFINITIVA CON ALTURA FIJA
    ============================================ */
 
-/* ========================================== */
-/* HERO SECTION (UNIFICADO)                  */
-/* ========================================== */
-
+/* HERO SECTION - ALTURA FIJA */
 .hero-section {
     position: relative;
-    min-height: 90vh;
+    min-height: 90vh; /* ✅ Altura mínima para que se vea siempre */
+    height: 100vh; /* ✅ Ocupa toda la pantalla */
+    max-height: 800px; /* ✅ Límite en pantallas grandes */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     margin: calc(-1 * var(--spacing-lg)) 0 0 0;
     padding: 0;
-    border-radius: 0;
-    /* evita que aparezca el “marco”/recorte raro en móvil */
+    background: var(--color-primary-dark); /* Fallback */
 }
 
-.hero-video-wrapper {
+/* HERO IMAGE WRAPPER */
+.hero-image-wrapper {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: 0;
+    overflow: hidden;
 }
 
-.hero-video {
+.hero-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 50%;
-    /* mejora percepción en móviles */
-    transform: translate3d(0, 0, 0);
-    filter: saturate(1.05) contrast(1.05);
     display: block;
+    /* ✅ Asegurar que la imagen se muestre */
+    min-width: 100%;
+    min-height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .hero-overlay {
@@ -45,12 +49,9 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        135deg,
-        rgba(107, 29, 26, 0.92) 0%,
-        rgba(44, 24, 16, 0.96) 100%
-    );
+    background: linear-gradient(135deg, rgba(107, 29, 26, 0.75) 0%, rgba(44, 24, 16, 0.9) 100%);
     z-index: 1;
+    pointer-events: none;
 }
 
 .hero-content {
@@ -68,195 +69,20 @@
     gap: var(--spacing-md);
 }
 
-/* Badge */
-.hero-badge {
-    display: inline-block;
-    background: var(--color-accent);
-    color: var(--color-primary-dark);
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: var(--spacing-xs);
-}
-
-/* Título */
-.hero-title {
-    font-family: var(--font-primary);
-    font-size: 4.5rem;
-    line-height: 1.1;
-    margin-bottom: var(--spacing-sm);
-    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-}
-
-.hero-title .highlight {
-    color: var(--color-accent);
-    position: relative;
-}
-
-.hero-title .highlight::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: var(--color-accent);
-    border-radius: 2px;
-}
-
-/* Descripción */
-.hero-description {
-    font-size: 1.3rem;
-    color: var(--color-text-secondary);
-    max-width: 600px;
-    margin: 0 auto var(--spacing-md) auto;
-    line-height: 1.6;
-}
-
-/* Features */
-.hero-features {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
-    margin-bottom: var(--spacing-md);
-}
-
-.hero-feature {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: 50px;
-    font-size: 0.95rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: var(--transition-normal);
-}
-
-.hero-feature:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
-}
-
-/* Acciones */
-.hero-actions {
-    display: flex;
-    gap: var(--spacing-md);
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.btn-hero {
-    padding: var(--spacing-md) var(--spacing-xl);
-    font-size: 1.1rem;
-    min-width: 200px;
-}
-
 /* ========================================== */
-/* BENEFITS SECTION                         */
+/* RESPONSIVE - ALTURAS AJUSTADAS            */
 /* ========================================== */
 
-.benefits-section {
-    padding: var(--spacing-xl) 0;
-}
-
-.benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--spacing-lg);
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-md);
-}
-
-.benefit-card {
-    background: var(--color-card);
-    padding: var(--spacing-lg);
-    border-radius: var(--border-radius-lg);
-    text-align: center;
-    border: 1px solid rgba(244, 196, 48, 0.1);
-    transition: var(--transition-normal);
-}
-
-.benefit-card:hover {
-    transform: translateY(-8px);
-    border-color: var(--color-accent);
-    box-shadow: 0 8px 30px var(--color-shadow);
-}
-
-.benefit-icon {
-    font-size: 3rem;
-    margin-bottom: var(--spacing-md);
-}
-
-.benefit-title {
-    font-family: var(--font-primary);
-    font-size: 1.4rem;
-    color: var(--color-accent);
-    margin-bottom: var(--spacing-sm);
-}
-
-.benefit-description {
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-}
-
-/* ========================================== */
-/* CTA SECTION                              */
-/* ========================================== */
-
-.cta-section {
-    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-xl);
-    margin: var(--spacing-xl) 0;
-    text-align: center;
-    border: 2px solid rgba(244, 196, 48, 0.2);
-}
-
-.cta-content {
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.cta-title {
-    font-family: var(--font-primary);
-    font-size: 2.8rem;
-    color: var(--color-text);
-    margin-bottom: var(--spacing-md);
-}
-
-.cta-title .highlight {
-    color: var(--color-accent);
-}
-
-.cta-description {
-    color: var(--color-text-secondary);
-    font-size: 1.2rem;
-    margin-bottom: var(--spacing-lg);
-}
-
-.btn-cta {
-    padding: var(--spacing-md) var(--spacing-xl);
-    font-size: 1.2rem;
-}
-
-/* ========================================== */
-/* RESPONSIVE                                */
-/* ========================================== */
-
-/* Tablets y móviles grandes */
 @media (max-width: 768px) {
     .hero-section {
         min-height: 80vh;
+        height: 80vh;
+        max-height: none;
     }
 
     .hero-content {
         padding: var(--spacing-lg);
-        min-height: 350px;
+        min-height: 300px;
     }
 
     .hero-title {
@@ -266,146 +92,32 @@
     .hero-description {
         font-size: 1.1rem;
     }
-    
-    .hero-features {
-        gap: var(--spacing-sm);
-    }
-    
-    .hero-feature {
-        font-size: 0.85rem;
-        padding: var(--spacing-xs) var(--spacing-sm);
-    }
-    
-    .hero-actions {
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-    
-    .btn-hero {
-        width: 100%;
-        min-width: unset;
-        max-width: 300px;
-    }
-
-    .benefits-grid {
-        grid-template-columns: 1fr;
-        padding: 0 var(--spacing-sm);
-    }
-    
-    .cta-title {
-        font-size: 2rem;
-    }
-    
-    .cta-description {
-        font-size: 1rem;
-    }
 }
 
-/* Móviles pequeños */
 @media (max-width: 480px) {
     .hero-section {
         min-height: 70vh;
+        height: 70vh;
     }
 
     .hero-content {
         padding: var(--spacing-md);
-        min-height: 300px;
+        min-height: 250px;
     }
 
     .hero-title {
         font-size: 2.2rem;
     }
 
-    .hero-badge {
-        font-size: 0.7rem;
-        padding: var(--spacing-xs) var(--spacing-sm);
-    }
-
     .hero-description {
         font-size: 0.95rem;
     }
-
-    .hero-feature {
-        font-size: 0.75rem;
-        padding: var(--spacing-xs) var(--spacing-sm);
-    }
-
-    .btn-hero {
-        font-size: 0.95rem;
-        padding: var(--spacing-sm) var(--spacing-md);
-        max-width: 100%;
-    }
-    
-    .cta-section {
-        padding: var(--spacing-lg);
-        margin: var(--spacing-lg) 0;
-    }
-
-    .cta-title {
-        font-size: 1.6rem;
-    }
 }
 
-/* Pantallas grandes */
 @media (min-width: 1200px) {
     .hero-section {
         min-height: 95vh;
+        height: 95vh;
+        max-height: 900px;
     }
-
-    .hero-title {
-        font-size: 5.5rem;
-    }
-
-    .hero-content {
-        padding: var(--spacing-xl) var(--spacing-xxl);
-    }
-}
-
-/* ========================================== */
-/* VIDEO - REPRODUCCIÓN MEJORADA             */
-/* ========================================== */
-
-.hero-video-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    background: var(--color-primary-dark);
-    overflow: hidden;
-}
-
-.hero-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 50%;
-    display: block;
-    /* ✅ Forzar GPU acceleration */
-    transform: translateZ(0);
-    will-change: transform;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    /* ✅ Asegurar que el video se muestre */
-    min-width: 100%;
-    min-height: 100%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translateZ(0);
-}
-
-/* Fallback para cuando el video no carga */
-.hero-video-wrapper::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(107, 29, 26, 0.6) 0%, rgba(44, 24, 16, 0.8) 100%);
-    z-index: 1;
-    pointer-events: none;
 }

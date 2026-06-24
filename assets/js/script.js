@@ -302,27 +302,35 @@ class Router {
     });
   }
 
-  async navigate(viewName) {
-    console.log(`📄 Navegando a vista: ${viewName}`);
-    try {
-      this.showLoadingState();
+    async navigate(viewName) {
+        console.log(`📄 Navegando a vista: ${viewName}`);
+        try {
+            this.showLoadingState();
 
-      const html = await this.fetchView(viewName);
-      await this.styleManager.switchToViewStyle(viewName);
-      await this.renderView(html, viewName);
-      this.updateTitle(viewName);
-      this.dispatchViewEvent(viewName);
-      this.initViewComponents(viewName);
-      this.hideLoadingState();
+            const html = await this.fetchView(viewName);
+            await this.styleManager.switchToViewStyle(viewName);
+            
+            // ✅ Renderizar el contenido
+            await this.renderView(html, viewName);
+            
+            // ✅ Forzar un reflow para asegurar que el contenido se renderice correctamente
+            this.appContent.style.display = 'block';
+            this.appContent.offsetHeight; // Trigger reflow
+            
+            this.updateTitle(viewName);
+            this.dispatchViewEvent(viewName);
+            this.initViewComponents(viewName);
+            this.hideLoadingState();
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      console.log(`✅ Vista "${viewName}" cargada exitosamente`);
-    } catch (error) {
-      console.error(`❌ Error al cargar la vista "${viewName}":`, error);
-      this.showErrorState(viewName);
+            console.log(`✅ Vista "${viewName}" cargada exitosamente`);
+
+        } catch (error) {
+            console.error(`❌ Error al cargar la vista "${viewName}":`, error);
+            this.showErrorState(viewName);
+        }
     }
-  }
 
   async fetchView(viewName) {
     const cacheKey = `view_${viewName}`;
@@ -366,17 +374,26 @@ class Router {
         `;
   }
 
-  renderView(html, viewName) {
-    return new Promise((resolve) => {
-      this.appContent.style.opacity = "0";
-
-      setTimeout(() => {
-        this.appContent.innerHTML = html;
-        this.appContent.style.opacity = "1";
-        resolve();
-      }, 150);
-    });
-  }
+    renderView(html, viewName) {
+        return new Promise((resolve) => {
+            // ✅ Aplicar transición suave
+            this.appContent.style.opacity = '0';
+            
+            setTimeout(() => {
+                this.appContent.innerHTML = html;
+                
+                // ✅ Forzar que el contenido se muestre correctamente
+                this.appContent.style.display = 'block';
+                this.appContent.style.width = '100%';
+                
+                // ✅ Trigger reflow para asegurar el renderizado
+                this.appContent.offsetHeight;
+                
+                this.appContent.style.opacity = '1';
+                resolve();
+            }, 150);
+        });
+    }
 
   showLoadingState() {
     const loader = this.appContent.querySelector(".loader");
@@ -418,7 +435,7 @@ class Router {
     document.dispatchEvent(event);
   }
 
-     initViewComponents(viewName) {
+      initViewComponents(viewName) {
         console.log(`🔍 Inicializando componentes para: ${viewName}`);
         
         // Limpiar el nombre de la vista (eliminar /)
@@ -427,14 +444,19 @@ class Router {
         if (cleanViewName === 'pedido') {
             setTimeout(() => {
                 this.initPedidoForm();
-            }, 100);
+            }, 200); // ✅ Aumentar timeout para asegurar renderizado
         }
         
         if (cleanViewName === 'home') {
-            // Dar tiempo para que el DOM se renderice
+            // ✅ Dar tiempo para que el DOM se renderice completamente
             setTimeout(() => {
                 this.initVideoHero();
-            }, 150);
+                // ✅ Forzar que el hero se muestre correctamente
+                const hero = document.querySelector('.hero-section');
+                if (hero) {
+                    hero.style.display = 'flex';
+                }
+            }, 250);
         }
 
         this.initNavbarToggle();
@@ -1572,72 +1594,60 @@ class Router {
     // 7. COMPONENTE DE HOME (VERSIÓN DEFINITIVA)
     // ============================================
 
+    // ============================================
+    // 7. COMPONENTE DE HOME (VERSIÓN FINAL)
+    // ============================================
+
     initVideoHero() {
         console.log('🎬 Iniciando video hero...');
         
-        const tryPlayVideo = () => {
-            const video = document.querySelector('.hero-video');
-            if (!video) {
-                console.log('⏳ Video no encontrado en el DOM');
-                return false;
-            }
-
-            console.log('✅ Video encontrado, estado:', video.readyState);
-            
-            // Si el video ya está cargado, intentar reproducir
-            if (video.readyState >= 2) {
-                this.playVideoWithRetry(video);
-                return true;
-            }
-
-            // Si no está cargado, esperar a que cargue
-            console.log('⏳ Esperando que el video cargue...');
-            video.addEventListener('loadeddata', () => {
-                console.log('✅ Video cargado, reproduciendo...');
-                this.playVideoWithRetry(video);
-            });
-
-            // Timeout de seguridad
-            setTimeout(() => {
-                if (video.paused) {
-                    console.log('⏳ Forzando reproducción después de timeout...');
-                    this.playVideoWithRetry(video);
-                }
-            }, 2000);
-
-            return true;
-        };
-
-        // Intentar inmediatamente
-        if (tryPlayVideo()) {
+        const video = document.querySelector('.hero-video');
+        if (!video) {
+            console.warn('⚠️ Video no encontrado en el DOM');
             return;
         }
 
-        // Si no se encuentra, usar MutationObserver para esperar
-        console.log('⏳ Esperando que el video se cargue en el DOM...');
-        const observer = new MutationObserver((mutations) => {
-            for (const mutation of mutations) {
-                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                    if (tryPlayVideo()) {
-                        observer.disconnect();
-                        return;
-                    }
-                }
-            }
-        });
+        // ✅ Forzar la reproducción con un enfoque más directo
+        const playVideo = () => {
+            video.play()
+                .then(() => {
+                    console.log('✅ Video reproduciéndose correctamente');
+                })
+                .catch(err => {
+                    console.log('⏳ Error al reproducir:', err.message);
+                    // Si falla, mostrar el poster/fallback
+                    video.style.opacity = '0.5';
+                });
+        };
 
-        observer.observe(this.appContent, {
-            childList: true,
-            subtree: true
-        });
+        // Si el video ya está cargado, reproducir
+        if (video.readyState >= 2) {
+            playVideo();
+            return;
+        }
 
-        // Timeout de seguridad (5 segundos)
+        // Esperar a que el video cargue
+        video.addEventListener('loadeddata', playVideo);
+        video.addEventListener('loadedmetadata', playVideo);
+
+        // Timeout de seguridad: intentar reproducir después de 2 segundos
         setTimeout(() => {
-            observer.disconnect();
-            if (!document.querySelector('.hero-video')) {
-                console.warn('⚠️ Video no encontrado después de 5 segundos');
+            if (video.paused) {
+                console.log('⏳ Timeout: forzando reproducción...');
+                playVideo();
             }
-        }, 5000);
+        }, 2000);
+
+        // Si el usuario interactúa con la página, intentar reproducir
+        const playOnInteraction = () => {
+            if (video.paused) {
+                video.play().catch(() => {});
+            }
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('touchstart', playOnInteraction);
+        };
+        document.addEventListener('click', playOnInteraction);
+        document.addEventListener('touchstart', playOnInteraction);
     }
 
     /**
