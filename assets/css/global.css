@@ -14,6 +14,7 @@
     --color-text-dark: #000000;    /* Negro puro */
     --color-text-secondary: #E0E0E0; /* Blanco suave */
     --color-background: #2C1810;   /* Fondo oscuro alternativo */
+   --color-background-white: #FFFFFF; /* Fondo blanco */
     --color-card: rgba(107, 29, 26, 0.95); /* Fondo tarjetas */
     --color-shadow: rgba(0, 0, 0, 0.4);
     

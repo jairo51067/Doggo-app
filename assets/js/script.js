@@ -1,5 +1,5 @@
 // ============================================
-// DOGGO-APP SPA ROUTER - Versión Profesional
+// DOGGO-APP SPA ROUTER - Versión Final con Limpieza y Emojis
 // ============================================
 
 // Configuración del Router
@@ -269,7 +269,7 @@ class Router {
     }
 
     // ============================================
-    // 3. COMPONENTE DE PEDIDO
+    // 3. COMPONENTE DE PEDIDO (Carrito + Cantidades + Delivery + Limpieza)
     // ============================================
 
     initPedidoForm() {
@@ -279,173 +279,631 @@ class Router {
             return;
         }
 
-        const submitBtn = document.getElementById('submit-pedido');
-        if (!submitBtn) {
-            console.warn('Botón de envío no encontrado');
-            return;
-        }
+        // Estado del pedido como propiedad de la instancia
+        this.orderState = {
+            currentStep: 1,
+            totalSteps: 4,
+            doggos: {},
+            extras: {},
+            bebida: 'Sin bebida',
+            delivery: 'pickup',
+            leadData: {
+                nombre: '',
+                email: '',
+                whatsapp: ''
+            }
+        };
 
-        const btnText = submitBtn.querySelector('.btn-text');
-        const btnLoader = submitBtn.querySelector('.btn-loader');
+        // Precios
+        this.PRICES = {
+            doggos: {
+                'Clásico': 8000,
+                'Americano': 9500,
+                'Mexicano': 10000,
+                'Bacon': 10500,
+                'Veggie': 9000,
+                'Hawaiano': 9500
+            },
+            extras: {
+                'Queso extra': 1500,
+                'Bacon': 2000,
+                'Jalapeños': 1000,
+                'Guacamole': 2500,
+                'Champiñones': 1500,
+                'Cebolla caramelizada': 1000,
+                'Pimentón asado': 1000,
+                'Queso rallado extra': 1000
+            },
+            delivery: 1.5
+        };
+
+        // Cargar estado desde localStorage
+        this.loadOrderState();
+
+        // Inicializar componentes
+        this.initStepper(form);
+        this.initDoggoQuantities(form);
+        this.initExtraQuantities(form);
+        this.initDeliveryOption(form);
+        this.initBebidaSelection(form);
+        this.initLeadFields(form);
+        this.initClearCartButtons(form);
+        this.initFormSubmit(form);
         
-        let isSubmitting = false;
+        // Actualizar resumen inicial
+        this.updateSummary();
+    }
 
-        // --- Validación en tiempo real ---
-        const inputs = form.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            input.addEventListener('input', () => this.validateField(input));
-            input.addEventListener('blur', () => this.validateField(input));
-            input.addEventListener('change', () => {
-                this.validateField(input);
-                this.updateOrderSummary(form);
+    // --- Stepper ---
+    initStepper(form) {
+        const steps = form.querySelectorAll('.step-content');
+        const indicators = document.querySelectorAll('.step-indicator');
+        const nextBtns = form.querySelectorAll('.btn-next');
+        const prevBtns = form.querySelectorAll('.btn-prev');
+
+        const showStep = (stepNumber) => {
+            if (stepNumber > this.orderState.currentStep) {
+                if (!this.validateCurrentStep(this.orderState.currentStep, form)) {
+                    return;
+                }
+            }
+
+            this.orderState.currentStep = stepNumber;
+            
+            steps.forEach(step => {
+                step.classList.toggle('active', parseInt(step.dataset.step) === stepNumber);
+            });
+
+            indicators.forEach(indicator => {
+                const step = parseInt(indicator.dataset.step);
+                indicator.classList.remove('active', 'completed');
+                if (step === stepNumber) {
+                    indicator.classList.add('active');
+                } else if (step < stepNumber) {
+                    indicator.classList.add('completed');
+                }
+            });
+
+            document.querySelectorAll('.step-line').forEach((line, index) => {
+                line.classList.toggle('completed', index < stepNumber - 1);
+            });
+
+            this.saveOrderState();
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        nextBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const nextStep = parseInt(btn.dataset.next);
+                if (nextStep <= this.orderState.totalSteps) {
+                    showStep(nextStep);
+                }
             });
         });
 
-        // Extras: actualizar resumen al cambiar
-        form.querySelectorAll('input[name="extras"]').forEach(cb => {
-            cb.addEventListener('change', () => this.updateOrderSummary(form));
+        prevBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const prevStep = parseInt(btn.dataset.prev);
+                if (prevStep >= 1) {
+                    showStep(prevStep);
+                }
+            });
         });
 
-        // --- Envío del formulario ---
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (isSubmitting) return;
+        indicators.forEach(indicator => {
+            indicator.addEventListener('click', () => {
+                const step = parseInt(indicator.dataset.step);
+                if (step < this.orderState.currentStep || indicator.classList.contains('completed')) {
+                    showStep(step);
+                }
+            });
+        });
 
-            // 1. Validar todos los campos
-            let isValid = true;
-            const allInputs = form.querySelectorAll('input, select');
-            allInputs.forEach(input => {
-                if (input.required && !input.value.trim()) {
+        showStep(this.orderState.currentStep);
+    }
+
+    // --- Validación por pasos ---
+    validateCurrentStep(step, form) {
+        switch(step) {
+            case 1:
+                return this.validateLeadFields(form);
+            case 2:
+                return this.validateDoggos();
+            case 3:
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    validateLeadFields(form) {
+        const inputs = form.querySelectorAll('.step-content[data-step="1"] input[required]');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                isValid = false;
+                this.validateField(input);
+            } else if (input.type === 'email') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(input.value)) {
                     isValid = false;
                     this.validateField(input);
                 }
-                if (input.type === 'email' && input.value) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(input.value)) {
-                        isValid = false;
-                        this.validateField(input);
-                    }
+            } else if (input.type === 'tel') {
+                const phoneRegex = /^(\+?\d{1,3}[-.]?)?\d{10,14}$/;
+                if (!phoneRegex.test(input.value.replace(/\s/g, ''))) {
+                    isValid = false;
+                    this.validateField(input);
                 }
-                if (input.type === 'tel' && input.value) {
-                    const phoneRegex = /^(\+?\d{1,3}[-.]?)?\d{10,14}$/;
-                    if (!phoneRegex.test(input.value.replace(/\s/g, ''))) {
-                        isValid = false;
-                        this.validateField(input);
-                    }
+            }
+        });
+
+        if (!isValid) {
+            const firstError = form.querySelector('.step-content[data-step="1"] .error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
+        }
+
+        return isValid;
+    }
+
+    validateDoggos() {
+        const total = Object.values(this.orderState.doggos).reduce((sum, qty) => sum + qty, 0);
+        if (total === 0) {
+            alert('¡Agrega al menos un Doggo a tu pedido! 🌭');
+            return false;
+        }
+        return true;
+    }
+
+    // --- Cantidades de Doggos ---
+    initDoggoQuantities(form) {
+        const cards = form.querySelectorAll('.doggo-card');
+
+        cards.forEach(card => {
+            const value = card.dataset.value;
+            const qtyDisplay = card.querySelector('.qty-value');
+            const minusBtn = card.querySelector('.qty-btn.minus');
+            const plusBtn = card.querySelector('.qty-btn.plus');
+
+            if (this.orderState.doggos[value]) {
+                qtyDisplay.textContent = this.orderState.doggos[value];
+                card.classList.add('has-items');
+            }
+
+            const updateQuantity = (change) => {
+                let current = parseInt(qtyDisplay.textContent) || 0;
+                let newQty = Math.max(0, current + change);
+                
+                if (newQty > 0) {
+                    this.orderState.doggos[value] = newQty;
+                    card.classList.add('has-items');
+                } else {
+                    delete this.orderState.doggos[value];
+                    card.classList.remove('has-items');
                 }
+                
+                qtyDisplay.textContent = newQty;
+                this.updateSummary();
+                this.saveOrderState();
+            };
+
+            minusBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateQuantity(-1);
             });
 
-            if (!isValid) {
-                const firstError = form.querySelector('.error');
-                if (firstError) {
-                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    firstError.focus();
+            plusBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateQuantity(1);
+            });
+        });
+    }
+
+    // --- Cantidades de Extras ---
+    initExtraQuantities(form) {
+        const chips = form.querySelectorAll('.extra-chip');
+
+        chips.forEach(chip => {
+            const value = chip.dataset.value;
+            const qtyDisplay = chip.querySelector('.qty-value-mini');
+            const minusBtn = chip.querySelector('.qty-btn-mini.minus');
+            const plusBtn = chip.querySelector('.qty-btn-mini.plus');
+
+            if (this.orderState.extras[value]) {
+                qtyDisplay.textContent = this.orderState.extras[value];
+                chip.classList.add('has-items');
+            }
+
+            const updateQuantity = (change) => {
+                let current = parseInt(qtyDisplay.textContent) || 0;
+                let newQty = Math.max(0, current + change);
+                
+                if (newQty > 0) {
+                    this.orderState.extras[value] = newQty;
+                    chip.classList.add('has-items');
+                } else {
+                    delete this.orderState.extras[value];
+                    chip.classList.remove('has-items');
                 }
+                
+                qtyDisplay.textContent = newQty;
+                this.updateSummary();
+                this.saveOrderState();
+            };
+
+            minusBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateQuantity(-1);
+            });
+
+            plusBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateQuantity(1);
+            });
+        });
+    }
+
+    // --- Opción de Delivery ---
+    initDeliveryOption(form) {
+        const cards = form.querySelectorAll('.delivery-card');
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                cards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                this.orderState.delivery = card.dataset.value;
+                this.updateSummary();
+                this.saveOrderState();
+            });
+
+            if (this.orderState.delivery === card.dataset.value) {
+                card.classList.add('selected');
+            }
+        });
+    }
+
+    // --- Bebida ---
+    initBebidaSelection(form) {
+        const select = form.querySelector('#bebida');
+        if (select) {
+            select.addEventListener('change', () => {
+                this.orderState.bebida = select.value;
+                this.updateSummary();
+                this.saveOrderState();
+            });
+
+            if (this.orderState.bebida) {
+                select.value = this.orderState.bebida;
+            }
+        }
+    }
+
+    // --- Campos de Lead ---
+    initLeadFields(form) {
+        const fields = ['nombre', 'email', 'whatsapp'];
+        
+        fields.forEach(fieldName => {
+            const input = form.querySelector(`#${fieldName}`);
+            if (input) {
+                if (this.orderState.leadData[fieldName]) {
+                    input.value = this.orderState.leadData[fieldName];
+                }
+
+                input.addEventListener('input', () => {
+                    this.orderState.leadData[fieldName] = input.value.trim();
+                    this.saveOrderState();
+                    this.validateField(input);
+                });
+
+                input.addEventListener('blur', () => {
+                    this.validateField(input);
+                });
+            }
+        });
+    }
+
+    // --- Botón Vaciar Carrito ---
+    initClearCartButtons(form) {
+        const clearButtons = form.querySelectorAll('.btn-clear-cart');
+        
+        clearButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (confirm('¿Seguro que quieres vaciar todo tu pedido? Esta acción no se puede deshacer.')) {
+                    this.clearCart();
+                    // Recargar la vista para actualizar la UI
+                    this.initPedidoForm();
+                }
+            });
+        });
+    }
+
+    clearCart() {
+        // Limpiar estado
+        this.orderState.doggos = {};
+        this.orderState.extras = {};
+        this.orderState.bebida = 'Sin bebida';
+        this.orderState.delivery = 'pickup';
+        this.orderState.leadData = {
+            nombre: '',
+            email: '',
+            whatsapp: ''
+        };
+        this.orderState.currentStep = 1;
+        
+        // Limpiar localStorage
+        localStorage.removeItem('doggo_order_state');
+        
+        // Actualizar resumen
+        this.updateSummary();
+        
+        console.log('🗑️ Carrito vaciado correctamente');
+        alert('✅ Carrito vaciado. Puedes comenzar un nuevo pedido.');
+    }
+
+    // --- Envío del Formulario ---
+    initFormSubmit(form) {
+        const submitBtn = document.getElementById('submit-pedido');
+        if (!submitBtn) return;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!this.validateLeadFields(form)) {
+                this.orderState.currentStep = 1;
+                this.initStepper(form);
                 return;
             }
 
-            // 2. Recopilar datos
-            const formData = new FormData(form);
+            if (!this.validateDoggos()) {
+                this.orderState.currentStep = 2;
+                this.initStepper(form);
+                return;
+            }
+
+            // Construir mensaje sin emojis para máxima compatibilidad
+            let doggosList = [];
+            for (const [tipo, cantidad] of Object.entries(this.orderState.doggos)) {
+                doggosList.push(`${cantidad}x ${tipo}`);
+            }
+
+            let extrasList = [];
+            for (const [extra, cantidad] of Object.entries(this.orderState.extras)) {
+                extrasList.push(`${cantidad}x ${extra}`);
+            }
+
+            const deliveryText = this.orderState.delivery === 'pickup' 
+                ? 'Recoger en local' 
+                : 'Envio a domicilio (+$1.5 USD)';
+
             const leadData = {
-                nombre: formData.get('nombre').trim(),
-                email: formData.get('email').trim(),
-                whatsapp: formData.get('whatsapp').trim(),
-                tipo: formData.get('tipo'),
-                extras: formData.getAll('extras'),
-                bebida: formData.get('bebida')
+                nombre: this.orderState.leadData.nombre,
+                email: this.orderState.leadData.email,
+                whatsapp: this.orderState.leadData.whatsapp,
+                doggos: doggosList.join(', '),
+                extras: extrasList.length > 0 ? extrasList.join(', ') : 'Ninguno',
+                bebida: this.orderState.bebida,
+                delivery: deliveryText
             };
 
-            // 3. Construir mensaje de WhatsApp
             const mensaje = this.buildWhatsAppMessage(leadData);
 
-            // 4. Mostrar estado de carga
-            isSubmitting = true;
+            // Mostrar estado de carga
             submitBtn.disabled = true;
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoader = submitBtn.querySelector('.btn-loader');
             if (btnText) btnText.style.display = 'none';
             if (btnLoader) btnLoader.style.display = 'inline';
 
-            // 5. Procesar y abrir WhatsApp
             try {
                 console.log('📩 Lead capturado:', leadData);
+                this.saveLeadToLocalStorage(leadData);
                 
-                // Aquí iría la llamada a tu CRM/API
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
+                await new Promise(resolve => setTimeout(resolve, 800));
                 this.openWhatsApp(mensaje);
+                
+                // ✅ LIMPIAR CARRITO DESPUÉS DE ENVIAR
+                this.clearCart();
+                // Recargar la vista para actualizar la UI
+                this.initPedidoForm();
+                
+                alert('✅ ¡Pedido enviado! El carrito ha sido vaciado. ¿Quieres hacer otro pedido?');
                 
             } catch (error) {
                 console.error('Error al procesar pedido:', error);
                 alert('Hubo un error al procesar tu pedido. Intenta nuevamente.');
             } finally {
                 setTimeout(() => {
-                    isSubmitting = false;
                     submitBtn.disabled = false;
                     if (btnText) btnText.style.display = 'inline';
                     if (btnLoader) btnLoader.style.display = 'none';
                 }, 1000);
             }
         });
-
-        // Actualizar resumen inicial
-        this.updateOrderSummary(form);
     }
 
-    buildWhatsAppMessage(data) {
-        const { nombre, email, whatsapp, tipo, extras, bebida } = data;
-        
-        let mensaje = `🍔 *NUEVO PEDIDO DOGGO*%0A%0A`;
-        mensaje += `👤 *Cliente:* ${nombre}%0A`;
-        mensaje += `📧 *Email:* ${email}%0A`;
-        mensaje += `📱 *WhatsApp:* ${whatsapp}%0A%0A`;
-        mensaje += `🌭 *Pedido:*%0A`;
-        mensaje += `- Tipo: *${tipo}*%0A`;
-        
-        if (extras && extras.length > 0) {
-            mensaje += `- Extras: ${extras.join(', ')}%0A`;
-        } else {
-            mensaje += `- Extras: Ninguno%0A`;
+    // --- Actualizar Resumen ---
+    updateSummary() {
+        // Cliente
+        const clientSummary = document.getElementById('summary-client');
+        if (clientSummary) {
+            const { nombre, email, whatsapp } = this.orderState.leadData;
+            if (nombre || email || whatsapp) {
+                clientSummary.innerHTML = `
+                    <div class="summary-item"><span>👤 ${nombre || 'No especificado'}</span></div>
+                    <div class="summary-item"><span>📧 ${email || 'No especificado'}</span></div>
+                    <div class="summary-item"><span>📱 ${whatsapp || 'No especificado'}</span></div>
+                `;
+            } else {
+                clientSummary.innerHTML = `<p class="empty-summary">Completa tus datos en el paso 1</p>`;
+            }
         }
+
+        // Doggos
+        const doggoSummary = document.getElementById('summary-doggos');
+        if (doggoSummary) {
+            const entries = Object.entries(this.orderState.doggos).filter(([_, qty]) => qty > 0);
+            if (entries.length > 0) {
+                let html = '';
+                let subtotal = 0;
+                entries.forEach(([tipo, cantidad]) => {
+                    const price = this.PRICES.doggos[tipo] || 0;
+                    const total = price * cantidad;
+                    subtotal += total;
+                    html += `<div class="summary-item">
+                        <span>${cantidad}x ${tipo}</span>
+                        <span>$${total.toLocaleString()}</span>
+                    </div>`;
+                });
+                html += `<div class="summary-item" style="font-weight:700;color:var(--color-accent);">
+                    <span>Subtotal Doggos</span>
+                    <span>$${subtotal.toLocaleString()}</span>
+                </div>`;
+                doggoSummary.innerHTML = html;
+            } else {
+                doggoSummary.innerHTML = `<p class="empty-summary">Añade Doggos en el paso 2</p>`;
+            }
+        }
+
+        // Extras
+        const extrasSummary = document.getElementById('summary-extras');
+        if (extrasSummary) {
+            const entries = Object.entries(this.orderState.extras).filter(([_, qty]) => qty > 0);
+            if (entries.length > 0) {
+                let html = '';
+                let subtotal = 0;
+                entries.forEach(([extra, cantidad]) => {
+                    const price = this.PRICES.extras[extra] || 0;
+                    const total = price * cantidad;
+                    subtotal += total;
+                    html += `<div class="summary-item">
+                        <span>${cantidad}x ${extra}</span>
+                        <span>$${total.toLocaleString()}</span>
+                    </div>`;
+                });
+                html += `<div class="summary-item" style="font-weight:700;color:var(--color-accent);">
+                    <span>Subtotal Extras</span>
+                    <span>$${subtotal.toLocaleString()}</span>
+                </div>`;
+                extrasSummary.innerHTML = html;
+            } else {
+                extrasSummary.innerHTML = `<p class="empty-summary">Añade extras en el paso 3</p>`;
+            }
+        }
+
+        // Bebida
+        const bebidaSummary = document.getElementById('summary-bebida');
+        if (bebidaSummary) {
+            bebidaSummary.innerHTML = `<div class="summary-item"><span>🥤 ${this.orderState.bebida || 'Sin bebida'}</span></div>`;
+        }
+
+        // Delivery
+        const deliverySummary = document.getElementById('summary-delivery');
+        if (deliverySummary) {
+            const text = this.orderState.delivery === 'pickup' 
+                ? '🏠 Recoger en local (sin costo)' 
+                : '🚀 Envío a domicilio (+$1.5 USD)';
+            deliverySummary.innerHTML = `<div class="summary-item"><span>${text}</span></div>`;
+        }
+
+        // Total
+        const totalElement = document.getElementById('order-total');
+        if (totalElement) {
+            let total = 0;
+            
+            for (const [tipo, cantidad] of Object.entries(this.orderState.doggos)) {
+                total += (this.PRICES.doggos[tipo] || 0) * cantidad;
+            }
+            
+            for (const [extra, cantidad] of Object.entries(this.orderState.extras)) {
+                total += (this.PRICES.extras[extra] || 0) * cantidad;
+            }
+
+            if (this.orderState.delivery === 'delivery') {
+                total += this.PRICES.delivery * 1000;
+            }
+            
+            totalElement.textContent = `$${total.toLocaleString()}`;
+        }
+    }
+
+    // --- Guardar y Cargar Estado ---
+    saveOrderState() {
+        try {
+            const stateToSave = {
+                currentStep: this.orderState.currentStep,
+                doggos: this.orderState.doggos,
+                extras: this.orderState.extras,
+                leadData: this.orderState.leadData,
+                bebida: this.orderState.bebida,
+                delivery: this.orderState.delivery
+            };
+            localStorage.setItem('doggo_order_state', JSON.stringify(stateToSave));
+        } catch (e) {
+            console.warn('No se pudo guardar el estado:', e);
+        }
+    }
+
+    loadOrderState() {
+        try {
+            const saved = localStorage.getItem('doggo_order_state');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                this.orderState.currentStep = parsed.currentStep || 1;
+                this.orderState.doggos = parsed.doggos || {};
+                this.orderState.extras = parsed.extras || {};
+                this.orderState.leadData = parsed.leadData || { nombre: '', email: '', whatsapp: '' };
+                this.orderState.bebida = parsed.bebida || 'Sin bebida';
+                this.orderState.delivery = parsed.delivery || 'pickup';
+            }
+        } catch (e) {
+            console.warn('No se pudo cargar el estado:', e);
+        }
+    }
+
+    saveLeadToLocalStorage(leadData) {
+        try {
+            const leads = JSON.parse(localStorage.getItem('doggo_leads') || '[]');
+            leads.push({
+                ...leadData,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('doggo_leads', JSON.stringify(leads));
+            console.log('💾 Lead guardado en localStorage');
+        } catch (e) {
+            console.warn('No se pudo guardar el lead:', e);
+        }
+    }
+
+    // --- WhatsApp con Emojis Compatibles ---
+    buildWhatsAppMessage(data) {
+        const { nombre, email, whatsapp, doggos, extras, bebida, delivery } = data;
         
-        mensaje += `- Bebida: ${bebida || 'Sin bebida'}%0A%0A`;
-        mensaje += `_¡Listo para preparar!_ 🚀`;
+        let mensaje = `[NUEVO PEDIDO DOGGO]%0A%0A`;
+        mensaje += `Cliente: ${nombre}%0A`;
+        mensaje += `Email: ${email}%0A`;
+        mensaje += `WhatsApp: ${whatsapp}%0A%0A`;
+        mensaje += `Pedido:%0A`;
+        mensaje += `- Doggos: ${doggos}%0A`;
+        mensaje += `- Extras: ${extras}%0A`;
+        mensaje += `- Bebida: ${bebida}%0A`;
+        mensaje += `- Entrega: ${delivery}%0A%0A`;
+        mensaje += `Listo para preparar!`;
 
         return mensaje;
     }
 
     openWhatsApp(mensaje) {
-        // Reemplaza con el número real de WhatsApp del negocio
-        const phoneNumber = '584245231898'; 
+        // ✅ Número actualizado
+        const phoneNumber = '584245231898';
         const url = `https://wa.me/${phoneNumber}?text=${mensaje}`;
         window.open(url, '_blank');
     }
 
-    updateOrderSummary(form) {
-        const summaryContainer = document.getElementById('order-summary');
-        if (!summaryContainer) return;
-
-        const formData = new FormData(form);
-        const tipo = formData.get('tipo');
-        const extras = formData.getAll('extras');
-        const bebida = formData.get('bebida');
-
-        if (!tipo) {
-            summaryContainer.innerHTML = `<p class="empty-summary">Aún no has seleccionado nada. ¡Arma tu movida!</p>`;
-            return;
-        }
-
-        let html = `<div class="summary-item"><strong>🌭 Tipo:</strong> ${tipo}</div>`;
-        
-        if (extras.length > 0) {
-            html += `<div class="summary-item"><strong>🧩 Extras:</strong> ${extras.join(', ')}</div>`;
-        }
-        
-        html += `<div class="summary-item"><strong>🥤 Bebida:</strong> ${bebida || 'Sin bebida'}</div>`;
-        html += `<div class="summary-total">🔥 ¡Tu Doggo está listo para pedir!</div>`;
-
-        summaryContainer.innerHTML = html;
-    }
-
+    // --- Validación de Campos ---
     validateField(field) {
         const parent = field.closest('.form-group');
         if (!parent) return;
@@ -473,11 +931,8 @@ class Router {
             const phoneRegex = /^(\+?\d{1,3}[-.]?)?\d{10,14}$/;
             if (!phoneRegex.test(field.value.replace(/\s/g, ''))) {
                 isValid = false;
-                errorMessage = 'Ingresa un número de WhatsApp válido (ej: 584141234567)';
+                errorMessage = 'Ingresa un número de WhatsApp válido (ej: 584245231898)';
             }
-        } else if (field.tagName === 'SELECT' && field.required && !field.value) {
-            isValid = false;
-            errorMessage = 'Selecciona una opción';
         }
 
         if (!isValid) {
@@ -515,7 +970,6 @@ class Router {
         const navMenu = document.querySelector('.nav-menu');
         
         if (toggle && navMenu) {
-            // Remover listeners anteriores para evitar duplicados
             toggle.replaceWith(toggle.cloneNode(true));
             const newToggle = document.querySelector('.nav-toggle');
             
@@ -537,11 +991,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.__DOGGO_APP__ = {
         router: app,
-        version: '1.0.1'
+        version: '1.4.0'
     };
 
     console.log('🐕 ¡Doggo App iniciada!');
-    console.log('📱 Versión SPA Profesional v1.0.1');
+    console.log('📱 Versión SPA Profesional v1.4.0 (Carrito + Cantidades + Delivery + Limpieza)');
 });
 
 // ============================================
@@ -549,12 +1003,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 
 const Logger = {
-    info: (message, ...args) => console.info(`🐕 [INFO] ${message}`, ...args),
-    warn: (message, ...args) => console.warn(`🐕 [WARN] ${message}`, ...args),
-    error: (message, ...args) => console.error(`🐕 [ERROR] ${message}`, ...args),
+    info: (message, ...args) => console.info(`[INFO] ${message}`, ...args),
+    warn: (message, ...args) => console.warn(`[WARN] ${message}`, ...args),
+    error: (message, ...args) => console.error(`[ERROR] ${message}`, ...args),
     debug: (message, ...args) => {
         if (localStorage.getItem('doggo_debug') === 'true') {
-            console.debug(`🐕 [DEBUG] ${message}`, ...args);
+            console.debug(`[DEBUG] ${message}`, ...args);
         }
     }
 };

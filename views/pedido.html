@@ -1,104 +1,295 @@
 <!-- ============================================ -->
-<!-- DOGGO - VISTA DE PEDIDO (Alta Conversión)    -->
+<!-- DOGGO - VISTA DE PEDIDO (Carrito + Cantidades) -->
 <!-- ============================================ -->
 
 <div class="pedido-container">
+    <!-- Header -->
     <header class="pedido-header">
         <h1 class="pedido-title">🔥 Arma tu <span class="highlight">Movida</span></h1>
-        <p class="pedido-subtitle">Personaliza tu perro caliente y confirma por WhatsApp</p>
+        <p class="pedido-subtitle">Construye tu pedido con cantidades y confirma por WhatsApp</p>
     </header>
 
+    <!-- Progress Bar -->
+    <div class="stepper-progress">
+        <div class="step-indicators">
+            <div class="step-indicator active" data-step="1">
+                <span class="step-number">1</span>
+                <span class="step-label">Tus datos</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-indicator" data-step="2">
+                <span class="step-number">2</span>
+                <span class="step-label">Tu pedido</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-indicator" data-step="3">
+                <span class="step-number">3</span>
+                <span class="step-label">Extras</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-indicator" data-step="4">
+                <span class="step-number">4</span>
+                <span class="step-label">Confirmar</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario Principal -->
     <form id="pedido-form" class="pedido-form" novalidate>
-        <!-- SECCIÓN 1: DATOS DEL CLIENTE (LEAD) -->
-        <section class="form-section lead-section">
-            <h2 class="section-title">📋 Tus datos</h2>
-            <p class="section-description">Completa esta información para recibir promociones exclusivas</p>
+
+        <!-- ===== PASO 1: DATOS DEL CLIENTE ===== -->
+        <div class="step-content active" data-step="1">
+            <div class="step-header">
+                <h2 class="step-title">📋 ¿Quién pide esta <span class="highlight">movida</span>?</h2>
+                <p class="step-description">Completa tus datos para recibir promociones exclusivas</p>
+            </div>
 
             <div class="form-group">
                 <label for="nombre">Nombre completo *</label>
-                <input type="text" id="nombre" name="nombre" 
-                       placeholder="Ej: Jairo Cárdenas" 
-                       required
-                       minlength="3"
-                       maxlength="100"
-                       autocomplete="name">
+                <input type="text" id="nombre" name="nombre" placeholder="Ej: Jairo Cárdenas" required minlength="3"
+                    maxlength="100" autocomplete="name">
                 <div class="field-feedback"></div>
             </div>
 
             <div class="form-group">
                 <label for="email">Email *</label>
-                <input type="email" id="email" name="email" 
-                       placeholder="tucorreo@gmail.com" 
-                       required
-                       autocomplete="email">
+                <input type="email" id="email" name="email" placeholder="tucorreo@gmail.com" required
+                    autocomplete="email">
                 <div class="field-feedback"></div>
             </div>
 
             <div class="form-group">
                 <label for="whatsapp">WhatsApp *</label>
-                <input type="tel" id="whatsapp" name="whatsapp" 
-                       placeholder="Ej: 584141234567" 
-                       required
-                       autocomplete="tel">
+                <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ej: 584141234567" required
+                    autocomplete="tel">
                 <small class="field-hint">Incluye código de país sin el símbolo + (ej: 58414...)</small>
                 <div class="field-feedback"></div>
             </div>
-        </section>
 
-        <!-- SECCIÓN 2: SELECCIÓN DEL PEDIDO -->
-        <section class="form-section order-section">
-            <h2 class="section-title">🌭 Elige tu Doggo</h2>
+            <div class="step-actions">
+                <button type="button" class="btn-next" data-next="2">
+                    Siguiente → <span class="btn-icon">🚀</span>
+                </button>
+            </div>
+        </div>
 
-            <div class="form-group">
-                <label for="tipo">Tipo de perro caliente *</label>
-                <select id="tipo" name="tipo" required>
-                    <option value="">Selecciona tu favorito...</option>
-                    <option value="Clásico">Clásico (Salchicha, pan, papitas)</option>
-                    <option value="Americano">Americano (Con chili con carne)</option>
-                    <option value="Mexicano">Mexicano (Guacamole, jalapeños, cebolla)</option>
-                    <option value="Bacon">Bacon & Queso (Con tiras de bacon)</option>
-                    <option value="Veggie">Veggie (Salchicha vegetal, aguacate)</option>
-                </select>
-                <div class="field-feedback"></div>
+        <!-- ===== PASO 2: SELECCIÓN DE DOGGOS CON CANTIDAD ===== -->
+        <div class="step-content" data-step="2">
+            <div class="step-header">
+                <h2 class="step-title">🌭 Elige tus <span class="highlight">armas</span></h2>
+                <p class="step-description">Selecciona los Doggos que quieras con sus cantidades</p>
+            </div>
+
+            <div class="doggo-grid">
+                <!-- Cada Doggo ahora tiene su propio control de cantidad -->
+                <div class="doggo-card" data-value="Clásico">
+                    <div class="doggo-card-content">
+                        <span class="doggo-icon">🌭</span>
+                        <h3 class="doggo-name">Clásico</h3>
+                        <p class="doggo-desc">Salchicha, pan, papitas</p>
+                        <span class="doggo-price">$8.000</span>
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn minus">-</button>
+                            <span class="qty-value">0</span>
+                            <button type="button" class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+                    <div class="doggo-check">✓</div>
+                </div>
+
+                <div class="doggo-card" data-value="Americano">
+                    <div class="doggo-card-content">
+                        <span class="doggo-icon">🇺🇸</span>
+                        <h3 class="doggo-name">Americano</h3>
+                        <p class="doggo-desc">Con chili con carne</p>
+                        <span class="doggo-price">$9.500</span>
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn minus">-</button>
+                            <span class="qty-value">0</span>
+                            <button type="button" class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+                    <div class="doggo-check">✓</div>
+                </div>
+
+                <div class="doggo-card" data-value="Mexicano">
+                    <div class="doggo-card-content">
+                        <span class="doggo-icon">🌶️</span>
+                        <h3 class="doggo-name">Mexicano</h3>
+                        <p class="doggo-desc">Guacamole, jalapeños, cebolla</p>
+                        <span class="doggo-price">$10.000</span>
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn minus">-</button>
+                            <span class="qty-value">0</span>
+                            <button type="button" class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+                    <div class="doggo-check">✓</div>
+                </div>
+
+                <div class="doggo-card" data-value="Bacon">
+                    <div class="doggo-card-content">
+                        <span class="doggo-icon">🥓</span>
+                        <h3 class="doggo-name">Bacon & Queso</h3>
+                        <p class="doggo-desc">Con tiras de bacon</p>
+                        <span class="doggo-price">$10.500</span>
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn minus">-</button>
+                            <span class="qty-value">0</span>
+                            <button type="button" class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+                    <div class="doggo-check">✓</div>
+                </div>
+
+                <div class="doggo-card" data-value="Veggie">
+                    <div class="doggo-card-content">
+                        <span class="doggo-icon">🌱</span>
+                        <h3 class="doggo-name">Veggie</h3>
+                        <p class="doggo-desc">Salchicha vegetal, aguacate</p>
+                        <span class="doggo-price">$9.000</span>
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn minus">-</button>
+                            <span class="qty-value">0</span>
+                            <button type="button" class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+                    <div class="doggo-check">✓</div>
+                </div>
+
+                <div class="doggo-card" data-value="Hawaiano">
+                    <div class="doggo-card-content">
+                        <span class="doggo-icon">🍍</span>
+                        <h3 class="doggo-name">Hawaiano</h3>
+                        <p class="doggo-desc">Piña, jamón, queso</p>
+                        <span class="doggo-price">$9.500</span>
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn minus">-</button>
+                            <span class="qty-value">0</span>
+                            <button type="button" class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+                    <div class="doggo-check">✓</div>
+                </div>
+            </div>
+
+            <div class="step-actions">
+                <button type="button" class="btn-prev" data-prev="1">← Atrás</button>
+                <button type="button" class="btn-next" data-next="3">
+                    Siguiente → <span class="btn-icon">🔥</span>
+                </button>
+                <!-- NUEVO BOTÓN VACIAR CARRITO -->
+                <button type="button" class="btn-clear-cart" id="clear-cart-step2">
+                    🗑️ Vaciar carrito
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== PASO 3: EXTRAS CON CANTIDADES Y DELIVERY ===== -->
+        <div class="step-content" data-step="3">
+            <div class="step-header">
+                <h2 class="step-title">🧩 Dale tu <span class="highlight">toque</span></h2>
+                <p class="step-description">Añade extras con las raciones que quieras y elige cómo recibir tu pedido</p>
             </div>
 
             <div class="form-group">
-                <label>Extras (elige hasta 3)</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" name="extras" value="Queso extra"> 🧀 Queso extra</label>
-                    <label><input type="checkbox" name="extras" value="Bacon"> 🥓 Bacon</label>
-                    <label><input type="checkbox" name="extras" value="Jalapeños"> 🌶️ Jalapeños</label>
-                    <label><input type="checkbox" name="extras" value="Guacamole"> 🥑 Guacamole</label>
-                    <label><input type="checkbox" name="extras" value="Champiñones"> 🍄 Champiñones</label>
-                    <label><input type="checkbox" name="extras" value="Cebolla caramelizada"> 🧅 Cebolla caramelizada</label>
+                <label class="extras-label">Extras (elige las raciones que quieras)</label>
+                <div class="extras-grid">
+                    <!-- Aquí van los extras con sus controles de cantidad -->
+                    <div class="extra-chip" data-value="Queso extra">
+                        <span class="extra-icon">🧀</span>
+                        <span class="extra-name">Queso extra</span>
+                        <span class="extra-price">+$1.500</span>
+                        <div class="qty-control-mini">
+                            <button type="button" class="qty-btn-mini minus">-</button>
+                            <span class="qty-value-mini">0</span>
+                            <button type="button" class="qty-btn-mini plus">+</button>
+                        </div>
+                    </div>
+                    <!-- Repite para todos los extras... -->
+                </div>
+                <div class="field-feedback"></div>
+            </div>
+
+            <!-- NUEVA SECCIÓN: OPCIÓN DE ENTREGA -->
+            <div class="form-group delivery-option">
+                <label class="delivery-label">📦 ¿Cómo quieres recibir tu pedido?</label>
+                <div class="delivery-options">
+                    <div class="delivery-card" data-value="pickup">
+                        <div class="delivery-icon">🏠</div>
+                        <div class="delivery-info">
+                            <h4 class="delivery-name">Recoger en local</h4>
+                            <p class="delivery-desc">Sin costo adicional</p>
+                        </div>
+                        <div class="delivery-check">✓</div>
+                    </div>
+                    <div class="delivery-card" data-value="delivery">
+                        <div class="delivery-icon">🚀</div>
+                        <div class="delivery-info">
+                            <h4 class="delivery-name">Envío a domicilio</h4>
+                            <p class="delivery-desc">Costo adicional: $1.5 USD</p>
+                        </div>
+                        <div class="delivery-check">✓</div>
+                    </div>
                 </div>
                 <div class="field-feedback"></div>
             </div>
 
             <div class="form-group">
-                <label for="bebida">Bebida</label>
-                <select id="bebida" name="bebida">
+                <label for="bebida">🥤 Elige tu bebida</label>
+                <select id="bebida" name="bebida" class="bebida-select">
                     <option value="Sin bebida">Sin bebida</option>
                     <option value="Refresco">🥤 Refresco</option>
                     <option value="Agua">💧 Agua</option>
                     <option value="Cerveza">🍺 Cerveza</option>
                     <option value="Malteada">🥛 Malteada</option>
+                    <option value="Jugo">🧃 Jugo natural</option>
                 </select>
             </div>
-        </section>
 
-        <!-- SECCIÓN 3: RESUMEN Y ACCIÓN -->
-        <section class="form-section summary-section">
-            <h2 class="section-title">📝 Resumen de tu pedido</h2>
-            <div id="order-summary" class="order-summary">
-                <p class="empty-summary">Aún no has seleccionado nada. ¡Arma tu movida!</p>
+            <div class="step-actions">
+                <button type="button" class="btn-prev" data-prev="2">← Atrás</button>
+                <button type="button" class="btn-next" data-next="4">
+                    Ver resumen → <span class="btn-icon">📝</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== PASO 4: CONFIRMACIÓN CON DELIVERY ===== -->
+        <div class="step-content" data-step="4">
+            <!-- ... (el resto del contenido del paso 4) ... -->
+            <div class="order-summary-card">
+                <!-- ... (secciones anteriores) ... -->
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-section">
+                    <h3 class="summary-title">📦 Opción de entrega</h3>
+                    <div id="summary-delivery" class="summary-content">
+                        <p class="empty-summary">Selecciona una opción en el paso 3</p>
+                    </div>
+                </div>
+
+                <div class="summary-total-box">
+                    <span class="total-label">Total aproximado:</span>
+                    <span id="order-total" class="total-price">$0</span>
+                </div>
             </div>
 
-            <button type="submit" class="btn-submit" id="submit-pedido">
-                <span class="btn-text">🚀 Confirmar Pedido por WhatsApp</span>
-                <span class="btn-loader" style="display:none;">Enviando...</span>
-            </button>
-            <p class="form-disclaimer">Al enviar, aceptas que tus datos sean utilizados para fines de marketing y promociones.</p>
-        </section>
+            <div class="step-actions">
+                <button type="button" class="btn-prev" data-prev="3">← Atrás</button>
+                <button type="submit" class="btn-submit" id="submit-pedido">
+                    <span class="btn-text">🚀 Confirmar y enviar a WhatsApp</span>
+                    <span class="btn-loader" style="display:none;">⏳ Enviando...</span>
+                </button>
+                <!-- NUEVO BOTÓN VACIAR CARRITO -->
+                <button type="button" class="btn-clear-cart" id="clear-cart-step4">
+                    🗑️ Vaciar carrito
+                </button>
+            </div>
+
+            <p class="form-disclaimer">Al enviar, aceptas que tus datos sean utilizados para fines de marketing y
+                promociones.</p>
+        </div>
     </form>
 </div>
