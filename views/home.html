@@ -1,11 +1,12 @@
 <!-- ========================================== -->
-<!-- DOGGO - VIEW: HOME (VERSIÓN PRO)          -->
+<!-- DOGGO - VIEW: HOME (CON VIDEO OPTIMIZADO) -->
 <!-- ========================================== -->
 
 <!-- HERO SECTION CON VIDEO -->
 <section class="hero-section">
     <div class="hero-video-wrapper">
-        <video class="hero-video" autoplay loop muted playsinline>
+        <!-- ✅ Añadir atributo preload para mejor rendimiento -->
+        <video class="hero-video" autoplay loop muted playsinline preload="metadata">
             <source src="assets/video/video_2026-06-23_13-23-35.mp4" type="video/mp4">
             Tu navegador no soporta el formato de video.
         </video>

@@ -418,20 +418,27 @@ class Router {
     document.dispatchEvent(event);
   }
 
-  initViewComponents(viewName) {
-    console.log(`🔍 Inicializando componentes para: ${viewName}`);
-    if (viewName === "pedido" || viewName === "/pedido") {
-      setTimeout(() => {
-        this.initPedidoForm();
-      }, 100);
-    }
+     initViewComponents(viewName) {
+        console.log(`🔍 Inicializando componentes para: ${viewName}`);
+        
+        // Limpiar el nombre de la vista (eliminar /)
+        const cleanViewName = viewName.replace('/', '');
+        
+        if (cleanViewName === 'pedido') {
+            setTimeout(() => {
+                this.initPedidoForm();
+            }, 100);
+        }
+        
+        if (cleanViewName === 'home') {
+            // Dar tiempo para que el DOM se renderice
+            setTimeout(() => {
+                this.initVideoHero();
+            }, 150);
+        }
 
-    if (viewName === "home") {
-      this.initVideoHero();
+        this.initNavbarToggle();
     }
-
-    this.initNavbarToggle();
-  }
 
   // ============================================
   // 6. COMPONENTE DE PEDIDO - VERSIÓN COMPLETA v5.0
@@ -1558,12 +1565,65 @@ class Router {
   // 7. COMPONENTE DE HOME
   // ============================================
 
-  initVideoHero() {
-    const video = document.querySelector(".hero-video");
-    if (video) {
-      video.play().catch(() => console.log("Video autoplay prevented"));
+     // ============================================
+    // 7. COMPONENTE DE HOME (VERSIÓN MEJORADA)
+    // ============================================
+
+    initVideoHero() {
+        console.log('🎬 Iniciando video hero...');
+        
+        // Función para intentar reproducir el video
+        const tryPlayVideo = () => {
+            const video = document.querySelector('.hero-video');
+            if (video) {
+                console.log('✅ Video encontrado, intentando reproducir...');
+                video.play().catch(err => {
+                    console.log('⏳ Autoplay bloqueado, esperando interacción del usuario');
+                    // Intentar reproducir al hacer clic en cualquier parte
+                    const playOnInteraction = () => {
+                        video.play().catch(() => {});
+                        document.removeEventListener('click', playOnInteraction);
+                        document.removeEventListener('touchstart', playOnInteraction);
+                    };
+                    document.addEventListener('click', playOnInteraction);
+                    document.addEventListener('touchstart', playOnInteraction);
+                });
+                return true;
+            }
+            return false;
+        };
+
+        // Intentar inmediatamente
+        if (tryPlayVideo()) {
+            return;
+        }
+
+        // Si no se encuentra, usar MutationObserver para esperar
+        console.log('⏳ Esperando que el video se cargue en el DOM...');
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    if (tryPlayVideo()) {
+                        observer.disconnect();
+                        return;
+                    }
+                }
+            }
+        });
+
+        observer.observe(this.appContent, {
+            childList: true,
+            subtree: true
+        });
+
+        // Timeout de seguridad (5 segundos)
+        setTimeout(() => {
+            observer.disconnect();
+            if (!document.querySelector('.hero-video')) {
+                console.warn('⚠️ Video no encontrado después de 5 segundos');
+            }
+        }, 5000);
     }
-  }
 
       // ============================================
     // 8. COMPONENTE DE NAVBAR (VERSIÓN MEJORADA)
