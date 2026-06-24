@@ -63,6 +63,10 @@ body {
 }
 
 /* ---- Navbar ---- */
+/* ============================================
+   NAVBAR MEJORADO CON HAMBURGUESA PRO
+   ============================================ */
+
 .navbar {
     background: linear-gradient(180deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
     padding: var(--spacing-md) var(--spacing-lg);
@@ -79,12 +83,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .nav-brand {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
+    z-index: 1001;
 }
 
 .nav-logo {
@@ -109,6 +115,77 @@ body {
     letter-spacing: 2px;
 }
 
+/* ========================================== */
+/* BOTÓN HAMBURGUESA MEJORADO                */
+/* ========================================== */
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    z-index: 1001;
+    width: 44px;
+    height: 44px;
+    position: relative;
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-normal);
+}
+
+.nav-toggle:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-toggle .hamburger {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: var(--color-accent);
+    position: relative;
+    transition: var(--transition-normal);
+    border-radius: 2px;
+}
+
+.nav-toggle .hamburger::before,
+.nav-toggle .hamburger::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 3px;
+    background: var(--color-accent);
+    transition: var(--transition-normal);
+    border-radius: 2px;
+    left: 0;
+}
+
+.nav-toggle .hamburger::before {
+    top: -8px;
+}
+
+.nav-toggle .hamburger::after {
+    bottom: -8px;
+}
+
+/* Animación de la hamburguesa a "X" */
+.nav-toggle.active .hamburger {
+    background: transparent;
+}
+
+.nav-toggle.active .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.nav-toggle.active .hamburger::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+/* ========================================== */
+/* MENÚ MÓVIL MEJORADO                       */
+/* ========================================== */
+
 .nav-menu {
     display: flex;
     list-style: none;
@@ -125,6 +202,7 @@ body {
     transition: var(--transition-normal);
     position: relative;
     font-size: 1rem;
+    white-space: nowrap;
 }
 
 .nav-link::after {
@@ -153,54 +231,132 @@ body {
     font-weight: 700;
 }
 
-/* Navbar Toggle (Móvil) */
-.nav-toggle {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: var(--spacing-sm);
+/* ========================================== */
+/* RESPONSIVE - MENÚ MÓVIL                   */
+/* ========================================== */
+
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(44, 24, 16, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: var(--spacing-lg);
+        padding: var(--spacing-xl);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                    opacity 0.3s ease,
+                    visibility 0.3s ease;
+        z-index: 1000;
+        margin: 0;
+        border: none;
+    }
+
+    .nav-menu.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .nav-menu .nav-link {
+        font-size: 1.6rem;
+        padding: var(--spacing-md) var(--spacing-lg);
+        width: 100%;
+        text-align: center;
+        color: var(--color-text-secondary);
+        transition: var(--transition-normal);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s ease;
+    }
+
+    .nav-menu.active .nav-link {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Stagger animation para los items */
+    .nav-menu.active .nav-link:nth-child(1) { transition-delay: 0.05s; }
+    .nav-menu.active .nav-link:nth-child(2) { transition-delay: 0.10s; }
+    .nav-menu.active .nav-link:nth-child(3) { transition-delay: 0.15s; }
+    .nav-menu.active .nav-link:nth-child(4) { transition-delay: 0.20s; }
+
+    .nav-menu .nav-link::after {
+        display: none;
+    }
+
+    .nav-menu .nav-link:hover,
+    .nav-menu .nav-link.active {
+        color: var(--color-accent);
+        background: rgba(244, 196, 48, 0.1);
+        border-radius: var(--border-radius-md);
+        transform: scale(1.05);
+    }
+
+    .nav-menu .nav-link.active {
+        color: var(--color-accent);
+        background: rgba(244, 196, 48, 0.15);
+    }
+
+    /* Overlay de cierre (clic fuera) */
+    .nav-menu::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: transparent;
+        z-index: -1;
+    }
+
+    .nav-menu.active::before {
+        background: rgba(0, 0, 0, 0.3);
+    }
 }
 
-.hamburger {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background: var(--color-accent);
-    position: relative;
-    transition: var(--transition-normal);
-}
+@media (max-width: 480px) {
+    .brand-text {
+        font-size: 1.4rem;
+    }
+    
+    .nav-logo img {
+        height: 40px;
+    }
 
-.hamburger::before,
-.hamburger::after {
-    content: '';
-    position: absolute;
-    width: 25px;
-    height: 3px;
-    background: var(--color-accent);
-    transition: var(--transition-normal);
-}
+    .nav-menu .nav-link {
+        font-size: 1.4rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
 
-.hamburger::before {
-    top: -8px;
-}
+    .nav-toggle {
+        width: 40px;
+        height: 40px;
+    }
 
-.hamburger::after {
-    bottom: -8px;
-}
+    .nav-toggle .hamburger {
+        width: 24px;
+    }
 
-.nav-toggle.active .hamburger {
-    background: transparent;
-}
-
-.nav-toggle.active .hamburger::before {
-    transform: rotate(45deg);
-    top: 0;
-}
-
-.nav-toggle.active .hamburger::after {
-    transform: rotate(-45deg);
-    bottom: 0;
+    .nav-toggle .hamburger::before,
+    .nav-toggle .hamburger::after {
+        width: 24px;
+    }
 }
 
 /* ---- Main Content ---- */

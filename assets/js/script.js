@@ -1565,26 +1565,77 @@ class Router {
     }
   }
 
-  // ============================================
-  // 8. COMPONENTE DE NAVBAR
-  // ============================================
+      // ============================================
+    // 8. COMPONENTE DE NAVBAR (VERSIÓN MEJORADA)
+    // ============================================
 
-  initNavbarToggle() {
-    const toggle = document.querySelector(".nav-toggle");
-    const navMenu = document.querySelector(".nav-menu");
+    initNavbarToggle() {
+        const toggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (toggle && navMenu) {
+            // Eliminar listeners anteriores
+            const newToggle = toggle.cloneNode(true);
+            toggle.parentNode.replaceChild(newToggle, toggle);
+            
+            // Prevenir scroll cuando el menú está abierto
+            const toggleScroll = (disable) => {
+                document.body.style.overflow = disable ? 'hidden' : '';
+                document.body.style.touchAction = disable ? 'none' : '';
+            };
 
-    if (toggle && navMenu) {
-      toggle.replaceWith(toggle.cloneNode(true));
-      const newToggle = document.querySelector(".nav-toggle");
+            newToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = navMenu.classList.toggle('active');
+                newToggle.classList.toggle('active');
+                newToggle.setAttribute('aria-expanded', isOpen);
+                toggleScroll(isOpen);
+                
+                // Animar los items con stagger
+                if (isOpen) {
+                    const links = navMenu.querySelectorAll('.nav-link');
+                    links.forEach((link, index) => {
+                        link.style.transitionDelay = `${0.05 * index}s`;
+                    });
+                }
+            });
 
-      newToggle.addEventListener("click", () => {
-        const isOpen = navMenu.classList.toggle("active");
-        newToggle.classList.toggle("active");
-        newToggle.setAttribute("aria-expanded", isOpen);
-      });
-    }
-  }
-}
+            // Cerrar menú al hacer clic en un enlace
+            const links = navMenu.querySelectorAll('.nav-link');
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    newToggle.classList.remove('active');
+                    newToggle.setAttribute('aria-expanded', 'false');
+                    toggleScroll(false);
+                });
+            });
+
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (navMenu.classList.contains('active') && 
+                    !navMenu.contains(e.target) && 
+                    !newToggle.contains(e.target)) {
+                    navMenu.classList.remove('active');
+                    newToggle.classList.remove('active');
+                    newToggle.setAttribute('aria-expanded', 'false');
+                    toggleScroll(false);
+                }
+            });
+
+            // Cerrar menú al presionar Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    newToggle.classList.remove('active');
+                    newToggle.setAttribute('aria-expanded', 'false');
+                    toggleScroll(false);
+                }
+            });
+
+            console.log('✅ Navbar toggle mejorado inicializado');
+        }
+    }}
 
 // ============================================
 // 9. MICRO-INTERACCIONES Y ANIMACIONES
