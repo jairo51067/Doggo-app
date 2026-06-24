@@ -1,51 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doggo - No es un perro, es una movida</title>
-    
+
     <!-- Meta tags para SEO y redes sociales -->
-    <meta name="description" content="Doggo - Pizzas y perros calientes con estilo urbano. Haz tu pedido por WhatsApp en segundos.">
+    <meta name="description"
+        content="Doggo - Pizzas y perros calientes con estilo urbano. Haz tu pedido por WhatsApp en segundos.">
     <meta property="og:title" content="Doggo - No es un perro, es una movida">
     <meta property="og:description" content="Pizzas y perros calientes con estilo urbano. Pedido rápido por WhatsApp.">
     <meta property="og:image" content="assets/img/doggo1.png">
-    
-   <!-- Precarga de recursos críticos -->
-<link rel="preload" href="assets/css/global.css" as="style">
-<link rel="preload" href="assets/js/script.js" as="script">
-<!-- ✅ NUEVO: Precarga del video -->
-<link rel="preload" href="assets/video/video_2026-06-23_13-23-35.mp4" as="video" type="video/mp4">
-    
+
+    <!-- Precarga de recursos críticos -->
+    <link rel="preload" href="assets/css/global.css" as="style">
+    <link rel="preload" href="assets/js/script.js" as="script">
+    <!-- ✅ NUEVO: Precarga del video -->
+    <!-- <link rel="preload" href="assets/video/video_2026-06-23_13-23-35.mp4" as="video" type="video/mp4"> -->
+
     <!-- CSS Global (siempre presente) -->
     <link rel="stylesheet" href="assets/css/global.css">
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/img/doggo1.png">
 </head>
+
 <body>
     <!-- Navbar persistente -->
-<nav class="navbar" role="navigation" aria-label="Navegación principal">
-    <div class="nav-container">
-        <div class="nav-brand">
-            <a href="#/home" class="nav-logo">
-                <img src="assets/img/doggo1.png" alt="Doggo Logo" height="50">
-                <span class="brand-text">Doggo</span>
-            </a>
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="#/home" class="nav-logo">
+                    <img src="assets/img/doggo1.png" alt="Doggo Logo" height="50">
+                    <span class="brand-text">Doggo</span>
+                </a>
+            </div>
+
+            <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <span class="hamburger"></span>
+            </button>
+
+            <ul class="nav-menu">
+                <li><a href="#/home" class="nav-link active">Inicio</a></li>
+                <li><a href="#/pedido" class="nav-link">Haz tu Pedido</a></li>
+                <li><a href="#/metodospagos" class="nav-link">Métodos de Pago</a></li>
+                <li><a href="#/contacto" class="nav-link">Contacto</a></li>
+            </ul>
         </div>
-        
-        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
-            <span class="hamburger"></span>
-        </button>
-        
-        <ul class="nav-menu">
-            <li><a href="#/home" class="nav-link active">Inicio</a></li>
-            <li><a href="#/pedido" class="nav-link">Haz tu Pedido</a></li>
-            <li><a href="#/metodospagos" class="nav-link">Métodos de Pago</a></li>
-            <li><a href="#/contacto" class="nav-link">Contacto</a></li>
-        </ul>
-    </div>
-</nav>
+    </nav>
 
     <!-- Contenido dinámico -->
     <main id="app-content">
@@ -55,6 +58,22 @@
             <p>Cargando Doggo...</p>
         </div>
     </main>
+
+    <!-- Script de inicialización temprana del video -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Intentar iniciar el video tan pronto como sea posible
+            const tryVideo = setInterval(function () {
+                const video = document.querySelector('.hero-video');
+                if (video) {
+                    video.play().catch(function () {
+                        // El autoplay fallará, pero lo intentaremos de nuevo después
+                    });
+                    clearInterval(tryVideo);
+                }
+            }, 100);
+        });
+    </script>
 
     <!-- Footer persistente -->
     <footer class="footer">
@@ -74,4 +93,5 @@
     <!-- Script principal -->
     <script src="assets/js/script.js" defer></script>
 </body>
+
 </html>

@@ -1568,29 +1568,44 @@ class Router {
      // ============================================
     // 7. COMPONENTE DE HOME (VERSIÓN MEJORADA)
     // ============================================
+    // ============================================
+    // 7. COMPONENTE DE HOME (VERSIÓN DEFINITIVA)
+    // ============================================
 
     initVideoHero() {
         console.log('🎬 Iniciando video hero...');
         
-        // Función para intentar reproducir el video
         const tryPlayVideo = () => {
             const video = document.querySelector('.hero-video');
-            if (video) {
-                console.log('✅ Video encontrado, intentando reproducir...');
-                video.play().catch(err => {
-                    console.log('⏳ Autoplay bloqueado, esperando interacción del usuario');
-                    // Intentar reproducir al hacer clic en cualquier parte
-                    const playOnInteraction = () => {
-                        video.play().catch(() => {});
-                        document.removeEventListener('click', playOnInteraction);
-                        document.removeEventListener('touchstart', playOnInteraction);
-                    };
-                    document.addEventListener('click', playOnInteraction);
-                    document.addEventListener('touchstart', playOnInteraction);
-                });
+            if (!video) {
+                console.log('⏳ Video no encontrado en el DOM');
+                return false;
+            }
+
+            console.log('✅ Video encontrado, estado:', video.readyState);
+            
+            // Si el video ya está cargado, intentar reproducir
+            if (video.readyState >= 2) {
+                this.playVideoWithRetry(video);
                 return true;
             }
-            return false;
+
+            // Si no está cargado, esperar a que cargue
+            console.log('⏳ Esperando que el video cargue...');
+            video.addEventListener('loadeddata', () => {
+                console.log('✅ Video cargado, reproduciendo...');
+                this.playVideoWithRetry(video);
+            });
+
+            // Timeout de seguridad
+            setTimeout(() => {
+                if (video.paused) {
+                    console.log('⏳ Forzando reproducción después de timeout...');
+                    this.playVideoWithRetry(video);
+                }
+            }, 2000);
+
+            return true;
         };
 
         // Intentar inmediatamente
@@ -1623,6 +1638,46 @@ class Router {
                 console.warn('⚠️ Video no encontrado después de 5 segundos');
             }
         }, 5000);
+    }
+
+    /**
+     * Reproduce un video con reintentos
+     * @param {HTMLVideoElement} video - Elemento de video
+     */
+    playVideoWithRetry(video) {
+        if (!video) return;
+
+        const playAttempt = () => {
+            video.play()
+                .then(() => {
+                    console.log('✅ Video reproduciéndose correctamente');
+                })
+                .catch(err => {
+                    console.log('⏳ Error al reproducir:', err.message);
+                    // Si falla, intentar de nuevo después de un clic del usuario
+                    const playOnInteraction = () => {
+                        video.play().catch(() => {});
+                        document.removeEventListener('click', playOnInteraction);
+                        document.removeEventListener('touchstart', playOnInteraction);
+                        document.removeEventListener('scroll', playOnInteraction);
+                    };
+                    document.addEventListener('click', playOnInteraction);
+                    document.addEventListener('touchstart', playOnInteraction);
+                    document.addEventListener('scroll', playOnInteraction);
+                });
+        };
+
+        // Si el video no está listo, esperar
+        if (video.readyState < 2) {
+            video.addEventListener('canplay', playAttempt);
+            setTimeout(() => {
+                if (video.paused) {
+                    playAttempt();
+                }
+            }, 3000);
+        } else {
+            playAttempt();
+        }
     }
 
       // ============================================
