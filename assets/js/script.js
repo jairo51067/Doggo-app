@@ -1,8 +1,8 @@
 // ============================================
-// DOGGO-APP SPA ROUTER - VERSIÓN CORREGIDA v1.8.0
+// DOGGO-APP SPA ROUTER - VERSIÓN FINAL v2.0.0
 // ============================================
 
-// 1. PRIMERO: Configuración
+// 1. Configuración
 const ROUTER_CONFIG = {
     defaultView: 'home',
     viewsPath: 'views/',
@@ -17,7 +17,7 @@ const ROUTER_CONFIG = {
 
 console.log('📋 Configuración cargada');
 
-// 2. SEGUNDO: StyleManager (DEFINIDO ANTES DE SER USADO)
+// 2. StyleManager
 class StyleManager {
     constructor() {
         console.log('🎨 StyleManager creado');
@@ -86,7 +86,7 @@ class StyleManager {
 
 console.log('✅ StyleManager definido');
 
-// 3. TERCERO: Router (USA StyleManager, QUE YA ESTÁ DEFINIDO)
+// 3. Router Principal
 class Router {
     constructor() {
         console.log('🚀 Iniciando Router...');
@@ -264,8 +264,11 @@ class Router {
 
     initViewComponents(viewName) {
         console.log(`🔍 Inicializando componentes para: ${viewName}`);
-        if (viewName === 'pedido') {
-            this.initPedidoForm();
+        if (viewName === 'pedido' || viewName === '/pedido') {
+            // Esperar un momento para que el DOM se actualice
+            setTimeout(() => {
+                this.initPedidoForm();
+            }, 100);
         }
         
         if (viewName === 'home') {
@@ -276,7 +279,7 @@ class Router {
     }
 
     // ============================================
-    // 3. COMPONENTE DE PEDIDO
+    // 3. COMPONENTE DE PEDIDO - VERSIÓN REESTRUCTURADA
     // ============================================
 
     initPedidoForm() {
@@ -348,24 +351,25 @@ class Router {
         console.log('✅ PedidoForm inicializado correctamente');
     }
 
-    // --- Stepper ---
-      // --- Stepper (VERSIÓN CORREGIDA CON SELECTOR MEJORADO) ---
-       // --- Stepper (VERSIÓN CON addEventListener) ---
+    // --- Stepper (VERSIÓN FINAL CON DELEGACIÓN DE EVENTOS) ---
     initStepper(form) {
         console.log('🔍 initStepper() ejecutado');
         
         const steps = form.querySelectorAll('.step-content');
         const indicators = document.querySelectorAll('.step-indicator');
 
+        // Guardar referencia al contexto
+        const self = this;
+
         const showStep = (stepNumber) => {
             console.log(`🔄 Mostrando paso ${stepNumber}`);
             
-            if (stepNumber > this.orderState.currentStep) {
-                const isValid = this.validateCurrentStep(this.orderState.currentStep, form);
+            if (stepNumber > self.orderState.currentStep) {
+                const isValid = self.validateCurrentStep(self.orderState.currentStep, form);
                 if (!isValid) return;
             }
 
-            this.orderState.currentStep = stepNumber;
+            self.orderState.currentStep = stepNumber;
             
             steps.forEach(step => {
                 const stepNum = parseInt(step.dataset.step);
@@ -386,39 +390,35 @@ class Router {
                 line.classList.toggle('completed', index < stepNumber - 1);
             });
 
-            this.saveOrderState();
+            self.saveOrderState();
             form.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        // 🔥 USANDO addEventListener CON BIND
-        const nextBtns = form.querySelectorAll('.btn-next');
-        nextBtns.forEach((btn) => {
-            const step = parseInt(btn.dataset.next);
-            // Remover listeners antiguos
-            btn.replaceWith(btn.cloneNode(true));
-            const newBtn = form.querySelector(`.btn-next[data-next="${step}"]`);
-            if (newBtn) {
-                newBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log(`🖱️ Click en botón (listener) -> paso ${step}`);
+        // 🔥 NUEVO ENFOQUE: Delegación de eventos en el formulario
+        // Esto evita problemas con botones que se reemplazan en el DOM
+        form.addEventListener('click', function(e) {
+            const target = e.target.closest('.btn-next');
+            if (target) {
+                e.preventDefault();
+                e.stopPropagation();
+                const step = parseInt(target.dataset.next);
+                console.log(`🖱️ Click en botón (delegado) -> paso ${step}`);
+                if (step <= self.orderState.totalSteps) {
                     showStep(step);
-                });
+                }
             }
         });
 
-        const prevBtns = form.querySelectorAll('.btn-prev');
-        prevBtns.forEach((btn) => {
-            const step = parseInt(btn.dataset.prev);
-            btn.replaceWith(btn.cloneNode(true));
-            const newBtn = form.querySelector(`.btn-prev[data-prev="${step}"]`);
-            if (newBtn) {
-                newBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log(`🖱️ Click en botón atrás -> paso ${step}`);
+        form.addEventListener('click', function(e) {
+            const target = e.target.closest('.btn-prev');
+            if (target) {
+                e.preventDefault();
+                e.stopPropagation();
+                const step = parseInt(target.dataset.prev);
+                console.log(`🖱️ Click en botón atrás (delegado) -> paso ${step}`);
+                if (step >= 1) {
                     showStep(step);
-                });
+                }
             }
         });
 
@@ -426,17 +426,16 @@ class Router {
         indicators.forEach(indicator => {
             indicator.addEventListener('click', () => {
                 const step = parseInt(indicator.dataset.step);
-                if (step < this.orderState.currentStep || indicator.classList.contains('completed')) {
+                if (step < self.orderState.currentStep || indicator.classList.contains('completed')) {
                     showStep(step);
                 }
             });
         });
 
-        console.log(`📍 Mostrando paso inicial: ${this.orderState.currentStep}`);
-        showStep(this.orderState.currentStep);
+        console.log(`📍 Mostrando paso inicial: ${self.orderState.currentStep}`);
+        showStep(self.orderState.currentStep);
     }
 
-    
     // --- Validación por pasos ---
     validateCurrentStep(step, form) {
         console.log(`🔍 Validando paso ${step}`);
@@ -655,10 +654,7 @@ class Router {
     initClearCart(form) {
         const clearButtons = form.querySelectorAll('.btn-clear-cart');
         clearButtons.forEach(btn => {
-            const newBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn, btn);
-            
-            newBtn.addEventListener('click', () => {
+            btn.addEventListener('click', () => {
                 if (confirm('¿Seguro que quieres vaciar todo tu pedido?')) {
                     this.clearCart();
                 }
@@ -722,28 +718,24 @@ class Router {
         const submitBtn = document.getElementById('submit-pedido');
         if (!submitBtn) return;
 
-        const newForm = form.cloneNode(true);
-        form.parentNode.replaceChild(newForm, form);
-        const newSubmitBtn = newForm.querySelector('#submit-pedido');
-
-        newForm.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!this.validateLeadFields(newForm)) {
+            if (!this.validateLeadFields(form)) {
                 this.orderState.currentStep = 1;
-                this.initStepper(newForm);
+                this.initStepper(form);
                 return;
             }
 
             if (!this.validateDoggos()) {
                 this.orderState.currentStep = 2;
-                this.initStepper(newForm);
+                this.initStepper(form);
                 return;
             }
 
-            const nombreInput = newForm.querySelector('#nombre');
-            const emailInput = newForm.querySelector('#email');
-            const whatsappInput = newForm.querySelector('#whatsapp');
+            const nombreInput = form.querySelector('#nombre');
+            const emailInput = form.querySelector('#email');
+            const whatsappInput = form.querySelector('#whatsapp');
             
             if (nombreInput) this.orderState.leadData.nombre = nombreInput.value.trim();
             if (emailInput) this.orderState.leadData.email = emailInput.value.trim();
@@ -775,9 +767,9 @@ class Router {
 
             const mensaje = this.buildWhatsAppMessage(leadData);
 
-            newSubmitBtn.disabled = true;
-            const btnText = newSubmitBtn.querySelector('.btn-text');
-            const btnLoader = newSubmitBtn.querySelector('.btn-loader');
+            submitBtn.disabled = true;
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoader = submitBtn.querySelector('.btn-loader');
             if (btnText) btnText.style.display = 'none';
             if (btnLoader) btnLoader.style.display = 'inline';
 
@@ -798,7 +790,7 @@ class Router {
                 alert('Hubo un error al procesar tu pedido.');
             } finally {
                 setTimeout(() => {
-                    newSubmitBtn.disabled = false;
+                    submitBtn.disabled = false;
                     if (btnText) btnText.style.display = 'inline';
                     if (btnLoader) btnLoader.style.display = 'none';
                 }, 1000);
@@ -1058,9 +1050,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.__DOGGO_APP__ = {
         router: app,
-        version: '1.8.0'
+        version: '2.0.0'
     };
 
-    console.log('🐕 ¡Doggo App iniciada! v1.8.0');
+    console.log('🐕 ¡Doggo App iniciada! v2.0.0');
     console.log('💡 Para depuración, ejecuta: __DOGGO_APP__.router');
 });
