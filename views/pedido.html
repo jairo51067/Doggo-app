@@ -185,94 +185,313 @@
             </div>
         </div>
 
-        <!-- ===== PASO 3: EXTRAS CON CANTIDADES Y DELIVERY ===== -->
-        <div class="step-content" data-step="3">
-            <div class="step-header">
-                <h2 class="step-title">🧩 Dale tu <span class="highlight">toque</span></h2>
-                <p class="step-description">Añade extras con las raciones que quieras y elige cómo recibir tu pedido</p>
-            </div>
+       <!-- ===== PASO 3: EXTRAS Y BEBIDAS ===== -->
+<div class="step-content" data-step="3">
+    <div class="step-header">
+        <h2 class="step-title">🧩 Dale tu <span class="highlight">toque</span></h2>
+        <p class="step-description">Añade extras, elige tus bebidas y selecciona cómo recibir tu pedido</p>
+    </div>
 
-            <div class="form-group">
-                <label class="extras-label">Extras (elige las raciones que quieras)</label>
-                <div class="extras-grid">
-                    <!-- Aquí van los extras con sus controles de cantidad -->
-                    <div class="extra-chip" data-value="Queso extra">
-                        <span class="extra-icon">🧀</span>
-                        <span class="extra-name">Queso extra</span>
-                        <span class="extra-price">+$1.500</span>
-                        <div class="qty-control-mini">
-                            <button type="button" class="qty-btn-mini minus">-</button>
-                            <span class="qty-value-mini">0</span>
-                            <button type="button" class="qty-btn-mini plus">+</button>
-                        </div>
-                    </div>
-                    <!-- Repite para todos los extras... -->
+    <!-- ========================================== -->
+    <!-- SECCIÓN 1: EXTRAS (CON CANTIDADES)        -->
+    <!-- ========================================== -->
+    <div class="form-group">
+        <label class="extras-label">🧩 Extras (elige las raciones que quieras)</label>
+        <div class="extras-grid">
+            <div class="extra-chip" data-value="Queso extra">
+                <span class="extra-icon">🧀</span>
+                <span class="extra-name">Queso extra</span>
+                <span class="extra-price">+$1.500</span>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
                 </div>
-                <div class="field-feedback"></div>
             </div>
-
-            <!-- NUEVA SECCIÓN: OPCIÓN DE ENTREGA -->
-            <div class="form-group delivery-option">
-                <label class="delivery-label">📦 ¿Cómo quieres recibir tu pedido?</label>
-                <div class="delivery-options">
-                    <div class="delivery-card" data-value="pickup">
-                        <div class="delivery-icon">🏠</div>
-                        <div class="delivery-info">
-                            <h4 class="delivery-name">Recoger en local</h4>
-                            <p class="delivery-desc">Sin costo adicional</p>
-                        </div>
-                        <div class="delivery-check">✓</div>
-                    </div>
-                    <div class="delivery-card" data-value="delivery">
-                        <div class="delivery-icon">🚀</div>
-                        <div class="delivery-info">
-                            <h4 class="delivery-name">Envío a domicilio</h4>
-                            <p class="delivery-desc">Costo adicional: $1.5 USD</p>
-                        </div>
-                        <div class="delivery-check">✓</div>
-                    </div>
+            
+            <div class="extra-chip" data-value="Bacon">
+                <span class="extra-icon">🥓</span>
+                <span class="extra-name">Bacon</span>
+                <span class="extra-price">+$2.000</span>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
                 </div>
-                <div class="field-feedback"></div>
             </div>
-
-            <div class="form-group">
-                <label for="bebida">🥤 Elige tu bebida</label>
-                <select id="bebida" name="bebida" class="bebida-select">
-                    <option value="Sin bebida">Sin bebida</option>
-                    <option value="Refresco">🥤 Refresco</option>
-                    <option value="Agua">💧 Agua</option>
-                    <option value="Cerveza">🍺 Cerveza</option>
-                    <option value="Malteada">🥛 Malteada</option>
-                    <option value="Jugo">🧃 Jugo natural</option>
-                </select>
+            
+            <div class="extra-chip" data-value="Jalapeños">
+                <span class="extra-icon">🌶️</span>
+                <span class="extra-name">Jalapeños</span>
+                <span class="extra-price">+$1.000</span>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
             </div>
-
-            <div class="step-actions">
-                <button type="button" class="btn-prev" data-prev="2">← Atrás</button>
-                <button type="button" class="btn-next" data-next="4">
-                    Ver resumen → <span class="btn-icon">📝</span>
-                </button>
+            
+            <div class="extra-chip" data-value="Guacamole">
+                <span class="extra-icon">🥑</span>
+                <span class="extra-name">Guacamole</span>
+                <span class="extra-price">+$2.500</span>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="extra-chip" data-value="Champiñones">
+                <span class="extra-icon">🍄</span>
+                <span class="extra-name">Champiñones</span>
+                <span class="extra-price">+$1.500</span>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="extra-chip" data-value="Cebolla caramelizada">
+                <span class="extra-icon">🧅</span>
+                <span class="extra-name">Cebolla caramelizada</span>
+                <span class="extra-price">+$1.000</span>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="extra-chip" data-value="Pimentón asado">
+                <span class="extra-icon">🫑</span>
+                <span class="extra-name">Pimentón asado</span>
+                <span class="extra-price">+$1.000</span>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="extra-chip" data-value="Queso rallado extra">
+                <span class="extra-icon">🧀</span>
+                <span class="extra-name">Queso rallado extra</span>
+                <span class="extra-price">+$1.000</span>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
             </div>
         </div>
+        <div class="field-feedback"></div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECCIÓN 2: BEBIDAS (CON CANTIDADES)       -->
+    <!-- ========================================== -->
+    <div class="form-group">
+        <label class="bebidas-label">🥤 Elige tus bebidas</label>
+        <p class="bebidas-hint">Puedes seleccionar varias bebidas con diferentes cantidades</p>
+        <div class="bebidas-grid">
+            <div class="bebida-card" data-value="Refresco">
+                <span class="bebida-icon">🥤</span>
+                <div class="bebida-info">
+                    <span class="bebida-name">Refresco</span>
+                    <span class="bebida-price">$2.500</span>
+                </div>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="bebida-card" data-value="Agua">
+                <span class="bebida-icon">💧</span>
+                <div class="bebida-info">
+                    <span class="bebida-name">Agua</span>
+                    <span class="bebida-price">$1.500</span>
+                </div>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="bebida-card" data-value="Cerveza">
+                <span class="bebida-icon">🍺</span>
+                <div class="bebida-info">
+                    <span class="bebida-name">Cerveza</span>
+                    <span class="bebida-price">$4.000</span>
+                </div>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="bebida-card" data-value="Malteada">
+                <span class="bebida-icon">🥛</span>
+                <div class="bebida-info">
+                    <span class="bebida-name">Malteada</span>
+                    <span class="bebida-price">$5.000</span>
+                </div>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="bebida-card" data-value="Jugo natural">
+                <span class="bebida-icon">🧃</span>
+                <div class="bebida-info">
+                    <span class="bebida-name">Jugo natural</span>
+                    <span class="bebida-price">$3.000</span>
+                </div>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+            
+            <div class="bebida-card" data-value="Limonada">
+                <span class="bebida-icon">🍋</span>
+                <div class="bebida-info">
+                    <span class="bebida-name">Limonada</span>
+                    <span class="bebida-price">$2.500</span>
+                </div>
+                <div class="qty-control-mini">
+                    <button type="button" class="qty-btn-mini minus">-</button>
+                    <span class="qty-value-mini">0</span>
+                    <button type="button" class="qty-btn-mini plus">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="field-feedback"></div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECCIÓN 3: OPCIÓN DE ENTREGA               -->
+    <!-- ========================================== -->
+    <div class="form-group delivery-option">
+        <label class="delivery-label">📦 ¿Cómo quieres recibir tu pedido?</label>
+        <div class="delivery-options">
+            <div class="delivery-card" data-value="pickup">
+                <div class="delivery-icon">🏠</div>
+                <div class="delivery-info">
+                    <h4 class="delivery-name">Recoger en local</h4>
+                    <p class="delivery-desc">Sin costo adicional</p>
+                </div>
+                <div class="delivery-check">✓</div>
+            </div>
+            <div class="delivery-card" data-value="delivery">
+                <div class="delivery-icon">🚀</div>
+                <div class="delivery-info">
+                    <h4 class="delivery-name">Envío a domicilio</h4>
+                    <p class="delivery-desc">Costo adicional: $1.5 USD</p>
+                </div>
+                <div class="delivery-check">✓</div>
+            </div>
+        </div>
+        <div class="field-feedback"></div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECCIÓN 4: DIRECCIÓN (si delivery)        -->
+    <!-- ========================================== -->
+    <div class="form-group direccion-group" style="display:none;">
+        <div class="direccion-fields">
+            <div class="form-group">
+                <label for="direccion">📍 Dirección de envío *</label>
+                <input type="text" id="direccion" name="direccion" 
+                       placeholder="Ej: Calle 123, Casa #45, Urbanización Las Acacias" 
+                       autocomplete="address-line1">
+                <div class="field-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="referencias">📌 Referencias (opcional)</label>
+                <input type="text" id="referencias" name="referencias" 
+                       placeholder="Ej: Cerca de la panadería, edificio verde con portón negro">
+                <div class="field-feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BOTONES DE ACCIÓN                         -->
+    <!-- ========================================== -->
+    <div class="step-actions">
+        <button type="button" class="btn-prev" data-prev="2">← Atrás</button>
+        <button type="button" class="btn-next" data-next="4">
+            Ver resumen → <span class="btn-icon">📝</span>
+        </button>
+        <button type="button" class="btn-clear-cart">🗑️ Vaciar carrito</button>
+    </div>
+</div>
 
         <!-- ===== PASO 4: CONFIRMACIÓN CON DELIVERY ===== -->
+
         <div class="step-content" data-step="4">
-            <!-- ... (el resto del contenido del paso 4) ... -->
+            <div class="step-header">
+                <h2 class="step-title">✅ ¡Todo <span class="highlight">listo</span>!</h2>
+                <p class="step-description">Revisa tu pedido completo y confirma por WhatsApp</p>
+            </div>
+
+            <!-- Resumen del pedido MEJORADO -->
             <div class="order-summary-card">
-                <!-- ... (secciones anteriores) ... -->
-
-                <div class="summary-divider"></div>
-
+                <!-- Datos del Cliente -->
                 <div class="summary-section">
-                    <h3 class="summary-title">📦 Opción de entrega</h3>
-                    <div id="summary-delivery" class="summary-content">
-                        <p class="empty-summary">Selecciona una opción en el paso 3</p>
+                    <h3 class="summary-title">👤 Tus datos <span class="badge">Paso 1</span></h3>
+                    <div id="summary-client" class="summary-content">
+                        <p class="empty-summary">Completa tus datos en el paso 1</p>
                     </div>
                 </div>
 
-                <div class="summary-total-box">
-                    <span class="total-label">Total aproximado:</span>
-                    <span id="order-total" class="total-price">$0</span>
+                <!-- Doggos -->
+                <div class="summary-section">
+                    <h3 class="summary-title">🌭 Tu pedido <span class="badge">Paso 2</span></h3>
+                    <div id="summary-doggos" class="summary-content">
+                        <p class="empty-summary">Añade Doggos en el paso 2</p>
+                    </div>
+                </div>
+
+                <!-- Extras -->
+                <div class="summary-section">
+                    <h3 class="summary-title">🧩 Extras <span class="badge">Paso 3</span></h3>
+                    <div id="summary-extras" class="summary-content">
+                        <p class="empty-summary">Añade extras en el paso 3</p>
+                    </div>
+                </div>
+
+                <!-- Bebidas en el resumen -->
+                <div class="summary-section">
+                    <h3 class="summary-title">🥤 Bebidas <span class="badge">Paso 3</span></h3>
+                    <div id="summary-bebidas" class="summary-content">
+                        <p class="empty-summary">Selecciona bebidas en el paso 3</p>
+                    </div>
+                </div>
+
+                <!-- Delivery y Dirección -->
+                <div class="summary-section">
+                    <h3 class="summary-title">📦 Entrega <span class="badge">Paso 3</span></h3>
+                    <div id="summary-delivery" class="summary-content">
+                        <p class="empty-summary">Selecciona una opción de entrega en el paso 3</p>
+                    </div>
+                </div>
+
+                <!-- Total (con desglose) -->
+                <div class="summary-section" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+                    <h3 class="summary-title">💰 Resumen de costos</h3>
+                    <div id="order-total" class="summary-content">
+                        <p class="empty-summary">Completa tu pedido para ver el total</p>
+                    </div>
                 </div>
             </div>
 
@@ -282,10 +501,7 @@
                     <span class="btn-text">🚀 Confirmar y enviar a WhatsApp</span>
                     <span class="btn-loader" style="display:none;">⏳ Enviando...</span>
                 </button>
-                <!-- NUEVO BOTÓN VACIAR CARRITO -->
-                <button type="button" class="btn-clear-cart" id="clear-cart-step4">
-                    🗑️ Vaciar carrito
-                </button>
+                <button type="button" class="btn-clear-cart">🗑️ Vaciar carrito</button>
             </div>
 
             <p class="form-disclaimer">Al enviar, aceptas que tus datos sean utilizados para fines de marketing y

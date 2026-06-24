@@ -871,3 +871,422 @@
         margin-top: var(--spacing-sm);
     }
 }
+
+/* ============================================
+   CAMPOS DE DIRECCIÓN
+   ============================================ */
+
+.direccion-group {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 2px solid rgba(244, 196, 48, 0.1);
+}
+
+.direccion-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.direccion-fields .form-group {
+    margin-bottom: 0;
+}
+
+.direccion-fields input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-text);
+    font-size: 1rem;
+    width: 100%;
+    transition: var(--transition-normal);
+}
+
+.direccion-fields input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
+}
+
+/* ============================================
+   RESUMEN DE PEDIDO MEJORADO
+   ============================================ */
+
+.order-summary-card {
+    background: var(--color-card);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    border: 2px solid rgba(244, 196, 48, 0.2);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 4px 20px var(--color-shadow);
+}
+
+.summary-section {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.summary-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.summary-title {
+    color: var(--color-accent);
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.summary-title .badge {
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 50px;
+    font-weight: 700;
+}
+
+.summary-content {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    padding-left: var(--spacing-sm);
+}
+
+.summary-content .empty-summary {
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+    font-style: italic;
+    margin: 0;
+    padding: var(--spacing-sm) 0;
+}
+
+.summary-item {
+    padding: var(--spacing-xs) 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-item .summary-label {
+    color: var(--color-text-secondary);
+    font-weight: 400;
+}
+
+.summary-item .summary-value {
+    color: var(--color-text);
+    font-weight: 500;
+    text-align: right;
+}
+
+.summary-item.subtotal {
+    margin-top: var(--spacing-xs);
+    padding-top: var(--spacing-xs);
+    border-top: 1px dashed rgba(244, 196, 48, 0.2);
+    font-weight: 600;
+}
+
+.summary-item.subtotal .summary-label {
+    color: var(--color-accent);
+}
+
+.summary-item.subtotal .summary-value {
+    color: var(--color-accent);
+}
+
+/* TOTAL BREAKDOWN */
+.total-breakdown {
+    background: rgba(244, 196, 48, 0.05);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-xs) 0;
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+}
+
+.breakdown-total {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm) 0 var(--spacing-xs) 0;
+    margin-top: var(--spacing-xs);
+    border-top: 2px solid var(--color-accent);
+    font-family: var(--font-primary);
+    font-size: 1.3rem;
+    color: var(--color-accent);
+}
+
+.breakdown-total span:first-child {
+    font-size: 1.1rem;
+}
+
+.breakdown-total span:last-child {
+    font-size: 1.5rem;
+    text-shadow: 0 0 20px rgba(244, 196, 48, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .order-summary-card {
+        padding: var(--spacing-md);
+    }
+    
+    .breakdown-total {
+        font-size: 1.1rem;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-xs);
+    }
+    
+    .breakdown-total span:last-child {
+        font-size: 1.8rem;
+    }
+    
+    .summary-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+    
+    .summary-item .summary-value {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-summary-card {
+        padding: var(--spacing-sm);
+    }
+    
+    .summary-title {
+        font-size: 0.95rem;
+    }
+    
+    .breakdown-total span:last-child {
+        font-size: 1.5rem;
+    }
+}
+
+/* ============================================
+   BEBIDAS CON CANTIDADES
+   ============================================ */
+
+.bebidas-label {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    display: block;
+    font-size: 1.1rem;
+}
+
+.bebidas-hint {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.7;
+}
+
+.bebidas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.bebida-card {
+    background: var(--color-card);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    transition: var(--transition-normal);
+}
+
+.bebida-card.has-items {
+    border-color: var(--color-accent);
+    background: rgba(244, 196, 48, 0.08);
+}
+
+.bebida-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+}
+
+.bebida-icon {
+    font-size: 1.5rem;
+}
+
+.bebida-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.bebida-name {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.bebida-price {
+    font-size: 0.8rem;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* Controles de cantidad para bebidas */
+.bebida-card .qty-control-mini {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-sm);
+    padding: 2px;
+}
+
+.bebida-card .qty-btn-mini {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bebida-card .qty-btn-mini:hover {
+    transform: scale(1.1);
+    background: var(--color-accent-light);
+}
+
+.bebida-card .qty-btn-mini:active {
+    transform: scale(0.95);
+}
+
+.bebida-card .qty-value-mini {
+    min-width: 20px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .bebidas-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .bebidas-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bebida-card {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+
+/* ============================================
+   EXTRAS Y BEBIDAS - ESTILOS COMPARTIDOS
+   ============================================ */
+
+/* Controles de cantidad para extras y bebidas */
+.extra-chip .qty-control-mini,
+.bebida-card .qty-control-mini {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-sm);
+    padding: 2px;
+}
+
+.extra-chip .qty-btn-mini,
+.bebida-card .qty-btn-mini {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.extra-chip .qty-btn-mini:hover,
+.bebida-card .qty-btn-mini:hover {
+    transform: scale(1.1);
+    background: var(--color-accent-light);
+}
+
+.extra-chip .qty-btn-mini:active,
+.bebida-card .qty-btn-mini:active {
+    transform: scale(0.95);
+}
+
+.extra-chip .qty-value-mini,
+.bebida-card .qty-value-mini {
+    min-width: 20px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+/* Espaciado entre secciones */
+.extras-grid,
+.bebidas-grid {
+    margin-bottom: var(--spacing-sm);
+}
+
+.form-group .bebidas-label,
+.form-group .extras-label {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    display: block;
+    font-size: 1.1rem;
+}
+
+.bebidas-hint {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.7;
+}
+
+/* Separador entre extras y bebidas */
+.form-group + .form-group {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 2px solid rgba(244, 196, 48, 0.1);
+}
