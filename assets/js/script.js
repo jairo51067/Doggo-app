@@ -1,5 +1,5 @@
 // ============================================
-// DOGGO-APP SPA ROUTER - VERSIÓN FINAL v6.0.0
+// DOGGO-APP SPA ROUTER - VERSIÓN FINAL v6.0.1
 // ============================================
 
 // 1. Configuración
@@ -295,26 +295,22 @@ class Router {
         });
     }
 
-     async navigate(viewName) {
+    async navigate(viewName) {
         console.log(`📄 Navegando a vista: ${viewName}`);
         try {
-            // ✅ Mostrar skeleton loader
             this.showSkeleton();
             
-            // ✅ Cargar contenido en paralelo
             const [html] = await Promise.all([
                 this.fetchView(viewName),
                 this.styleManager.switchToViewStyle(viewName)
             ]);
             
-            // ✅ Renderizar con transición suave
             await this.renderViewSmooth(html, viewName);
             
             this.updateTitle(viewName);
             this.dispatchViewEvent(viewName);
             this.initViewComponents(viewName);
             
-            // ✅ Ocultar skeleton
             this.hideSkeleton();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -328,30 +324,23 @@ class Router {
     }
 
     showSkeleton() {
-        // ✅ Añadir clase loading para mostrar el skeleton
         this.appContent.classList.add('loading');
-        // ✅ Mantener el skeleton visible
         this.appContent.style.opacity = '1';
     }
 
     hideSkeleton() {
-        // ✅ Eliminar clase loading para ocultar skeleton
         this.appContent.classList.remove('loading');
-        // ✅ Asegurar que el contenido sea visible
         this.appContent.style.opacity = '1';
     }
 
     renderViewSmooth(html, viewName) {
         return new Promise((resolve) => {
-            // ✅ Transición de 300ms para que sea suave
             this.appContent.style.transition = 'opacity 0.3s ease';
             this.appContent.style.opacity = '0';
             
             setTimeout(() => {
-                // ✅ Actualizar contenido
                 this.appContent.innerHTML = html;
                 
-                // ✅ Si es home, asegurar hero
                 if (viewName === 'home' || viewName === '/home') {
                     const hero = this.appContent.querySelector('.hero-section');
                     if (hero) {
@@ -360,13 +349,9 @@ class Router {
                     }
                 }
                 
-                // ✅ Forzar reflow
                 this.appContent.offsetHeight;
-                
-                // ✅ Mostrar con fade
                 this.appContent.style.opacity = '1';
                 
-                // ✅ Limpiar transición después de mostrar
                 setTimeout(() => {
                     this.appContent.style.transition = '';
                     resolve();
@@ -374,6 +359,7 @@ class Router {
             }, 200);
         });
     }
+
     async fetchView(viewName) {
         const cacheKey = `view_${viewName}`;
         
@@ -416,7 +402,7 @@ class Router {
         `;
     }
 
-     renderView(html, viewName) {
+    renderView(html, viewName) {
         return new Promise((resolve) => {
             this.appContent.style.opacity = '0';
             
@@ -489,8 +475,15 @@ class Router {
         }
         
         if (cleanViewName === 'home') {
-            // ✅ Dar tiempo para que el DOM se renderice completamente
             setTimeout(() => {
+                const heroSection = document.querySelector('.hero-section');
+                if (!heroSection) {
+                    console.warn('⚠️ Hero section no encontrada, reintentando...');
+                    setTimeout(() => {
+                        this.initHeroImage();
+                    }, 200);
+                    return;
+                }
                 this.initHeroImage();
             }, 300);
         }
@@ -499,7 +492,7 @@ class Router {
     }
 
     // ============================================
-    // 6. COMPONENTE DE HOME - IMAGEN (VERSIÓN DEFINITIVA)
+    // 6. COMPONENTE DE HOME - IMAGEN
     // ============================================
 
     initHeroImage() {
@@ -511,13 +504,11 @@ class Router {
             return;
         }
 
-        // ✅ Asegurar altura
         heroSection.style.minHeight = '100vh';
         heroSection.style.display = 'flex';
         heroSection.style.alignItems = 'center';
         heroSection.style.justifyContent = 'center';
 
-        // ✅ Forzar que la imagen se muestre
         const heroImage = document.querySelector('.hero-image');
         if (heroImage) {
             heroImage.style.display = 'block';
@@ -530,7 +521,7 @@ class Router {
     }
 
     // ============================================
-    // 7. COMPONENTE DE PEDIDO - VERSIÓN COMPLETA v6.0
+    // 7. COMPONENTE DE PEDIDO
     // ============================================
 
     initPedidoForm() {
@@ -543,7 +534,6 @@ class Router {
         }
         console.log('✅ Formulario encontrado');
 
-        // Estado del pedido
         this.orderState = {
             currentStep: 1,
             totalSteps: 4,
@@ -560,7 +550,6 @@ class Router {
             }
         };
 
-        // Precios
         this.PRICES = {
             doggos: {
                 'Clásico': 8000,
@@ -591,12 +580,10 @@ class Router {
             delivery: 1.5
         };
 
-        // Cargar estado desde localStorage
         this.loadOrderState();
 
         console.log('📦 Estado inicial:', this.orderState);
 
-        // Inicializar componentes
         this.initStepper(form);
         this.initDoggoQuantities(form);
         this.initExtraQuantities(form);
@@ -607,7 +594,6 @@ class Router {
         this.initClearCart(form);
         this.initFormSubmit(form);
         
-        // Actualizar resumen inicial
         this.updateSummary();
         
         console.log('✅ PedidoForm inicializado correctamente');
@@ -659,7 +645,6 @@ class Router {
             form.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        // Delegación de eventos para botones
         form.addEventListener('click', function(e) {
             const target = e.target.closest('.btn-next');
             if (target) {
@@ -699,7 +684,6 @@ class Router {
         showStep(self.orderState.currentStep);
     }
 
-    // --- Toggle campos de dirección ---
     toggleDireccionFields(form) {
         const deliveryOption = this.orderState.delivery;
         const direccionGroup = form.querySelector('.direccion-group');
@@ -714,7 +698,6 @@ class Router {
         }
     }
 
-    // --- Validación por pasos ---
     validateCurrentStep(step, form) {
         console.log(`🔍 Validando paso ${step}`);
         switch(step) {
@@ -799,7 +782,6 @@ class Router {
         return true;
     }
 
-    // --- Cantidades de Doggos ---
     initDoggoQuantities(form) {
         const cards = form.querySelectorAll('.doggo-card');
         cards.forEach(card => {
@@ -845,7 +827,6 @@ class Router {
         });
     }
 
-    // --- Cantidades de Extras ---
     initExtraQuantities(form) {
         const chips = form.querySelectorAll('.extra-chip');
         chips.forEach(chip => {
@@ -891,7 +872,6 @@ class Router {
         });
     }
 
-    // --- Cantidades de Bebidas ---
     initBebidasQuantities(form) {
         console.log('🔍 initBebidasQuantities() ejecutado');
         
@@ -941,7 +921,6 @@ class Router {
         });
     }
 
-    // --- Opción de Delivery ---
     initDeliveryOption(form) {
         const cards = form.querySelectorAll('.delivery-card');
         cards.forEach(card => {
@@ -965,7 +944,6 @@ class Router {
         });
     }
 
-    // --- Campos de Dirección ---
     initDireccionFields(form) {
         const direccionInput = form.querySelector('#direccion');
         const referenciasInput = form.querySelector('#referencias');
@@ -993,7 +971,6 @@ class Router {
         }
     }
 
-    // --- Campos de Lead ---
     initLeadFields(form) {
         const fields = ['nombre', 'email', 'whatsapp'];
         fields.forEach(fieldName => {
@@ -1016,7 +993,6 @@ class Router {
         });
     }
 
-    // --- Vaciar Carrito con Modal Personalizado ---
     initClearCart(form) {
         const clearButtons = form.querySelectorAll('.btn-clear-cart');
         clearButtons.forEach(btn => {
@@ -1101,7 +1077,6 @@ class Router {
         Toast.success('Todos los datos han sido reiniciados.', 'Carrito vaciado');
     }
 
-    // --- Envío del Formulario ---
     initFormSubmit(form) {
         const submitBtn = document.getElementById('submit-pedido');
         if (!submitBtn) return;
@@ -1139,7 +1114,6 @@ class Router {
             if (direccionInput) this.orderState.direccion = direccionInput.value.trim();
             if (referenciasInput) this.orderState.referencias = referenciasInput.value.trim();
 
-            // Calcular total
             let total = 0;
             
             let doggosList = [];
@@ -1229,11 +1203,9 @@ class Router {
         });
     }
 
-    // --- Actualizar Resumen ---
     updateSummary() {
         console.log('🔄 Actualizando resumen del pedido...');
         
-        // 1. DATOS DEL CLIENTE
         const clientSummary = document.getElementById('summary-client');
         if (clientSummary) {
             const { nombre, email, whatsapp } = this.orderState.leadData;
@@ -1257,7 +1229,6 @@ class Router {
             }
         }
 
-        // 2. DOGGOS
         const doggoSummary = document.getElementById('summary-doggos');
         if (doggoSummary) {
             const entries = Object.entries(this.orderState.doggos).filter(([_, qty]) => qty > 0);
@@ -1287,7 +1258,6 @@ class Router {
             }
         }
 
-        // 3. EXTRAS
         const extrasSummary = document.getElementById('summary-extras');
         if (extrasSummary) {
             const entries = Object.entries(this.orderState.extras).filter(([_, qty]) => qty > 0);
@@ -1317,7 +1287,6 @@ class Router {
             }
         }
 
-        // 4. BEBIDAS
         const bebidasSummary = document.getElementById('summary-bebidas');
         if (bebidasSummary) {
             const entries = Object.entries(this.orderState.bebidas).filter(([_, qty]) => qty > 0);
@@ -1347,7 +1316,6 @@ class Router {
             }
         }
 
-        // 5. DELIVERY Y DIRECCIÓN
         const deliverySummary = document.getElementById('summary-delivery');
         if (deliverySummary) {
             let html = '';
@@ -1387,7 +1355,6 @@ class Router {
             deliverySummary.innerHTML = html;
         }
 
-        // 6. TOTAL GENERAL
         const totalElement = document.getElementById('order-total');
         if (totalElement) {
             let total = 0;
@@ -1448,7 +1415,6 @@ class Router {
         console.log('✅ Resumen actualizado correctamente');
     }
 
-    // --- Guardar y Cargar Estado ---
     saveOrderState() {
         try {
             localStorage.setItem('doggo_order_state', JSON.stringify({
@@ -1495,7 +1461,6 @@ class Router {
         }
     }
 
-    // --- WhatsApp ---
     buildWhatsAppMessage(data) {
         const { nombre, email, whatsapp, doggos, extras, bebidas, delivery, direccion, total } = data;
         
@@ -1523,7 +1488,6 @@ class Router {
         window.open(`https://wa.me/${phoneNumber}?text=${mensaje}`, '_blank');
     }
 
-    // --- Validación de Campos ---
     validateField(field) {
         const parent = field.closest('.form-group');
         if (!parent) return;
@@ -1572,7 +1536,7 @@ class Router {
     // 8. COMPONENTE DE NAVBAR
     // ============================================
 
-  initNavbarToggle() {
+    initNavbarToggle() {
         const toggle = document.querySelector('.nav-toggle');
         const navMenu = document.querySelector('.nav-menu');
         
@@ -1672,33 +1636,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.__DOGGO_APP__ = {
         router: app,
-        version: '6.0.0'
+        version: '6.0.1'
     };
 
-    console.log('🐕 ¡Doggo App iniciada! v6.0.0');
+    console.log('🐕 ¡Doggo App iniciada! v6.0.1');
     console.log('💡 Para depuración, ejecuta: __DOGGO_APP__.router');
 });
-
-       // ============================================
-    // 11. LAZY LOADING DE IMÁGENES
-    // ============================================
-
-    initLazyLoading(); {
-        // ✅ Usar Intersection Observer para imágenes
-        if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src || img.src;
-                        img.classList.add('loaded');
-                        imageObserver.unobserve(img);
-                    }
-                });
-            });
-
-            document.querySelectorAll('.doggo-image').forEach(img => {
-                imageObserver.observe(img);
-            });
-        }
-    }
