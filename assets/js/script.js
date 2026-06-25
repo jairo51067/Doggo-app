@@ -632,9 +632,14 @@ class Router {
                     'Cancelar',
                     'danger'
                 );
-                if (confirmed) {
-                    this.clearCart();
-                }
+      if (confirmed) {
+          this.clearCart();
+          // Forzar reinicio visual del stepper (y evitar listeners duplicados)
+          const formEl = document.getElementById('pedido-form');
+          if (formEl) {
+            this.initStepper(formEl);
+          }
+      }
             }
         });
         
@@ -1062,25 +1067,10 @@ class Router {
     });
   }
 
-  initClearCart(form) {
-    const clearButtons = form.querySelectorAll(".btn-clear-cart");
-    clearButtons.forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const confirmed = await Modal.confirm(
-          "Esta acción eliminará todos los items de tu carrito y tus datos de contacto.",
-          "¿Vaciar todo el pedido?",
-          "Sí, vaciar todo",
-          "Cancelar",
-          "danger",
-        );
+  // initClearCart(form) eliminado: ya existe delegación en initFormSubmit(form)
+  // para evitar doble-bind y comportamientos duplicados.
 
-        if (confirmed) {
-          this.clearCart();
-        }
-      });
-    });
-  }
-
+// Vacía el pedido (estado + UI + localStorage)
 clearCart() {
     // 1. Limpiar estado
     this.orderState.doggos = {};
