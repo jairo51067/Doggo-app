@@ -1,19 +1,287 @@
-/* Doggo - Contacto */
+/* ============================================
+   DOGGO - CONTACTO
+   ============================================ */
 
-.card-doggo {
-  color: #fff;
+.contacto-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
 }
 
-.map-embed {
-  width: 100%;
-  height: 320px;
-  border: 0;
-  border-radius: var(--radius);
+.contacto-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
 }
 
-@media (max-width: 576px) {
-  .map-embed {
-    height: 220px;
-  }
+.contacto-title {
+    font-family: var(--font-primary);
+    font-size: 2.8rem;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
 }
 
+.contacto-title .highlight {
+    color: var(--color-accent);
+}
+
+.contacto-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+}
+
+.contacto-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+}
+
+/* ========================================== */
+/* FORMULARIO                                */
+/* ========================================== */
+
+.contacto-form-wrapper {
+    background: var(--color-card);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid rgba(244, 196, 48, 0.1);
+}
+
+.form-title {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-lg);
+}
+
+.contacto-form .form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.contacto-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text);
+}
+
+.contacto-form input,
+.contacto-form select,
+.contacto-form textarea {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--border-radius-md);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text);
+    font-size: 1rem;
+    transition: var(--transition-normal);
+}
+
+.contacto-form input:focus,
+.contacto-form select:focus,
+.contacto-form textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
+}
+
+.contacto-form input.error,
+.contacto-form select.error,
+.contacto-form textarea.error {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.contacto-form input.success,
+.contacto-form select.success,
+.contacto-form textarea.success {
+    border-color: #2ecc71;
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.contacto-form textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: var(--font-secondary);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: 1.1rem;
+}
+
+/* ========================================== */
+/* INFORMACIÓN DE CONTACTO                   */
+/* ========================================== */
+
+.contacto-info-wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+.info-card {
+    background: var(--color-card);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid rgba(244, 196, 48, 0.1);
+    width: 100%;
+}
+
+.info-title {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-lg);
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+}
+
+.info-icon {
+    font-size: 1.5rem;
+    min-width: 2rem;
+}
+
+.info-item strong {
+    color: var(--color-text);
+    display: block;
+}
+
+.info-item p {
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.info-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: var(--transition-normal);
+}
+
+.info-link:hover {
+    text-decoration: underline;
+}
+
+.info-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    margin: var(--spacing-md) 0;
+}
+
+.info-subtitle {
+    font-family: var(--font-primary);
+    color: var(--color-text);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.horario {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.horario-item {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-text-secondary);
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.horario-item:last-child {
+    border-bottom: none;
+}
+
+.btn-whatsapp {
+    width: 100%;
+    text-align: center;
+    margin-top: var(--spacing-md);
+}
+
+/* ========================================== */
+/* RESPONSIVE                                */
+/* ========================================== */
+
+@media (max-width: 992px) {
+    .contacto-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .contacto-title {
+        font-size: 2rem;
+    }
+    
+    .contacto-subtitle {
+        font-size: 1rem;
+    }
+    
+    .contacto-form-wrapper,
+    .info-card {
+        padding: var(--spacing-md);
+    }
+    
+    .horario-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .contacto-container {
+        padding: var(--spacing-md);
+    }
+    
+    .contacto-title {
+        font-size: 1.6rem;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+}
+
+/* ============================================
+   BOTÓN DE MAPA
+   ============================================ */
+
+.btn-mapa {
+    display: inline-block;
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.85rem;
+    background: transparent;
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-normal);
+}
+
+.btn-mapa:hover {
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(244, 196, 48, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .btn-mapa {
+        width: 100%;
+        text-align: center;
+    }
+}

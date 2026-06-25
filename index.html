@@ -5,25 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doggo - No es un perro, es una movida</title>
-
+    
     <!-- Meta tags para SEO y redes sociales -->
-    <meta name="description"
-        content="Doggo - Pizzas y perros calientes con estilo urbano. Haz tu pedido por WhatsApp en segundos.">
+    <meta name="description" content="Doggo - Pizzas y perros calientes con estilo urbano. Haz tu pedido por WhatsApp en segundos.">
     <meta property="og:title" content="Doggo - No es un perro, es una movida">
     <meta property="og:description" content="Pizzas y perros calientes con estilo urbano. Pedido rápido por WhatsApp.">
     <meta property="og:image" content="assets/img/doggo1.png">
-
+    
+    <!-- ✅ Font Awesome para iconos profesionales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <!-- Precarga de recursos críticos -->
     <link rel="preload" href="assets/css/global.css" as="style">
     <link rel="preload" href="assets/js/script.js" as="script">
-    <!-- ✅ NUEVO: Precarga del video -->
-    <!-- <link rel="preload" href="assets/video/video_2026-06-23_13-23-35.mp4" as="video" type="video/mp4"> -->
-
-    <!-- CSS Global (siempre presente) -->
+    
+    <!-- CSS Global -->
     <link rel="stylesheet" href="assets/css/global.css">
-
+    
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/img/doggo2.png">
+    <link rel="icon" type="image/png" href="assets/img/doggo1.png">
 </head>
 
 <body>
@@ -81,7 +81,7 @@
         });
     </script>
 
-   <!-- Footer persistente -->
+<!-- Footer persistente -->
 <footer class="footer">
     <div class="footer-container">
         <div class="footer-brand">
@@ -91,17 +91,45 @@
         <div class="footer-links">
             <a href="#/metodospagos" class="footer-link">Métodos de Pago</a>
             <a href="#/contacto" class="footer-link">Contacto</a>
+            <!-- <a href="#/sobre" class="footer-link">ℹ️ Sobre este proyecto</a> -->
             <a href="#" class="footer-link">Términos y Condiciones</a>
             <a href="#" class="footer-link">Política de Privacidad</a>
         </div>
         <div class="footer-social">
-            <a href="#" aria-label="Instagram" class="social-link">📸</a>
-            <a href="#" aria-label="WhatsApp" class="social-link">💬</a>
-            <a href="#" aria-label="TikTok" class="social-link">🎵</a>
+            <!-- ✅ Iconos profesionales con Font Awesome -->
+            <a href="https://www.instagram.com/doggo.sc" aria-label="Instagram" class="social-link">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" aria-label="WhatsApp" class="social-link">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="#" aria-label="TikTok" class="social-link">
+                <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="#" aria-label="Facebook" class="social-link">
+                <i class="fab fa-facebook"></i>
+            </a>
+            <a href="#" aria-label="YouTube" class="social-link">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
+    </div>
+    <!-- Créditos del Desarrollador -->
+    <div class="footer-credits">
+        <div class="credits-container">
+            <span class="credits-text">
+                <i class="fas fa-code"></i> Desarrollado por 
+                <a href="https://jairo-cardenas-dev-portfolio.vercel.app/" target="_blank" class="credits-link">
+                    <strong>Jairo Cárdenas</strong>
+                </a>
+                <span class="credits-separator">|</span>
+                <a href="#/sobre" class="credits-link credits-cta">
+                    <i class="fas fa-rocket"></i> Conoce más sobre este proyecto
+                </a>
+            </span>
         </div>
     </div>
 </footer>
-
     <!-- Script principal -->
     <script src="assets/js/script.js" defer></script>
 </body>

@@ -936,3 +936,182 @@ body {
 #app-content.loading .skeleton-loader {
     display: block;
 }
+
+/* ============================================
+   CRÉDITOS DEL DESARROLLADOR
+   ============================================ */
+
+.footer-credits {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.credits-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.credits-text {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.credits-text:hover {
+    opacity: 1;
+}
+
+.credits-text .fa-code {
+    color: var(--color-accent);
+    margin-right: var(--spacing-xs);
+}
+
+.credits-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: var(--transition-normal);
+}
+
+.credits-link:hover {
+    color: var(--color-accent-light);
+    text-decoration: underline;
+}
+
+.credits-link.credits-cta {
+    color: var(--color-accent);
+    font-weight: 600;
+    position: relative;
+    padding: 0 var(--spacing-xs);
+}
+
+.credits-link.credits-cta .fa-rocket {
+    margin-right: var(--spacing-xs);
+}
+
+.credits-separator {
+    color: rgba(255, 255, 255, 0.1);
+    margin: 0 var(--spacing-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .credits-text {
+        font-size: 0.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--spacing-xs);
+    }
+    
+    .credits-separator {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .credits-text {
+        font-size: 0.7rem;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-xs);
+    }
+}
+
+/* ============================================
+   REDES SOCIALES - ICONOS PROFESIONALES
+   ============================================ */
+
+.footer-social {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: var(--transition-normal);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.social-link:hover {
+    color: var(--color-accent);
+    background: rgba(244, 196, 48, 0.1);
+    border-color: var(--color-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(244, 196, 48, 0.2);
+}
+
+/* Colores específicos para cada red social (opcional) */
+.social-link:hover .fa-instagram {
+    color: #E4405F;
+}
+
+.social-link:hover .fa-whatsapp {
+    color: #25D366;
+}
+
+.social-link:hover .fa-tiktok {
+    color: #00f2ea;
+}
+
+.social-link:hover .fa-facebook {
+    color: #1877F2;
+}
+
+.social-link:hover .fa-youtube {
+    color: #FF0000;
+}
+
+/* Efecto de brillo al pasar el mouse */
+.social-link::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.social-link:hover::before {
+    opacity: 0.1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .social-link {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+    
+    .footer-social {
+        gap: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .social-link {
+        width: 34px;
+        height: 34px;
+        font-size: 0.9rem;
+    }
+    
+    .footer-social {
+        gap: var(--spacing-xs);
+    }
+}

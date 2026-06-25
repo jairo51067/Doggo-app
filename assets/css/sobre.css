@@ -1,0 +1,161 @@
+/* ============================================
+   DOGGO - SOBRE ESTE PROYECTO
+   ============================================ */
+
+.sobre-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.sobre-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.sobre-title {
+    font-family: var(--font-primary);
+    font-size: 2.8rem;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+}
+
+.sobre-title .highlight {
+    color: var(--color-accent);
+}
+
+.sobre-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+}
+
+.sobre-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.sobre-card {
+    background: var(--color-card);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid rgba(244, 196, 48, 0.1);
+    text-align: center;
+    transition: var(--transition-normal);
+}
+
+.sobre-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px var(--color-shadow);
+}
+
+.sobre-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.sobre-card h2 {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-md);
+}
+
+.sobre-card h2 .highlight {
+    color: var(--color-accent);
+}
+
+.sobre-card p {
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+}
+
+.sobre-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-normal);
+}
+
+.sobre-link:hover {
+    text-decoration: underline;
+    color: var(--color-accent-light);
+}
+
+.sobre-lista {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.sobre-lista li {
+    color: var(--color-text-secondary);
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.sobre-lista li:last-child {
+    border-bottom: none;
+}
+
+.sobre-cta {
+    text-align: center;
+    padding: var(--spacing-lg);
+}
+
+.btn-sobre {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 1.2rem;
+    transition: var(--transition-normal);
+}
+
+.btn-sobre:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 40px rgba(244, 196, 48, 0.35);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sobre-title {
+        font-size: 2rem;
+    }
+    
+    .sobre-subtitle {
+        font-size: 1rem;
+    }
+    
+    .sobre-card {
+        padding: var(--spacing-md);
+    }
+    
+    .sobre-card h2 {
+        font-size: 1.2rem;
+    }
+    
+    .sobre-lista {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sobre-container {
+        padding: var(--spacing-md);
+    }
+    
+    .sobre-title {
+        font-size: 1.6rem;
+    }
+    
+    .sobre-cta {
+        padding: var(--spacing-md);
+    }
+    
+    .btn-sobre {
+        width: 100%;
+        font-size: 1rem;
+    }
+}

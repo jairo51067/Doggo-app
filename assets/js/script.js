@@ -1,5 +1,5 @@
 // ============================================
-// DOGGO-APP SPA ROUTER - VERSIÓN FINAL v6.0.1
+// DOGGO-APP SPA ROUTER - VERSIÓN FINAL v6.0.2
 // ============================================
 
 // 1. Configuración
@@ -11,7 +11,8 @@ const ROUTER_CONFIG = {
         home: 'Doggo - Inicio | No es un perro, es una movida',
         pedido: 'Doggo - Haz tu Pedido | No es un perro, es una movida',
         metodospagos: 'Doggo - Métodos de Pago | No es un perro, es una movida',
-        contacto: 'Doggo - Contacto | No es un perro, es una movida'
+        contacto: 'Doggo - Contacto | No es un perro, es una movida',
+        sobre: 'Doggo - Sobre este proyecto' // ✅ NUEVO
     }
 };
 
@@ -463,7 +464,7 @@ class Router {
         document.dispatchEvent(event);
     }
 
-    initViewComponents(viewName) {
+     initViewComponents(viewName) {
         console.log(`🔍 Inicializando componentes para: ${viewName}`);
         
         const cleanViewName = viewName.replace('/', '');
@@ -486,6 +487,17 @@ class Router {
                 }
                 this.initHeroImage();
             }, 300);
+        }
+
+        if (cleanViewName === 'contacto') {
+            setTimeout(() => {
+                this.initContactoForm();
+            }, 200);
+        }
+
+        // ✅ NUEVO: No necesita inicialización especial, solo CSS
+        if (cleanViewName === 'sobre') {
+            console.log('📄 Página Sobre cargada');
         }
 
         this.initNavbarToggle();
@@ -1599,10 +1611,141 @@ class Router {
             console.log('✅ Navbar toggle inicializado');
         }
     }
-}
+
+    // ============================================
+    // 9. COMPONENTE DE CONTACTO
+    // ============================================
+
+    initContactoForm() {
+        console.log('📬 Inicializando formulario de contacto...');
+        
+        const form = document.getElementById('contacto-form');
+        if (!form) {
+            console.warn('⚠️ Formulario de contacto no encontrado');
+            return;
+        }
+
+        // Validación en tiempo real
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => {
+                this.validateContactField(input);
+            });
+            input.addEventListener('input', () => {
+                this.validateContactField(input);
+            });
+        });
+
+        // Envío del formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validar todos los campos
+            let isValid = true;
+            const required = form.querySelectorAll('[required]');
+            required.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    this.validateContactField(field);
+                }
+            });
+
+            if (!isValid) {
+                Toast.warning('Por favor, completa todos los campos requeridos.', 'Formulario incompleto');
+                return;
+            }
+
+            // Recopilar datos
+            const formData = new FormData(form);
+            const data = {
+                nombre: formData.get('nombre'),
+                email: formData.get('email'),
+                telefono: formData.get('telefono'),
+                asunto: formData.get('asunto'),
+                mensaje: formData.get('mensaje')
+            };
+
+            // Mostrar estado de carga
+            const submitBtn = form.querySelector('.btn-submit');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '⏳ Enviando...';
+            submitBtn.disabled = true;
+
+            try {
+                console.log('📩 Mensaje de contacto:', data);
+                
+                // Simular envío
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                Toast.success('¡Tu mensaje ha sido enviado! Te responderemos pronto.', 'Mensaje enviado');
+                form.reset();
+                
+                // Limpiar estados de validación
+                form.querySelectorAll('.success, .error').forEach(el => {
+                    el.classList.remove('success', 'error');
+                });
+                form.querySelectorAll('.field-feedback').forEach(el => {
+                    el.innerHTML = '';
+                });
+
+            } catch (error) {
+                console.error('Error al enviar mensaje:', error);
+                Toast.error('Hubo un error al enviar tu mensaje. Intenta nuevamente.', 'Error');
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
+    validateContactField(field) {
+        const parent = field.closest('.form-group');
+        if (!parent) return;
+        
+        const feedback = parent.querySelector('.field-feedback');
+        if (feedback) {
+            feedback.innerHTML = '';
+            feedback.className = 'field-feedback';
+        }
+        field.classList.remove('error', 'success');
+
+        let isValid = true;
+        let errorMessage = '';
+
+        if (field.required && !field.value.trim()) {
+            isValid = false;
+            errorMessage = 'Este campo es obligatorio';
+        } else if (field.type === 'email' && field.value.trim()) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(field.value.trim())) {
+                isValid = false;
+                errorMessage = 'Ingresa un email válido';
+            }
+        } else if (field.type === 'tel' && field.value.trim()) {
+            const phoneRegex = /^(\+?\d{1,3}[-.]?)?\d{10,14}$/;
+            if (!phoneRegex.test(field.value.replace(/\s/g, ''))) {
+                isValid = false;
+                errorMessage = 'Ingresa un número válido';
+            }
+        }
+
+        if (!isValid) {
+            field.classList.add('error');
+            if (feedback) {
+                feedback.innerHTML = `<span class="error-msg">⚠️ ${errorMessage}</span>`;
+            }
+        } else if (field.value.trim() && field.required) {
+            field.classList.add('success');
+            if (feedback) {
+                feedback.innerHTML = `<span class="success-msg">✅ Correcto</span>`;
+            }
+        }
+    }
+
+} // <-- CIERRE DE LA CLASE Router
 
 // ============================================
-// 9. MICRO-INTERACCIONES Y ANIMACIONES
+// 10. MICRO-INTERACCIONES Y ANIMACIONES
 // ============================================
 
 function addMicroInteractions() {
@@ -1623,7 +1766,7 @@ function addMicroInteractions() {
 }
 
 // ============================================
-// 10. INICIALIZACIÓN
+// 11. INICIALIZACIÓN
 // ============================================
 
 console.log('📦 Esperando DOM...');
@@ -1636,9 +1779,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.__DOGGO_APP__ = {
         router: app,
-        version: '6.0.1'
+        version: '6.0.2'
     };
 
-    console.log('🐕 ¡Doggo App iniciada! v6.0.1');
+    console.log('🐕 ¡Doggo App iniciada! v6.0.2');
     console.log('💡 Para depuración, ejecuta: __DOGGO_APP__.router');
 });

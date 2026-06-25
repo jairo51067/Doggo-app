@@ -1,95 +1,125 @@
-<!-- views/contacto.html -->
-<section class="py-4">
-  <div class="row g-4 justify-content-center">
-    <div class="col-12 col-lg-5">
-      <div class="card-doggo p-4 h-100">
-        <div class="d-flex align-items-center gap-3 mb-3">
-          <span class="badge badge-doggo p-2"><i class="fas fa-map-marker-alt"></i></span>
-          <h1 class="h4 m-0 fw-black">Contáctanos</h1>
+<!-- ========================================== -->
+<!-- DOGGO - VISTA: CONTACTO                   -->
+<!-- ========================================== -->
+
+<div class="contacto-container">
+  <header class="contacto-header">
+    <h1 class="contacto-title">📬 Contáctanos</h1>
+    <p class="contacto-subtitle">Estamos aquí para ayudarte</p>
+  </header>
+
+  <div class="contacto-grid">
+    <!-- ========================================== -->
+    <!-- COLUMNA 1: FORMULARIO DE CONTACTO          -->
+    <!-- ========================================== -->
+    <div class="contacto-form-wrapper">
+      <h2 class="form-title">✉️ Envíanos un mensaje</h2>
+      <form id="contacto-form" class="contacto-form">
+        <div class="form-group">
+          <label for="contact-nombre">Nombre completo *</label>
+          <input type="text" id="contact-nombre" name="nombre" placeholder="Tu nombre completo" required>
+          <div class="field-feedback"></div>
         </div>
 
-        <div class="mb-3" style="color: var(--muted);">
-          Mensajes directos, dudas y pedidos especiales.
+        <div class="form-group">
+          <label for="contact-email">Email *</label>
+          <input type="email" id="contact-email" name="email" placeholder="tucorreo@email.com" required>
+          <div class="field-feedback"></div>
         </div>
 
-        <div class="info-row mb-3" style="display:flex; align-items:center; gap:12px;">
-          <i class="fas fa-location-dot text-accent"></i>
-          <a
-            class="text-decoration-none"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://maps.app.goo.gl/P8MEMF6eEjJ2bYfv6"
-          >
-            Ver ubicación en Maps
-          </a>
+        <div class="form-group">
+          <label for="contact-telefono">Teléfono</label>
+          <input type="tel" id="contact-telefono" name="telefono" placeholder="0414-1234567">
+          <div class="field-feedback"></div>
         </div>
 
-        <div class="info-row mb-3" style="display:flex; align-items:center; gap:12px;">
-          <i class="fas fa-phone text-accent"></i>
-          <a class="text-decoration-none" href="tel:+584220364460">+58 422-0364460</a>
+        <div class="form-group">
+          <label for="contact-asunto">Asunto *</label>
+          <select id="contact-asunto" name="asunto" required>
+            <option value="">Selecciona un asunto...</option>
+            <option value="Pedido">Información sobre un pedido</option>
+            <option value="Pago">Problema con un pago</option>
+            <option value="Entrega">Problema con la entrega</option>
+            <option value="Sugerencia">Sugerencia o reclamo</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <div class="field-feedback"></div>
         </div>
 
-        <div class="info-row mb-4" style="display:flex; align-items:center; gap:12px;">
-          <i class="fas fa-envelope text-accent"></i>
-          <a class="text-decoration-none" href="mailto:info.doggosc@gmail.com">info.doggosc@gmail.com</a>
+        <div class="form-group">
+          <label for="contact-mensaje">Mensaje *</label>
+          <textarea id="contact-mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..."
+            required></textarea>
+          <div class="field-feedback"></div>
         </div>
 
-        <div class="d-flex gap-3">
-          <a
-            class="btn btn-ghost"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.instagram.com/doggo.sc/"
-            aria-label="Instagram"
-          >
-            <i class="fab fa-instagram me-2"></i>Instagram
-          </a>
-        </div>
-
-      </div>
+        <button type="submit" class="btn btn-primary btn-submit">
+          📨 Enviar mensaje
+        </button>
+      </form>
     </div>
 
-    <div class="col-12 col-lg-7">
-      <div class="card-doggo p-4 p-md-5">
-        <h2 class="h4 fw-black">Ubicación</h2>
-        <div style="margin-top:12px;">
-          <iframe
-            class="map-embed"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps?q=Doggo&output=embed"
-          ></iframe>
+    <!-- ========================================== -->
+    <!-- COLUMNA 2: INFORMACIÓN DE CONTACTO         -->
+    <!-- ========================================== -->
+    <div class="contacto-info-wrapper">
+      <div class="info-card">
+        <h3 class="info-title">📞 Contáctanos directamente</h3>
+
+        <div class="info-item">
+          <span class="info-icon">📱</span>
+          <div>
+            <strong>WhatsApp</strong>
+            <p><a href="https://wa.me/584245231898" target="_blank" class="info-link">+58 424-5231898</a></p>
+          </div>
         </div>
 
-        <div style="height:18px;"></div>
-
-        <h2 class="h4 fw-black">Escríbenos</h2>
-        <p class="m-0" style="color: var(--muted);">Este formulario es referencial; puedes conectarlo a tu CRM/servicio.</p>
-
-
-        <form class="mt-4" action="" method="post">
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-bold" for="contact-name">Nombre completo</label>
-              <input id="contact-name" class="form-control" type="text" placeholder="Tu nombre" required />
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-bold" for="contact-email">Email</label>
-              <input id="contact-email" class="form-control" type="email" placeholder="tuemail@gmail.com" required />
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-bold" for="contact-msg">Mensaje</label>
-              <textarea id="contact-msg" class="form-control" rows="4" placeholder="Escribe tu mensaje..." required></textarea>
-            </div>
-            <div class="col-12 d-grid d-md-flex gap-3 justify-content-md-end">
-              <button class="btn btn-accent" type="submit">
-                <i class="fas fa-paper-plane me-2"></i>Enviar
-              </button>
-            </div>
+        <div class="info-item">
+          <span class="info-icon">📧</span>
+          <div>
+            <strong>Email</strong>
+            <p><a href="mailto:info@doggo.com" class="info-link">info@doggo.com</a></p>
           </div>
-        </form>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- NUEVA SECCIÓN: UBICACIÓN CON MAPA         -->
+        <!-- ========================================== -->
+        <div class="info-item">
+          <span class="info-icon">📍</span>
+          <div>
+            <strong>📍 Nuestra ubicación</strong>
+            <p>Barrio Obrero, San Cristóbal<br>Estado Táchira, Venezuela</p>
+            <a href="https://maps.app.goo.gl/v7R1kT7VSK9RUKVE9" target="_blank" class="btn btn-secondary btn-mapa">
+              🗺️ Ver en Google Maps
+            </a>
+          </div>
+        </div>
+
+        <div class="info-divider"></div>
+
+        <h4 class="info-subtitle">🕐 Horarios de atención</h4>
+        <div class="horario">
+          <div class="horario-item">
+            <span>Lunes - Viernes</span>
+            <span>11:00 AM - 10:00 PM</span>
+          </div>
+          <div class="horario-item">
+            <span>Sábados</span>
+            <span>11:00 AM - 11:00 PM</span>
+          </div>
+          <div class="horario-item">
+            <span>Domingos</span>
+            <span>12:00 PM - 9:00 PM</span>
+          </div>
+        </div>
+
+        <div class="info-divider"></div>
+
+        <a href="https://wa.me/584245231898" target="_blank" class="btn btn-primary btn-whatsapp">
+          💬 Chatear por WhatsApp
+        </a>
       </div>
     </div>
   </div>
-</section>
-
+</div>
