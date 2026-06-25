@@ -1,29 +1,24 @@
-/* ============================================
-   DOGGO - ESTILOS DE PEDIDO (Carrito + Cantidades)
-   ============================================ */
-
 .pedido-container {
     max-width: 900px;
     margin: 0 auto;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-lg)
 }
 
-/* HEADER */
 .pedido-header {
     text-align: center;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl)
 }
 
 .pedido-title {
     font-family: var(--font-primary);
     font-size: 2.8rem;
     color: var(--color-text);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm)
 }
 
 .pedido-title .highlight {
     color: var(--color-accent);
-    position: relative;
+    position: relative
 }
 
 .pedido-title .highlight::after {
@@ -34,27 +29,25 @@
     width: 100%;
     height: 4px;
     background: var(--color-accent);
-    border-radius: 2px;
+    border-radius: 2px
 }
 
 .pedido-subtitle {
     color: var(--color-text-secondary);
-    font-size: 1.2rem;
+    font-size: 1.2rem
 }
 
-/* STEPPER PROGRESS */
 .stepper-progress {
     margin-bottom: var(--spacing-xl);
-    padding: 0 var(--spacing-md);
+    padding: 0 var(--spacing-md)
 }
 
 .step-indicators {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: relative;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0 auto
 }
 
 .step-indicator {
@@ -66,7 +59,7 @@
     transition: var(--transition-normal);
     flex: 1;
     position: relative;
-    z-index: 2;
+    z-index: 2
 }
 
 .step-number {
@@ -74,267 +67,217 @@
     height: 40px;
     border-radius: 50%;
     background: var(--color-primary);
-    border: 3px solid rgba(255, 255, 255, 0.2);
+    border: 3px solid rgba(255, 255, 255, .2);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 1.1rem;
-    color: var(--color-text-secondary);
-    transition: var(--transition-normal);
+    color: var(--color-text-secondary)
 }
 
 .step-indicator.active .step-number {
     background: var(--color-accent);
     border-color: var(--color-accent);
     color: var(--color-primary-dark);
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(244, 196, 48, 0.3);
+    transform: scale(1.1)
 }
 
 .step-indicator.completed .step-number {
     background: #2ecc71;
     border-color: #2ecc71;
-    color: white;
+    color: #fff
 }
 
 .step-label {
-    font-size: 0.75rem;
+    font-size: .75rem;
     font-weight: 600;
     color: var(--color-text-secondary);
-    text-align: center;
-    transition: var(--transition-normal);
+    text-align: center
 }
 
 .step-indicator.active .step-label {
-    color: var(--color-accent);
+    color: var(--color-accent)
 }
 
 .step-line {
     flex: 1;
     height: 3px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, .2);
     margin: 0 var(--spacing-xs);
     position: relative;
     top: -20px;
-    z-index: 1;
-    transition: var(--transition-normal);
+    z-index: 1
 }
 
 .step-line.completed {
-    background: var(--color-accent);
+    background: var(--color-accent)
 }
 
-/* STEP CONTENT */
 .step-content {
     display: none;
-    animation: fadeSlideIn 0.4s ease;
+    animation: fadeSlideIn .4s ease
 }
 
 .step-content.active {
-    display: block;
+    display: block
 }
 
 @keyframes fadeSlideIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(20px)
     }
+
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0)
     }
 }
 
 .step-header {
     margin-bottom: var(--spacing-lg);
-    text-align: center;
+    text-align: center
 }
 
 .step-title {
     font-family: var(--font-primary);
     font-size: 2rem;
     color: var(--color-text);
-    margin-bottom: var(--spacing-sm);
-}
-
-.step-title .highlight {
-    color: var(--color-accent);
+    margin-bottom: var(--spacing-sm)
 }
 
 .step-description {
     color: var(--color-text-secondary);
-    font-size: 1rem;
+    font-size: 1rem
 }
 
-/* FORM GROUPS */
 .form-group {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg)
 }
 
 .form-group label {
     display: block;
     font-weight: 600;
     margin-bottom: var(--spacing-xs);
-    color: var(--color-text);
+    color: var(--color-text)
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
-    border: 2px solid rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, .15);
     border-radius: var(--border-radius-md);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, .05);
     color: var(--color-text);
     font-size: 1rem;
-    transition: var(--transition-normal);
+    transition: var(--transition-normal)
 }
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
+    box-shadow: 0 0 0 3px rgba(244, 196, 48, .2)
 }
 
 .form-group input.error,
 .form-group select.error {
     border-color: #e74c3c;
-    background: rgba(231, 76, 60, 0.1);
+    background: rgba(231, 76, 60, .1)
 }
 
 .form-group input.success {
     border-color: #2ecc71;
-    background: rgba(46, 204, 113, 0.1);
+    background: rgba(46, 204, 113, .1)
 }
 
 .field-feedback {
     margin-top: var(--spacing-xs);
-    font-size: 0.9rem;
-    min-height: 1.5rem;
+    font-size: .9rem;
+    min-height: 1.5rem
 }
 
 .field-feedback .error-msg {
-    color: #e74c3c;
+    color: #e74c3c
 }
 
 .field-feedback .success-msg {
-    color: #2ecc71;
+    color: #2ecc71
 }
 
 .field-hint {
     display: block;
     color: var(--color-text-secondary);
-    font-size: 0.8rem;
+    font-size: .8rem;
     margin-top: var(--spacing-xs);
-    opacity: 0.7;
+    opacity: .7
 }
 
-/* DOGGO GRID */
 .doggo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg)
+}
+
+.doggo-card,
+.extra-chip,
+.bebida-card,
+.delivery-card {
+    min-height: 44px
 }
 
 .doggo-card {
     background: var(--color-card);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, .1);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-md);
-    cursor: default;
     transition: var(--transition-normal);
     position: relative;
-    text-align: center;
+    text-align: center
 }
 
 .doggo-card.has-items {
     border-color: var(--color-accent);
-    background: rgba(244, 196, 48, 0.08);
-    box-shadow: 0 0 20px rgba(244, 196, 48, 0.1);
+    background: rgba(244, 196, 48, .08)
 }
 
 .doggo-card:hover {
     transform: translateY(-4px);
-    border-color: var(--color-accent);
-    box-shadow: 0 8px 25px var(--color-shadow);
+    border-color: var(--color-accent)
 }
 
 .doggo-card-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-xs)
 }
 
 .doggo-icon {
-    font-size: 2.5rem;
+    font-size: 2.5rem
 }
 
 .doggo-name {
     font-family: var(--font-primary);
     font-size: 1.1rem;
     color: var(--color-text);
-    margin: var(--spacing-xs) 0;
+    margin: var(--spacing-xs) 0
 }
 
 .doggo-desc {
-    font-size: 0.85rem;
+    font-size: .85rem;
     color: var(--color-text-secondary);
-    margin: 0;
+    margin: 0
 }
 
 .doggo-price {
     font-weight: 700;
     color: var(--color-accent);
     font-size: 1.1rem;
-    margin-top: var(--spacing-xs);
-}
-
-/* CONTROLES DE CANTIDAD */
-.quantity-control {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-sm);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-xs);
-}
-
-.qty-btn {
-    width: 30px;
-    height: 30px;
-    border: none;
-    border-radius: 50%;
-    background: var(--color-accent);
-    color: var(--color-primary-dark);
-    font-weight: 700;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: var(--transition-normal);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.qty-btn:hover {
-    transform: scale(1.1);
-    background: var(--color-accent-light);
-}
-
-.qty-btn:active {
-    transform: scale(0.95);
-}
-
-.qty-value {
-    min-width: 30px;
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--color-text);
+    margin-top: var(--spacing-xs)
 }
 
 .doggo-check {
@@ -350,457 +293,130 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: .8rem
 }
 
 .doggo-card.has-items .doggo-check {
-    display: flex;
+    display: flex
 }
 
-/* EXTRAS GRID */
-.extras-label {
-    font-weight: 600;
-    margin-bottom: var(--spacing-sm);
-    display: block;
-}
-
-.extras-grid {
+.extras-grid,
+.bebidas-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md)
 }
 
-.extra-chip {
+.extra-chip,
+.bebida-card,
+.delivery-card {
     background: var(--color-card);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, .1);
     border-radius: var(--border-radius-md);
     padding: var(--spacing-sm) var(--spacing-md);
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    transition: var(--transition-normal);
-    flex-wrap: wrap;
+    transition: var(--transition-normal)
 }
 
-.extra-chip.has-items {
+.extra-chip.has-items,
+.bebida-card.has-items,
+.delivery-card.selected {
     border-color: var(--color-accent);
-    background: rgba(244, 196, 48, 0.08);
+    background: rgba(244, 196, 48, .08)
 }
 
-.extra-chip:hover {
-    border-color: var(--color-accent);
+.extra-chip:hover,
+.bebida-card:hover,
+.delivery-card:hover {
     transform: translateY(-2px);
+    border-color: var(--color-accent)
 }
 
-.extra-icon {
-    font-size: 1.2rem;
+.extra-icon,
+.bebida-icon,
+.delivery-icon {
+    font-size: 1.5rem
 }
 
-.extra-name {
+.extra-name,
+.bebida-name,
+.delivery-name {
+    color: var(--color-text)
+}
+
+.extra-price,
+.bebida-price,
+.delivery-desc {
+    color: var(--color-text-secondary);
+    font-size: .85rem
+}
+
+.bebida-info,
+.delivery-info {
     flex: 1;
-    font-size: 0.9rem;
-    color: var(--color-text);
+    display: flex;
+    flex-direction: column
 }
 
-.extra-price {
-    font-size: 0.8rem;
-    color: var(--color-accent);
-    font-weight: 600;
-}
-
-/* CONTROLES MINI DE CANTIDAD PARA EXTRAS */
+.quantity-control,
 .qty-control-mini {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, .05);
     border-radius: var(--border-radius-sm);
-    padding: 2px;
+    padding: 2px
 }
 
+.quantity-control {
+    justify-content: center;
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-xs)
+}
+
+.qty-btn,
 .qty-btn-mini {
-    width: 24px;
-    height: 24px;
     border: none;
     border-radius: 50%;
     background: var(--color-accent);
     color: var(--color-primary-dark);
     font-weight: 700;
-    font-size: 1rem;
     cursor: pointer;
     transition: var(--transition-normal);
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 44px;
+    min-height: 44px
 }
 
-.qty-btn-mini:hover {
-    transform: scale(1.1);
-    background: var(--color-accent-light);
+.qty-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem
 }
 
-.qty-btn-mini:active {
-    transform: scale(0.95);
+.qty-btn-mini {
+    width: 24px;
+    height: 24px;
+    font-size: 1rem
 }
 
+.qty-value,
 .qty-value-mini {
     min-width: 20px;
     text-align: center;
     font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--color-text);
-}
-
-/* BEBIDA SELECT */
-.bebida-select {
-    width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    border-radius: var(--border-radius-md);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--color-text);
-    font-size: 1rem;
-    transition: var(--transition-normal);
-    cursor: pointer;
-}
-
-.bebida-select:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
-}
-
-/* STEP ACTIONS */
-.step-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-lg);
-    flex-wrap: wrap;
-}
-
-.btn-prev,
-.btn-next,
-.btn-submit {
-    padding: var(--spacing-sm) var(--spacing-lg);
-    border: none;
-    border-radius: var(--border-radius-md);
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: var(--transition-normal);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.btn-prev {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--color-text);
-}
-
-.btn-prev:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateX(-2px);
-}
-
-.btn-next {
-    background: var(--color-accent);
-    color: var(--color-primary-dark);
-    margin-left: auto;
-}
-
-.btn-next:hover {
-    background: var(--color-accent-light);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(244, 196, 48, 0.3);
-}
-
-.btn-submit {
-    background: var(--color-accent);
-    color: var(--color-primary-dark);
-    width: 100%;
-    justify-content: center;
-    padding: var(--spacing-md);
-    font-size: 1.1rem;
-}
-
-.btn-submit:hover:not(:disabled) {
-    background: var(--color-accent-light);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 30px rgba(244, 196, 48, 0.4);
-}
-
-.btn-submit:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.btn-icon {
-    font-size: 1.2rem;
-}
-
-.btn-loader {
-    display: none;
-}
-
-/* ORDER SUMMARY CARD */
-.order-summary-card {
-    background: var(--color-card);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-lg);
-    border: 1px solid rgba(244, 196, 48, 0.15);
-    margin-bottom: var(--spacing-lg);
-}
-
-.summary-section {
-    margin-bottom: var(--spacing-md);
-}
-
-.summary-title {
-    color: var(--color-accent);
-    font-family: var(--font-primary);
-    font-size: 1.1rem;
-    margin-bottom: var(--spacing-sm);
-}
-
-.summary-content {
-    color: var(--color-text-secondary);
-    font-size: 0.95rem;
-    padding-left: var(--spacing-sm);
-}
-
-.summary-content .empty-summary {
-    color: var(--color-text-secondary);
-    opacity: 0.6;
-    font-style: italic;
-    margin: 0;
-}
-
-.summary-item {
-    padding: var(--spacing-xs) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    justify-content: space-between;
-}
-
-.summary-item:last-child {
-    border-bottom: none;
-}
-
-.summary-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.05);
-    margin: var(--spacing-md) 0;
-}
-
-.summary-total-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: var(--spacing-md);
-    border-top: 2px solid var(--color-accent);
-    margin-top: var(--spacing-md);
-}
-
-.total-label {
-    font-weight: 600;
-    color: var(--color-text);
-    font-size: 1.1rem;
-}
-
-.total-price {
-    font-family: var(--font-primary);
-    font-size: 1.8rem;
-    color: var(--color-accent);
-}
-
-/* DISCLAIMER */
-.form-disclaimer {
-    text-align: center;
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin-top: var(--spacing-md);
-    opacity: 0.7;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .pedido-title {
-        font-size: 2rem;
-    }
-    
-    .step-title {
-        font-size: 1.5rem;
-    }
-    
-    .step-indicators {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        gap: var(--spacing-xs);
-    }
-    
-    .step-label {
-        font-size: 0.6rem;
-    }
-    
-    .step-number {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-    }
-    
-    .step-line {
-        min-width: 20px;
-        top: -16px;
-    }
-    
-    .doggo-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-    
-    .extras-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .step-actions {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .btn-next {
-        margin-left: 0;
-        flex: 1;
-        justify-content: center;
-    }
-    
-    .btn-prev {
-        flex: 1;
-        justify-content: center;
-    }
-    
-    .order-summary-card {
-        padding: var(--spacing-md);
-    }
-    
-    .total-price {
-        font-size: 1.4rem;
-    }
-
-    .extra-chip {
-        flex-wrap: wrap;
-    }
-}
-
-@media (max-width: 480px) {
-    .pedido-container {
-        padding: var(--spacing-md);
-    }
-    
-    .pedido-title {
-        font-size: 1.6rem;
-    }
-    
-    .step-title {
-        font-size: 1.2rem;
-    }
-    
-    .doggo-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: var(--spacing-sm);
-    }
-    
-    .doggo-card {
-        padding: var(--spacing-sm);
-    }
-    
-    .doggo-icon {
-        font-size: 2rem;
-    }
-    
-    .doggo-name {
-        font-size: 0.9rem;
-    }
-    
-    .quantity-control {
-        gap: var(--spacing-xs);
-    }
-    
-    .qty-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 1rem;
-    }
-}
-
-/* ============================================
-   ESTILOS PARA DELIVERY
-   ============================================ */
-
-.delivery-option {
-    margin-top: var(--spacing-lg);
-    padding-top: var(--spacing-lg);
-    border-top: 2px solid rgba(244, 196, 48, 0.1);
-}
-
-.delivery-label {
-    font-weight: 600;
-    margin-bottom: var(--spacing-md);
-    display: block;
-    font-size: 1.1rem;
+    color: var(--color-text)
 }
 
 .delivery-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-md);
-}
-
-.delivery-card {
-    background: var(--color-card);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-md);
-    cursor: pointer;
-    transition: var(--transition-normal);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    position: relative;
-}
-
-.delivery-card:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-2px);
-}
-
-.delivery-card.selected {
-    border-color: var(--color-accent);
-    background: rgba(244, 196, 48, 0.1);
-    box-shadow: 0 0 20px rgba(244, 196, 48, 0.1);
-}
-
-.delivery-icon {
-    font-size: 2rem;
-}
-
-.delivery-info {
-    flex: 1;
-}
-
-.delivery-name {
-    font-family: var(--font-primary);
-    font-size: 1rem;
-    color: var(--color-text);
-    margin: 0;
-}
-
-.delivery-desc {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    margin: var(--spacing-xs) 0 0 0;
+    gap: var(--spacing-md)
 }
 
 .delivery-check {
@@ -813,125 +429,78 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: .8rem
 }
 
 .delivery-card.selected .delivery-check {
+    display: flex
+}
+
+.step-actions {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    flex-wrap: wrap
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .delivery-options {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ============================================
-   BOTÓN VACIAR CARRITO
-   ============================================ */
-
+.btn-prev,
+.btn-next,
+.btn-submit,
 .btn-clear-cart {
-    background: rgba(231, 76, 60, 0.15);
-    color: #e74c3c;
-    border: 2px solid #e74c3c;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
     border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: 700;
+    font-size: 1rem;
     cursor: pointer;
     transition: var(--transition-normal);
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
+    min-height: 44px
 }
 
-.btn-clear-cart:hover {
-    background: #e74c3c;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+.btn-prev {
+    background: rgba(255, 255, 255, .1);
+    color: var(--color-text)
 }
 
-.btn-clear-cart:active {
-    transform: scale(0.95);
+.btn-next,
+.btn-submit {
+    background: var(--color-accent);
+    color: var(--color-primary-dark)
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .step-actions {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .btn-clear-cart {
-        order: 10;
-        width: 100%;
-        justify-content: center;
-        margin-top: var(--spacing-sm);
-    }
+.btn-next {
+    margin-left: auto
 }
 
-/* ============================================
-   CAMPOS DE DIRECCIÓN
-   ============================================ */
-
-.direccion-group {
-    margin-top: var(--spacing-lg);
-    padding-top: var(--spacing-lg);
-    border-top: 2px solid rgba(244, 196, 48, 0.1);
+.btn-clear-cart {
+    background: rgba(231, 76, 60, .15);
+    color: #e74c3c;
+    border: 2px solid #e74c3c
 }
-
-.direccion-fields {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-}
-
-.direccion-fields .form-group {
-    margin-bottom: 0;
-}
-
-.direccion-fields input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    color: var(--color-text);
-    font-size: 1rem;
-    width: 100%;
-    transition: var(--transition-normal);
-}
-
-.direccion-fields input:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
-}
-
-/* ============================================
-   RESUMEN DE PEDIDO MEJORADO
-   ============================================ */
 
 .order-summary-card {
     background: var(--color-card);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-lg);
-    border: 2px solid rgba(244, 196, 48, 0.2);
-    margin-bottom: var(--spacing-lg);
-    box-shadow: 0 4px 20px var(--color-shadow);
+    border: 2px solid rgba(244, 196, 48, .2);
+    margin-bottom: var(--spacing-lg)
 }
 
 .summary-section {
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, .05)
 }
 
 .summary-section:last-of-type {
     border-bottom: none;
     margin-bottom: 0;
-    padding-bottom: 0;
+    padding-bottom: 0
 }
 
 .summary-title {
@@ -941,352 +510,148 @@
     margin-bottom: var(--spacing-sm);
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-sm)
 }
 
 .summary-title .badge {
     background: var(--color-accent);
     color: var(--color-primary-dark);
-    font-size: 0.7rem;
+    font-size: .7rem;
     padding: 2px 8px;
     border-radius: 50px;
-    font-weight: 700;
+    font-weight: 700
 }
 
 .summary-content {
     color: var(--color-text-secondary);
-    font-size: 0.95rem;
-    padding-left: var(--spacing-sm);
+    font-size: .95rem;
+    padding-left: var(--spacing-sm)
 }
 
 .summary-content .empty-summary {
-    color: var(--color-text-secondary);
-    opacity: 0.6;
+    opacity: .6;
     font-style: italic;
     margin: 0;
-    padding: var(--spacing-sm) 0;
+    padding: var(--spacing-sm) 0
 }
 
 .summary-item {
     padding: var(--spacing-xs) 0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-.summary-item:last-child {
-    border-bottom: none;
+    align-items: center
 }
 
 .summary-item .summary-label {
-    color: var(--color-text-secondary);
-    font-weight: 400;
+    color: var(--color-text-secondary)
 }
 
 .summary-item .summary-value {
     color: var(--color-text);
-    font-weight: 500;
-    text-align: right;
+    font-weight: 500
 }
 
-.summary-item.subtotal {
-    margin-top: var(--spacing-xs);
-    padding-top: var(--spacing-xs);
-    border-top: 1px dashed rgba(244, 196, 48, 0.2);
-    font-weight: 600;
-}
-
-.summary-item.subtotal .summary-label {
-    color: var(--color-accent);
-}
-
-.summary-item.subtotal .summary-value {
-    color: var(--color-accent);
-}
-
-/* TOTAL BREAKDOWN */
 .total-breakdown {
-    background: rgba(244, 196, 48, 0.05);
+    background: rgba(244, 196, 48, .05);
     border-radius: var(--border-radius-md);
     padding: var(--spacing-md);
-    margin-top: var(--spacing-sm);
+    margin-top: var(--spacing-sm)
 }
 
-.breakdown-item {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--spacing-xs) 0;
-    font-size: 0.95rem;
-    color: var(--color-text-secondary);
-}
-
+.breakdown-item,
 .breakdown-total {
     display: flex;
     justify-content: space-between;
-    padding: var(--spacing-sm) 0 var(--spacing-xs) 0;
+    padding: var(--spacing-xs) 0
+}
+
+.breakdown-total {
     margin-top: var(--spacing-xs);
     border-top: 2px solid var(--color-accent);
     font-family: var(--font-primary);
     font-size: 1.3rem;
-    color: var(--color-accent);
+    color: var(--color-accent)
 }
 
-.breakdown-total span:first-child {
-    font-size: 1.1rem;
-}
-
-.breakdown-total span:last-child {
-    font-size: 1.5rem;
-    text-shadow: 0 0 20px rgba(244, 196, 48, 0.3);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .order-summary-card {
-        padding: var(--spacing-md);
-    }
-    
-    .breakdown-total {
-        font-size: 1.1rem;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--spacing-xs);
-    }
-    
-    .breakdown-total span:last-child {
-        font-size: 1.8rem;
-    }
-    
-    .summary-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-    }
-    
-    .summary-item .summary-value {
-        text-align: left;
-    }
-}
-
-@media (max-width: 480px) {
-    .order-summary-card {
-        padding: var(--spacing-sm);
-    }
-    
-    .summary-title {
-        font-size: 0.95rem;
-    }
-    
-    .breakdown-total span:last-child {
-        font-size: 1.5rem;
-    }
-}
-
-/* ============================================
-   BEBIDAS CON CANTIDADES
-   ============================================ */
-
-.bebidas-label {
-    font-weight: 600;
-    margin-bottom: var(--spacing-xs);
-    display: block;
-    font-size: 1.1rem;
-}
-
-.bebidas-hint {
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin-bottom: var(--spacing-md);
-    opacity: 0.7;
-}
-
-.bebidas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
-}
-
-.bebida-card {
-    background: var(--color-card);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    transition: var(--transition-normal);
-}
-
-.bebida-card.has-items {
-    border-color: var(--color-accent);
-    background: rgba(244, 196, 48, 0.08);
-}
-
-.bebida-card:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-2px);
-}
-
-.bebida-icon {
-    font-size: 1.5rem;
-}
-
-.bebida-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.bebida-name {
-    font-size: 0.9rem;
-    color: var(--color-text);
-    font-weight: 500;
-}
-
-.bebida-price {
-    font-size: 0.8rem;
-    color: var(--color-accent);
-    font-weight: 600;
-}
-
-/* Controles de cantidad para bebidas */
-.bebida-card .qty-control-mini {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius-sm);
-    padding: 2px;
-}
-
-.bebida-card .qty-btn-mini {
-    width: 24px;
-    height: 24px;
-    border: none;
-    border-radius: 50%;
-    background: var(--color-accent);
-    color: var(--color-primary-dark);
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: var(--transition-normal);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bebida-card .qty-btn-mini:hover {
-    transform: scale(1.1);
-    background: var(--color-accent-light);
-}
-
-.bebida-card .qty-btn-mini:active {
-    transform: scale(0.95);
-}
-
-.bebida-card .qty-value-mini {
-    min-width: 20px;
+.form-disclaimer {
     text-align: center;
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--color-text);
+    color: var(--color-text-secondary);
+    font-size: .85rem;
+    margin-top: var(--spacing-md);
+    opacity: .7
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .bebidas-grid {
+@media (max-width:768px) {
+    .pedido-title {
+        font-size: 2rem
+    }
+
+    .step-title {
+        font-size: 1.5rem
+    }
+
+    .step-indicators {
+        overflow-x: auto;
+        gap: var(--spacing-xs)
+    }
+
+    .step-label {
+        font-size: .6rem
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        font-size: .9rem
+    }
+
+    .doggo-grid,
+    .extras-grid,
+    .bebidas-grid,
+    .delivery-options {
+        grid-template-columns: 1fr
+    }
+
+    .step-actions {
+        justify-content: center
+    }
+
+    .btn-next,
+    .btn-prev,
+    .btn-clear-cart {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0
+    }
+}
+
+@media (max-width:480px) {
+    .pedido-container {
+        padding: var(--spacing-md)
+    }
+
+    .pedido-title {
+        font-size: 1.6rem
+    }
+
+    .step-title {
+        font-size: 1.2rem
+    }
+
+    .doggo-grid {
         grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-sm)
     }
-}
 
-@media (max-width: 480px) {
-    .bebidas-grid {
-        grid-template-columns: 1fr;
+    .doggo-card {
+        padding: var(--spacing-sm)
     }
-    
-    .bebida-card {
-        padding: var(--spacing-xs) var(--spacing-sm);
+
+    .doggo-icon {
+        font-size: 2rem
     }
-}
 
-/* ============================================
-   EXTRAS Y BEBIDAS - ESTILOS COMPARTIDOS
-   ============================================ */
-
-/* Controles de cantidad para extras y bebidas */
-.extra-chip .qty-control-mini,
-.bebida-card .qty-control-mini {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius-sm);
-    padding: 2px;
-}
-
-.extra-chip .qty-btn-mini,
-.bebida-card .qty-btn-mini {
-    width: 24px;
-    height: 24px;
-    border: none;
-    border-radius: 50%;
-    background: var(--color-accent);
-    color: var(--color-primary-dark);
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: var(--transition-normal);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.extra-chip .qty-btn-mini:hover,
-.bebida-card .qty-btn-mini:hover {
-    transform: scale(1.1);
-    background: var(--color-accent-light);
-}
-
-.extra-chip .qty-btn-mini:active,
-.bebida-card .qty-btn-mini:active {
-    transform: scale(0.95);
-}
-
-.extra-chip .qty-value-mini,
-.bebida-card .qty-value-mini {
-    min-width: 20px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--color-text);
-}
-
-/* Espaciado entre secciones */
-.extras-grid,
-.bebidas-grid {
-    margin-bottom: var(--spacing-sm);
-}
-
-.form-group .bebidas-label,
-.form-group .extras-label {
-    font-weight: 600;
-    margin-bottom: var(--spacing-xs);
-    display: block;
-    font-size: 1.1rem;
-}
-
-.bebidas-hint {
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin-bottom: var(--spacing-md);
-    opacity: 0.7;
-}
-
-/* Separador entre extras y bebidas */
-.form-group + .form-group {
-    margin-top: var(--spacing-lg);
-    padding-top: var(--spacing-lg);
-    border-top: 2px solid rgba(244, 196, 48, 0.1);
+    .doggo-name {
+        font-size: .9rem
+    }
 }
