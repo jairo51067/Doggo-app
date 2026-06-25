@@ -369,10 +369,21 @@ body {
     transition: opacity var(--transition-normal);
     opacity: 1;
     min-height: 60vh;
+     transition: opacity 0.3s ease;
+    opacity: 1;
 }
 
 #app-content.loading {
     opacity: 0.6;
+}
+
+#app-content.loading .skeleton-loader {
+    display: block;
+}
+
+/* Asegurar que el contenido se muestre después de cargar */
+#app-content:not(.loading) .skeleton-loader {
+    display: none;
 }
 
 /* Loader */
@@ -405,7 +416,10 @@ body {
     font-size: 1.1rem;
 }
 
-/* ---- Footer ---- */
+/* ============================================
+   FOOTER MEJORADO
+   ============================================ */
+
 .footer {
     background: var(--color-primary-dark);
     border-top: 3px solid var(--color-accent);
@@ -420,7 +434,7 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
 }
 
 .footer-brand {
@@ -434,21 +448,63 @@ body {
     font-size: 0.9rem;
 }
 
+.footer-links {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.footer-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition-normal);
+}
+
+.footer-link:hover {
+    color: var(--color-accent);
+}
+
 .footer-social {
     display: flex;
     gap: var(--spacing-md);
 }
 
-.footer-social a {
+.social-link {
     color: var(--color-text-secondary);
     font-size: 1.5rem;
     transition: var(--transition-normal);
     text-decoration: none;
 }
 
-.footer-social a:hover {
+.social-link:hover {
     color: var(--color-accent);
     transform: scale(1.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+    
+    .footer-links {
+        justify-content: center;
+        gap: var(--spacing-md);
+    }
+    
+    .footer-brand {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-links {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
 }
 
 /* ---- Utilidades ---- */
@@ -809,3 +865,74 @@ body {
     }
 }
 
+/* ============================================
+   SKELETON LOADER - SHIMMER EFFECT
+   ============================================ */
+
+.skeleton-loader {
+    width: 100%;
+    min-height: 60vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-hero {
+    width: 100%;
+    height: 400px;
+    background: var(--color-primary-dark);
+    border-radius: var(--border-radius-lg);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: var(--spacing-lg);
+}
+
+.skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.skeleton-card {
+    height: 200px;
+    background: var(--color-primary);
+    border-radius: var(--border-radius-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer Effect */
+.skeleton-shimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.05) 25%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.05) 75%,
+        transparent 100%
+    );
+    animation: shimmer 2s ease-in-out infinite;
+    background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Ocultar skeleton cuando el contenido está listo */
+#app-content:not(.loading) .skeleton-loader {
+    display: none;
+}
+
+#app-content.loading .skeleton-loader {
+    display: block;
+}

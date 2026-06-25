@@ -1,61 +1,66 @@
-<!-- views/metodospagos.html -->
-<section class="py-4">
-  <div class="card-doggo p-4 p-md-5">
-    <div class="text-center">
-      <h1 class="fw-black">Métodos de pago</h1>
-      <p class="m-0" style="color: var(--muted); max-width: 680px; margin: 10px auto 0;">
-        Elige tu forma preferida. Tu pedido se confirma vía WhatsApp con el texto ya armado.
-      </p>
-    </div>
+<!-- ========================================== -->
+<!-- DOGGO - VISTA: MÉTODOS DE PAGO           -->
+<!-- ========================================== -->
 
-    <div class="row g-4 mt-3">
-      <div class="col-12 col-md-6">
-        <div class="card-doggo p-4 h-100">
-          <div class="d-flex align-items-center gap-3 mb-2">
-            <span class="badge badge-doggo p-2"><i class="fas fa-mobile-screen-button"></i></span>
-            <h2 class="h5 m-0 fw-black">Pago móvil</h2>
-          </div>
-          <p class="m-0" style="color: var(--muted);">Transferencia rápida o pagos móviles disponibles.</p>
-          <ul class="mt-3 mb-0" style="color: rgba(255,255,255,0.85)">
-            <li>Destinatario: Doggo App</li>
-            <li>Referencia: (se coloca en WhatsApp)</li>
-          </ul>
+<div class="metodos-container">
+    <header class="metodos-header">
+        <h1 class="metodos-title">💳 Métodos de <span class="highlight">Pago</span></h1>
+        <p class="metodos-subtitle">Elige la opción que mejor se adapte a ti</p>
+    </header>
+
+    <!-- Tarjetas de métodos de pago -->
+    <div class="metodos-grid">
+        <!-- Efectivo -->
+        <div class="metodo-card">
+            <div class="metodo-icon">💵</div>
+            <h3 class="metodo-name">Efectivo</h3>
+            <p class="metodo-desc">Paga al recibir tu pedido en la puerta de tu casa o en el local.</p>
+            <span class="metodo-badge">Disponible</span>
         </div>
-      </div>
 
-      <div class="col-12 col-md-6">
-        <div class="card-doggo p-4 h-100">
-          <div class="d-flex align-items-center gap-3 mb-2">
-            <span class="badge badge-doggo p-2"><i class="fas fa-university"></i></span>
-            <h2 class="h5 m-0 fw-black">Transferencia</h2>
-          </div>
-          <p class="m-0" style="color: var(--muted);">Cuenta bancaria / referencia para conciliar fácilmente.</p>
-          <ul class="mt-3 mb-0" style="color: rgba(255,255,255,0.85)">
-            <li>Banco: a definir</li>
-            <li>Cuenta: a definir</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="alert" style="background: rgba(244,196,48,0.14); border: 1px solid rgba(244,196,48,0.35); color:#fff; border-radius:14px;">
-          <div class="d-flex align-items-start gap-3">
-            <span class="badge badge-doggo p-2" style="flex:0 0 auto;">🔒</span>
-            <div>
-              <strong>Conversión SDD:</strong>
-              <div style="color: rgba(255,255,255,0.85); margin-top:4px;">
-                El sistema valida tus datos antes de abrir WhatsApp para evitar errores y mejorar la tasa de cierre.
-              </div>
+        <!-- Transferencia Bancaria -->
+        <div class="metodo-card">
+            <div class="metodo-icon">🏦</div>
+            <h3 class="metodo-name">Transferencia Bancaria</h3>
+            <p class="metodo-desc">Realiza una transferencia desde tu banco a nuestra cuenta.</p>
+            <span class="metodo-badge">Disponible</span>
+            <div class="metodo-details">
+                <p><strong>Banco:</strong> Ejemplo Bank</p>
+                <p><strong>Cuenta:</strong> 1234-5678-9012</p>
+                <p><strong>RIF:</strong> J-12345678-9</p>
             </div>
-          </div>
         </div>
-      </div>
 
-      <div class="col-12 d-grid d-md-flex gap-3 justify-content-md-end">
-        <a class="btn btn-ghost px-4" href="#/contacto"><i class="fas fa-envelope me-2"></i>Contáctanos</a>
-        <a class="btn btn-accent px-4" href="#/pedido"><i class="fas fa-bolt me-2"></i>Ir al pedido</a>
-      </div>
+        <!-- Pago Móvil -->
+        <div class="metodo-card">
+            <div class="metodo-icon">📱</div>
+            <h3 class="metodo-name">Pago Móvil</h3>
+            <p class="metodo-desc">Paga desde tu teléfono con nuestra aplicación de pago móvil.</p>
+            <span class="metodo-badge">Disponible</span>
+            <div class="metodo-details">
+                <p><strong>Teléfono:</strong> 0414-1234567</p>
+                <p><strong>Cédula:</strong> V-12345678</p>
+                <p><strong>Banco:</strong> Ejemplo Bank</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Crédito/Débito (ejemplo) -->
+        <div class="metodo-card">
+            <div class="metodo-icon">💳</div>
+            <h3 class="metodo-name">Tarjeta de Crédito/Débito</h3>
+            <p class="metodo-desc">Próximamente podrás pagar con tu tarjeta de forma segura.</p>
+            <span class="metodo-badge proximamente">Próximamente</span>
+        </div>
     </div>
-  </div>
-</section>
 
+    <!-- FAQ o Nota de Confianza -->
+    <section class="metodos-faq">
+        <h2 class="faq-title">🔒 Confianza y Seguridad</h2>
+        <p class="faq-text">
+            Todos nuestros métodos de pago son seguros y confiables. 
+            Si tienes alguna duda, no dudes en contactarnos a través de nuestro 
+            <a href="#/contacto" class="faq-link">formulario de contacto</a> 
+            o directamente por <a href="#" class="faq-link">WhatsApp</a>.
+        </p>
+    </section>
+</div>

@@ -295,27 +295,27 @@ class Router {
         });
     }
 
-    async navigate(viewName) {
+     async navigate(viewName) {
         console.log(`📄 Navegando a vista: ${viewName}`);
         try {
-            this.showLoadingState();
-
-            const html = await this.fetchView(viewName);
+            // ✅ Mostrar skeleton loader
+            this.showSkeleton();
             
-            // ✅ Cargar CSS antes de renderizar
-            await this.styleManager.switchToViewStyle(viewName);
+            // ✅ Cargar contenido en paralelo
+            const [html] = await Promise.all([
+                this.fetchView(viewName),
+                this.styleManager.switchToViewStyle(viewName)
+            ]);
             
-            // ✅ Renderizar el contenido
-            await this.renderView(html, viewName);
-            
-            // ✅ Forzar reflow para aplicar CSS
-            this.appContent.style.display = 'block';
-            this.appContent.offsetHeight;
+            // ✅ Renderizar con transición suave
+            await this.renderViewSmooth(html, viewName);
             
             this.updateTitle(viewName);
             this.dispatchViewEvent(viewName);
             this.initViewComponents(viewName);
-            this.hideLoadingState();
+            
+            // ✅ Ocultar skeleton
+            this.hideSkeleton();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -327,6 +327,53 @@ class Router {
         }
     }
 
+    showSkeleton() {
+        // ✅ Añadir clase loading para mostrar el skeleton
+        this.appContent.classList.add('loading');
+        // ✅ Mantener el skeleton visible
+        this.appContent.style.opacity = '1';
+    }
+
+    hideSkeleton() {
+        // ✅ Eliminar clase loading para ocultar skeleton
+        this.appContent.classList.remove('loading');
+        // ✅ Asegurar que el contenido sea visible
+        this.appContent.style.opacity = '1';
+    }
+
+    renderViewSmooth(html, viewName) {
+        return new Promise((resolve) => {
+            // ✅ Transición de 300ms para que sea suave
+            this.appContent.style.transition = 'opacity 0.3s ease';
+            this.appContent.style.opacity = '0';
+            
+            setTimeout(() => {
+                // ✅ Actualizar contenido
+                this.appContent.innerHTML = html;
+                
+                // ✅ Si es home, asegurar hero
+                if (viewName === 'home' || viewName === '/home') {
+                    const hero = this.appContent.querySelector('.hero-section');
+                    if (hero) {
+                        hero.style.minHeight = '100vh';
+                        hero.style.display = 'flex';
+                    }
+                }
+                
+                // ✅ Forzar reflow
+                this.appContent.offsetHeight;
+                
+                // ✅ Mostrar con fade
+                this.appContent.style.opacity = '1';
+                
+                // ✅ Limpiar transición después de mostrar
+                setTimeout(() => {
+                    this.appContent.style.transition = '';
+                    resolve();
+                }, 350);
+            }, 200);
+        });
+    }
     async fetchView(viewName) {
         const cacheKey = `view_${viewName}`;
         
@@ -1631,3 +1678,27 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🐕 ¡Doggo App iniciada! v6.0.0');
     console.log('💡 Para depuración, ejecuta: __DOGGO_APP__.router');
 });
+
+       // ============================================
+    // 11. LAZY LOADING DE IMÁGENES
+    // ============================================
+
+    initLazyLoading(); {
+        // ✅ Usar Intersection Observer para imágenes
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.add('loaded');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.doggo-image').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+    }
