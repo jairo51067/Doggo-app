@@ -1118,6 +1118,21 @@ clearCart() {
             if (qty) qty.textContent = '0';
         });
 
+        // Resetear lead y stepper visual (por si el DOM conserva estado)
+        this.orderState.currentStep = 1;
+        const formEl = document.getElementById('pedido-form');
+        if (formEl) {
+            formEl.querySelectorAll('.step-content').forEach(step => {
+                step.classList.toggle('active', step.dataset.step === '1');
+            });
+            formEl.querySelectorAll('.step-indicator').forEach(ind => {
+                const stepNum = ind.dataset.step;
+                ind.classList.toggle('active', stepNum === '1');
+                ind.classList.toggle('completed', parseInt(stepNum, 10) < 1);
+            });
+            formEl.querySelectorAll('.step-line').forEach(line => line.classList.remove('completed'));
+        }
+
         // Resetear cantidades de Extras
         form.querySelectorAll('.extra-chip').forEach(chip => {
             chip.classList.remove('has-items');
