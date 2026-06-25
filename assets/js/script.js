@@ -603,7 +603,7 @@ class Router {
         this.initDeliveryOption(form);
         this.initDireccionFields(form);
         this.initLeadFields(form);
-        this.initClearCart(form);
+        //this.initClearCart(form);//
         this.initFormSubmit(form);
         
         this.updateSummary();
@@ -1089,10 +1089,30 @@ class Router {
         Toast.success('Todos los datos han sido reiniciados.', 'Carrito vaciado');
     }
 
-    initFormSubmit(form) {
+     initFormSubmit(form) {
         const submitBtn = document.getElementById('submit-pedido');
         if (!submitBtn) return;
 
+        // ✅ NUEVO: Delegación de eventos para el botón de vaciar carrito
+        form.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.btn-clear-cart');
+            if (btn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const confirmed = await Modal.confirm(
+                    'Esta acción eliminará todos los items de tu carrito y tus datos de contacto.',
+                    '¿Vaciar todo el pedido?',
+                    'Sí, vaciar todo',
+                    'Cancelar',
+                    'danger'
+                );
+                if (confirmed) {
+                    this.clearCart();
+                }
+            }
+        });
+
+        // Envío del formulario
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
