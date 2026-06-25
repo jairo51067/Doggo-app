@@ -69,14 +69,12 @@ class StyleManager {
         try {
             this.unloadDynamicStyles();
             
-            // ✅ Cargar home.css con prioridad
             if (viewName === 'home' || viewName === '/home') {
                 await this.loadStyle('home');
-                // ✅ Esperar un momento para que el CSS se aplique
-                await new Promise(resolve => setTimeout(resolve, 50));
             } else if (viewName !== 'home') {
                 await this.loadStyle(viewName);
             }
+            
             return true;
         } catch (error) {
             console.error('Error al cambiar estilos:', error);
@@ -209,7 +207,7 @@ class ToastManager {
             if (toast.parentNode) {
                 toast.remove();
             }
-        }, 300);
+        }, 400);
     }
 
     clearAll() {
@@ -371,22 +369,14 @@ class Router {
         `;
     }
 
-    renderView(html, viewName) {
+     renderView(html, viewName) {
         return new Promise((resolve) => {
-            // ✅ Ocultar contenido mientras se aplica el CSS
             this.appContent.style.opacity = '0';
             
             setTimeout(() => {
                 this.appContent.innerHTML = html;
-                
-                // ✅ Forzar que el contenido se muestre correctamente
-                this.appContent.style.display = 'block';
-                this.appContent.style.width = '100%';
-                
-                // ✅ Trigger reflow para asegurar el renderizado
                 this.appContent.offsetHeight;
                 
-                // ✅ Si es home, asegurar que el hero tenga altura
                 if (viewName === 'home' || viewName === '/home') {
                     const hero = this.appContent.querySelector('.hero-section');
                     if (hero) {
@@ -1535,24 +1525,23 @@ class Router {
     // 8. COMPONENTE DE NAVBAR
     // ============================================
 
-    initNavbarToggle() {
+  initNavbarToggle() {
         const toggle = document.querySelector('.nav-toggle');
         const navMenu = document.querySelector('.nav-menu');
         
         if (toggle && navMenu) {
-            const newToggle = toggle.cloneNode(true);
-            toggle.parentNode.replaceChild(newToggle, toggle);
+            if (toggle._listenerAdded) return;
             
             const toggleScroll = (disable) => {
                 document.body.style.overflow = disable ? 'hidden' : '';
                 document.body.style.touchAction = disable ? 'none' : '';
             };
 
-            newToggle.addEventListener('click', (e) => {
+            const handleToggle = (e) => {
                 e.stopPropagation();
                 const isOpen = navMenu.classList.toggle('active');
-                newToggle.classList.toggle('active');
-                newToggle.setAttribute('aria-expanded', isOpen);
+                toggle.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', isOpen);
                 toggleScroll(isOpen);
                 
                 if (isOpen) {
@@ -1561,14 +1550,17 @@ class Router {
                         link.style.transitionDelay = `${0.05 * index}s`;
                     });
                 }
-            });
+            };
+
+            toggle.addEventListener('click', handleToggle);
+            toggle._listenerAdded = true;
 
             const links = navMenu.querySelectorAll('.nav-link');
             links.forEach(link => {
                 link.addEventListener('click', () => {
                     navMenu.classList.remove('active');
-                    newToggle.classList.remove('active');
-                    newToggle.setAttribute('aria-expanded', 'false');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
                     toggleScroll(false);
                 });
             });
@@ -1576,10 +1568,10 @@ class Router {
             document.addEventListener('click', (e) => {
                 if (navMenu.classList.contains('active') && 
                     !navMenu.contains(e.target) && 
-                    !newToggle.contains(e.target)) {
+                    !toggle.contains(e.target)) {
                     navMenu.classList.remove('active');
-                    newToggle.classList.remove('active');
-                    newToggle.setAttribute('aria-expanded', 'false');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
                     toggleScroll(false);
                 }
             });
@@ -1587,13 +1579,13 @@ class Router {
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && navMenu.classList.contains('active')) {
                     navMenu.classList.remove('active');
-                    newToggle.classList.remove('active');
-                    newToggle.setAttribute('aria-expanded', 'false');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
                     toggleScroll(false);
                 }
             });
 
-            console.log('✅ Navbar toggle mejorado inicializado');
+            console.log('✅ Navbar toggle inicializado');
         }
     }
 }

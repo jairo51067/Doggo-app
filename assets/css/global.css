@@ -540,7 +540,7 @@ body {
     }
     
     #app-content {
-        padding: var(--spacing-md);
+        padding: var(--spacing-sm);
     }
 }
 
@@ -808,3 +808,4 @@ body {
         width: 100%;
     }
 }
+
