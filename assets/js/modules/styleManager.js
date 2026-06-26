@@ -2,9 +2,6 @@
 // STYLE MANAGER - Gestión de estilos dinámicos
 // ============================================
 
-/**
- * Gestiona la carga y descarga de estilos CSS dinámicos
- */
 export class StyleManager {
     constructor() {
         console.log('🎨 StyleManager creado');
@@ -13,12 +10,6 @@ export class StyleManager {
         this.dynamicStyles = [];
     }
 
-    /**
-     * Carga una hoja de estilos CSS
-     * @param {string} styleName - Nombre del archivo CSS (sin extensión)
-     * @param {string} cssPath - Ruta base de los CSS
-     * @returns {Promise<HTMLLinkElement>}
-     */
     loadStyle(styleName, cssPath = 'assets/css/') {
         return new Promise((resolve, reject) => {
             const href = `${cssPath}${styleName}.css`;
@@ -48,9 +39,6 @@ export class StyleManager {
         });
     }
 
-    /**
-     * Descarga todas las hojas de estilos dinámicos
-     */
     unloadDynamicStyles() {
         const dynamicLinks = document.querySelectorAll('link[data-dynamic="true"]');
         dynamicLinks.forEach(link => {
@@ -61,12 +49,6 @@ export class StyleManager {
         });
     }
 
-    /**
-     * Cambia al estilo de una vista específica
-     * @param {string} viewName - Nombre de la vista
-     * @param {string} cssPath - Ruta base de los CSS
-     * @returns {Promise<boolean>}
-     */
     async switchToViewStyle(viewName, cssPath = 'assets/css/') {
         try {
             this.unloadDynamicStyles();
@@ -84,17 +66,8 @@ export class StyleManager {
         }
     }
 
-    /**
-     * Verifica si un estilo está cargado
-     * @param {string} styleName - Nombre del estilo
-     * @param {string} cssPath - Ruta base de los CSS
-     * @returns {boolean}
-     */
     isStyleLoaded(styleName, cssPath = 'assets/css/') {
         const href = `${cssPath}${styleName}.css`;
         return this.loadedStyles.has(href);
     }
 }
-
-// Exportar una instancia por defecto
-export const styleManager = new StyleManager();

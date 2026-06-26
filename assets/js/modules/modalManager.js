@@ -2,9 +2,6 @@
 // MODAL MANAGER - Sistema de modales personalizados
 // ============================================
 
-/**
- * Sistema de modales de confirmación personalizados
- */
 export class ModalManager {
     constructor() {
         this.container = null;
@@ -12,12 +9,6 @@ export class ModalManager {
 
     /**
      * Muestra un modal de confirmación
-     * @param {string} message - Mensaje principal
-     * @param {string} title - Título del modal
-     * @param {string} confirmText - Texto del botón confirmar
-     * @param {string} cancelText - Texto del botón cancelar
-     * @param {string} type - Tipo: 'warning', 'danger', 'info'
-     * @returns {Promise<boolean>} - Resuelve con true si confirma, false si cancela
      */
     confirm(message, title = 'Confirmar', confirmText = 'Sí, continuar', cancelText = 'Cancelar', type = 'warning') {
         return new Promise((resolve) => {
@@ -67,6 +58,3 @@ export class ModalManager {
         });
     }
 }
-
-// Exportar una instancia por defecto
-export const modalManager = new ModalManager();

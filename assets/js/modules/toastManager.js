@@ -2,18 +2,12 @@
 // TOAST MANAGER - Sistema de notificaciones
 // ============================================
 
-/**
- * Sistema de notificaciones tipo Toast
- */
 export class ToastManager {
     constructor() {
         this.container = null;
         this.init();
     }
 
-    /**
-     * Inicializa el contenedor de toasts
-     */
     init() {
         if (!document.querySelector('.toast-container')) {
             this.container = document.createElement('div');
@@ -24,14 +18,6 @@ export class ToastManager {
         }
     }
 
-    /**
-     * Muestra una notificación
-     * @param {string} message - Mensaje principal
-     * @param {string} type - Tipo: 'success', 'error', 'info', 'warning'
-     * @param {string} title - Título opcional
-     * @param {number} duration - Duración en ms (0 para no auto-cerrar)
-     * @returns {HTMLElement} - Elemento toast creado
-     */
     show(message, type = 'info', title = '', duration = 3000) {
         const icons = {
             success: '✅',
@@ -67,10 +53,6 @@ export class ToastManager {
         return toast;
     }
 
-    /**
-     * Oculta una notificación
-     * @param {HTMLElement} toast - Elemento toast a ocultar
-     */
     hide(toast) {
         if (!toast || !toast.parentNode) return;
         
@@ -82,42 +64,24 @@ export class ToastManager {
         }, 400);
     }
 
-    /**
-     * Limpia todas las notificaciones
-     */
     clearAll() {
         const toasts = this.container.querySelectorAll('.toast');
         toasts.forEach(toast => this.hide(toast));
     }
 
-    /**
-     * Notificación de éxito
-     */
     success(message, title = '¡Éxito!', duration = 3000) {
         return this.show(message, 'success', title, duration);
     }
 
-    /**
-     * Notificación de error
-     */
     error(message, title = 'Error', duration = 4000) {
         return this.show(message, 'error', title, duration);
     }
 
-    /**
-     * Notificación informativa
-     */
     info(message, title = 'Información', duration = 3000) {
         return this.show(message, 'info', title, duration);
     }
 
-    /**
-     * Notificación de advertencia
-     */
     warning(message, title = 'Atención', duration = 3500) {
         return this.show(message, 'warning', title, duration);
     }
 }
-
-// Exportar una instancia por defecto
-export const toastManager = new ToastManager();
