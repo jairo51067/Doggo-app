@@ -1,95 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Doggo - No es un perro, es una movida</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doggo - No es un perro, es una movida</title>
 
-  <meta name="description" content="Doggo - Pizzas y perros calientes con estilo urbano. Haz tu pedido por WhatsApp en segundos.">
-  <meta property="og:title" content="Doggo - No es un perro, es una movida">
-  <meta property="og:description" content="Doggo - Pizzas y perros calientes con estilo urbano. Pedido rápido por WhatsApp.">
-  <meta property="og:image" content="assets/img/doggo1.png">
+    <!-- Meta tags para SEO y redes sociales -->
+    <meta name="description"
+        content="Doggo - Pizzas y perros calientes con estilo urbano. Haz tu pedido por WhatsApp en segundos.">
+    <meta property="og:title" content="Doggo - No es un perro, es una movida">
+    <meta property="og:description" content="Pizzas y perros calientes con estilo urbano. Pedido rápido por WhatsApp.">
+    <meta property="og:image" content="assets/img/doggo1.png">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="preload" href="assets/css/global.css" as="style">
-  <link rel="stylesheet" href="assets/css/global.css">
-  <link rel="icon" type="image/png" href="assets/img/doggo1.png">
+    <!-- ✅ Font Awesome para iconos profesionales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Precarga de recursos críticos -->
+    <link rel="preload" href="assets/css/global.css" as="style">
+    <link rel="preload" href="assets/js/app.js" as="script">
+
+    <!-- CSS Global (siempre presente) -->
+    <link rel="stylesheet" href="assets/css/global.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/img/doggo1.png">
 </head>
+
 <body>
-  <nav class="navbar" role="navigation" aria-label="Navegación principal">
-    <div class="nav-container">
-      <div class="nav-brand">
-        <a href="#/home" class="nav-logo">
-          <img src="assets/img/doggo2.png" alt="Doggo Logo" height="50">
-          <span class="brand-text">Doggo</span>
-        </a>
-      </div>
+    <!-- Navbar persistente -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="#/home" class="nav-logo">
+                    <img src="assets/img/doggo1.png" alt="Doggo Logo" height="50">
+                    <span class="brand-text">Doggo</span>
+                </a>
+            </div>
 
-      <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
-        <span class="hamburger"></span>
-      </button>
+            <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <span class="hamburger"></span>
+            </button>
 
-      <ul class="nav-menu">
-        <li><a href="#/home" class="nav-link active">Inicio</a></li>
-        <li><a href="#/pedido" class="nav-link">Haz tu Pedido</a></li>
-        <li><a href="#/metodospagos" class="nav-link">Métodos de Pago</a></li>
-        <li><a href="#/contacto" class="nav-link">Contacto</a></li>
-      </ul>
-    </div>
-  </nav>
+            <ul class="nav-menu">
+                <li><a href="#/home" class="nav-link active">Inicio</a></li>
+                <li><a href="#/pedido" class="nav-link">Haz tu Pedido</a></li>
+                <li><a href="#/metodospagos" class="nav-link">Métodos de Pago</a></li>
+                <li><a href="#/contacto" class="nav-link">Contacto</a></li>
+            </ul>
+        </div>
+    </nav>
 
-  <main id="app-content">
-    <div class="skeleton-loader">
-      <div class="skeleton-hero">
-        <div class="skeleton-shimmer"></div>
-      </div>
-      <div class="skeleton-grid">
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-      </div>
-    </div>
-  </main>
+    <!-- Contenido dinámico -->
+    <main id="app-content">
+        <!-- El contenido se inyecta aquí vía JavaScript -->
+        <div class="loading-state">
+            <div class="loader"></div>
+            <p>Cargando Doggo...</p>
+        </div>
+    </main>
 
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-brand">
-        <img src="assets/img/doggo1.png" alt="Doggo" height="40">
-        <p>© 2026 Doggo - No es un perro, es una movida</p>
-      </div>
+    <!-- Footer persistente -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <img src="assets/img/doggo1.png" alt="Doggo" height="40">
+                <p>© 2026 Doggo - No es un perro, es una movida</p>
+            </div>
+            <div class="footer-links">
+                <a href="#/metodospagos" class="footer-link">Métodos de Pago</a>
+                <a href="#/contacto" class="footer-link">Contacto</a>
+                <a href="#/sobre" class="footer-link">ℹ️ Sobre este proyecto</a>
+                <a href="#" class="footer-link">Términos y Condiciones</a>
+                <a href="#" class="footer-link">Política de Privacidad</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" aria-label="Instagram" class="social-link">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" aria-label="WhatsApp" class="social-link">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="#" aria-label="TikTok" class="social-link">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="#" aria-label="Facebook" class="social-link">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" aria-label="YouTube" class="social-link">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+        <!-- Créditos del Desarrollador -->
+        <div class="footer-credits">
+            <div class="credits-container">
+                <span class="credits-text">
+                    <i class="fas fa-code"></i> Desarrollado por
+                    <a href="https://tusitio.com" target="_blank" class="credits-link">
+                        <strong>Jairo Cárdenas</strong>
+                    </a>
+                    <span class="credits-separator">|</span>
+                    <a href="#/sobre" class="credits-link credits-cta">
+                        <i class="fas fa-rocket"></i> Conoce más sobre este proyecto
+                    </a>
+                </span>
+            </div>
+        </div>
+    </footer>
 
-      <div class="footer-links">
-        <a href="#/metodospagos" class="footer-link">Métodos de Pago</a>
-        <a href="#/contacto" class="footer-link">Contacto</a>
-        <a href="#" class="footer-link">Términos y Condiciones</a>
-        <a href="#" class="footer-link">Política de Privacidad</a>
-      </div>
-
-      <div class="footer-social">
-        <a href="https://www.instagram.com/doggo.sc" aria-label="Instagram" class="social-link"><i class="fab fa-instagram"></i></a>
-        <a href="#" aria-label="WhatsApp" class="social-link"><i class="fab fa-whatsapp"></i></a>
-        <a href="#" aria-label="TikTok" class="social-link"><i class="fab fa-tiktok"></i></a>
-        <a href="#" aria-label="Facebook" class="social-link"><i class="fab fa-facebook"></i></a>
-        <a href="#" aria-label="YouTube" class="social-link"><i class="fab fa-youtube"></i></a>
-      </div>
-    </div>
-
-    <div class="footer-credits">
-      <div class="credits-container">
-        <span class="credits-text">
-          <i class="fas fa-code"></i> Desarrollado por
-          <a href="https://jairo-cardenas-dev-portfolio.vercel.app/" target="_blank" class="credits-link">
-            <strong>Jairo Cárdenas</strong>
-          </a>
-          <span class="credits-separator">|</span>
-          <a href="#/sobre" class="credits-link credits-cta">
-            <i class="fas fa-rocket"></i> Conoce más sobre este proyecto
-          </a>
-        </span>
-      </div>
-    </div>
-  </footer>
-
-  <script type="module" src="assets/js/script.js"></script>
+    <!-- ✅ Script principal como módulo -->
+    <script type="module" src="assets/js/app.js"></script>
 </body>
+
 </html>

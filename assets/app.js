@@ -5,6 +5,7 @@
 import { StyleManager } from './modules/styleManager.js';
 import { ModalManager } from './modules/modalManager.js';
 import { ToastManager } from './modules/toastManager.js';
+import { PedidoManager } from './modules/pedidoManager.js';
 import { Router } from './modules/router.js';
 
 // Configuración del Router
@@ -27,11 +28,11 @@ const modalManager = new ModalManager();
 const toastManager = new ToastManager();
 
 // Inicializar Router con los managers
-const router = new Router(ROUTER_CONFIG, styleManager, modalManager, toastManager);
+const app = new Router(ROUTER_CONFIG, styleManager, modalManager, toastManager);
 
 // Exportar para debugging
 window.__DOGGO_APP__ = {
-    router,
+    app,
     version: '7.0.0',
     managers: {
         style: styleManager,
