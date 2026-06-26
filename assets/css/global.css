@@ -1115,3 +1115,32 @@ body {
         gap: var(--spacing-xs);
     }
 }
+
+.nav-toggle {
+  display: none;
+  position: relative;
+  z-index: 1001;
+}
+
+.nav-menu {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+  }
+
+  /* .nav-menu.open {
+    display: flex;
+  } */
+}
