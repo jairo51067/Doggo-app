@@ -225,6 +225,7 @@
     justify-content: center;
     flex-wrap: wrap;
     margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
 }
 
 .btn-hero {
@@ -634,7 +635,7 @@
    ============================================ */
 
 .doggos-destacados {
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) 0;
 }
 
 .section-header {

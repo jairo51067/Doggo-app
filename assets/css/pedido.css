@@ -655,3 +655,12 @@
         font-size: .9rem
     }
 }
+
+.btn-next, .btn-prev, .btn-clear-cart, .btn-submit, .step-indicator {
+  position: relative;
+  z-index: 9999;
+}
+
+.step-content, .step-actions, .delivery-card, .doggo-card, .extra-chip, .bebida-card {
+  pointer-events: auto;
+}
