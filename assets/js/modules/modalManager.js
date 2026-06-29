@@ -57,7 +57,8 @@ export class ModalManager {
             document.addEventListener('keydown', handleEscape);
         });
     }
-        /**
+
+    /**
      * Muestra un modal informativo (solo botón de cerrar)
      */
     show({ title = 'Información', content = '', confirmText = 'Entendido', showCancel = false }) {

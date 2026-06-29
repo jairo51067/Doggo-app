@@ -341,6 +341,8 @@ export class PedidoManager {
     });
   }
 
+  
+
   /**
    * Vaciar carrito - versión original corregida
    */
@@ -426,6 +428,73 @@ export class PedidoManager {
   }
 
   /**
+ * Limpia el estado del pedido después de enviarlo
+ * (versión silenciosa, sin toast de "carrito vaciado")
+ */
+clearOrderState() {
+  console.log("🧹 Limpiando estado del pedido...");
+
+  // 1. Reiniciar estado completo
+  this.orderState = {
+    currentStep: 1,
+    totalSteps: 4,
+    doggos: {},
+    extras: {},
+    bebidas: {},
+    delivery: "pickup",
+    direccion: "",
+    referencias: "",
+    leadData: { nombre: "", email: "", whatsapp: "" },
+  };
+
+  // 2. Limpiar localStorage
+  localStorage.removeItem("doggo_order_state");
+
+  // 3. Obtener el formulario
+  const form = this.form;
+  if (!form) return;
+
+  // 4. Limpiar TODOS los inputs
+  form.querySelectorAll("input").forEach((input) => {
+    input.value = "";
+    input.classList.remove("error", "success");
+    const feedback = input.closest(".form-group")?.querySelector(".field-feedback");
+    if (feedback) feedback.innerHTML = "";
+  });
+
+  // 5. Limpiar TODAS las cantidades
+  form.querySelectorAll(".qty-value, .qty-value-mini").forEach((el) => {
+    el.textContent = "0";
+  });
+
+  // 6. Limpiar TODAS las tarjetas con clase 'has-items'
+  form.querySelectorAll(".doggo-card, .extra-chip, .bebida-card").forEach((card) => {
+    card.classList.remove("has-items");
+  });
+
+  // 7. Resetear opción de delivery
+  form.querySelectorAll(".delivery-card").forEach((card) => {
+    card.classList.toggle("selected", card.dataset.value === "pickup");
+  });
+
+  // 8. Ocultar dirección
+  const direccionGroup = form.querySelector(".direccion-group");
+  if (direccionGroup) direccionGroup.style.display = "none";
+
+  // 9. Resetear el select de bebida si existe
+  const bebidaSelect = form.querySelector("#bebida");
+  if (bebidaSelect) bebidaSelect.value = "Sin bebida";
+
+  // 10. Actualizar resumen
+  this.updateSummary();
+
+  // 11. Reiniciar stepper (volver al paso 1 visualmente)
+  this.updateStepperUI(1);
+
+  console.log("✅ Estado del pedido limpiado");
+}
+
+  /**
    * Inicializa el envío del formulario - VERSIÓN MODIFICADA
    */
   initFormSubmit() {
@@ -438,35 +507,37 @@ export class PedidoManager {
   /**
    * 🆕 NUEVO MÉTODO - Envía el pedido y lo guarda en Firestore
    */
-  async submitOrder() {
-    console.log("📤 Enviando pedido...");
+ async submitOrder() {
+  console.log("📤 Enviando pedido...");
 
-    // Validar formulario completo
-    if (!this.validateLeadFields()) {
-      this.orderState.currentStep = 1;
-      this.updateStepperUI(1);
-      return;
-    }
+  // Validar formulario completo
+  if (!this.validateLeadFields()) {
+    this.orderState.currentStep = 1;
+    this.updateStepperUI(1);
+    return;
+  }
 
-    if (!this.validateDoggos()) {
-      this.orderState.currentStep = 2;
-      this.updateStepperUI(2);
-      return;
-    }
+  if (!this.validateDoggos()) {
+    this.orderState.currentStep = 2;
+    this.updateStepperUI(2);
+    return;
+  }
 
-    if (!this.validateStep3()) {
-      this.orderState.currentStep = 3;
-      this.updateStepperUI(3);
-      return;
-    }
+  if (!this.validateStep3()) {
+    this.orderState.currentStep = 3;
+    this.updateStepperUI(3);
+    return;
+  }
 
-    // Construir resumen del pedido
-    const summary = this.buildOrderSummary();
+  const summary = this.buildOrderSummary();
 
-    // Preparar URL de WhatsApp
-    const whatsappUrl = this.buildWhatsAppUrl(summary);
+  // Mostrar loading
+  if (this.toastManager) {
+    this.toastManager.info("Guardando pedido...", "Procesando");
+  }
 
-    // Preparar datos del pedido
+  try {
+    // 1. PRIMERO: Guardar pedido en Firestore para obtener el número
     const orderData = {
       customerName: this.orderState.leadData.nombre,
       phone: this.orderState.leadData.whatsapp,
@@ -481,60 +552,86 @@ export class PedidoManager {
       subtotal: summary.total - summary.deliveryCost,
       deliveryFee: summary.deliveryCost,
       total: summary.total,
-      whatsappUrl: whatsappUrl,
+      whatsappUrl: null, // Se actualizará después
       notes: null,
     };
 
-    // Mostrar loading
-    if (this.toastManager) {
-      this.toastManager.info("Guardando pedido...", "Procesando");
+    const result = await this.ordersManager.saveOrder(orderData);
+
+    if (!result.success) {
+      if (this.toastManager) {
+        this.toastManager.error("Error al guardar el pedido. Intenta de nuevo.", "Error");
+      }
+      return;
     }
 
-    // GUARDAR EN FIRESTORE ANTES DE ABRIR WHATSAPP
-    try {
-      const result = await this.ordersManager.saveOrder(orderData);
+    console.log("✅ Pedido guardado:", result.orderNumber);
 
-      if (!result.success) {
-        if (this.toastManager) {
-          this.toastManager.error(
-            "Error al guardar el pedido. Intenta de nuevo.",
-            "Error"
-          );
-        }
-        return;
-      }
+    // 2. AHORA: Construir el mensaje de WhatsApp CON el número de pedido
+    const whatsappMessage = this.buildWhatsAppMessageWithOrderNumber(summary, result.orderNumber);
+    const phone = this.formatWhatsApp(this.orderState.leadData.whatsapp);
+    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
 
-      // ÉXITO - Mostrar confirmación con número de pedido
-      console.log("✅ Pedido guardado:", result.orderNumber);
+    // 3. Mostrar confirmación
+    if (this.toastManager) {
+      this.toastManager.success(
+        `¡Pedido ${result.orderNumber} confirmado! Abriendo WhatsApp...`,
+        "¡Listo!"
+      );
+    }
 
-      if (this.toastManager) {
-        this.toastManager.success(
-          `¡Pedido ${result.orderNumber} confirmado! Abriendo WhatsApp...`,
-          "¡Listo!"
-        );
-      }
+    this.showOrderConfirmation(result.orderNumber, result.order.total);
 
-      // Mostrar modal de confirmación con el número de pedido
-      this.showOrderConfirmation(result.orderNumber, result.order.total);
+    // 4. Limpiar carrito
+    this.clearOrderState();
 
-      // Limpiar carrito
-      this.clearCart();
+    // 5. Esperar 2 segundos y abrir WhatsApp
+    setTimeout(() => {
+      window.open(whatsappUrl, "_blank");
+    }, 2000);
 
-      // Esperar 2 segundos para que el usuario vea la confirmación
-      setTimeout(() => {
-        // Abrir WhatsApp
-        window.open(whatsappUrl, "_blank");
-      }, 2000);
-    } catch (error) {
-      console.error("❌ Error en submitOrder:", error);
-      if (this.toastManager) {
-        this.toastManager.error(
-          "Error al procesar el pedido. Intenta de nuevo.",
-          "Error"
-        );
-      }
+  } catch (error) {
+    console.error("❌ Error en submitOrder:", error);
+    if (this.toastManager) {
+      this.toastManager.error("Error al procesar el pedido. Intenta de nuevo.", "Error");
     }
   }
+}
+
+/**
+ * Construye el mensaje para WhatsApp incluyendo el número de pedido
+ */
+buildWhatsAppMessageWithOrderNumber(data, orderNumber) {
+  return `
+🌭 *Nuevo Pedido Doggo* 🌭
+
+📋 *Número de Pedido:* ${orderNumber}
+
+👤 *Datos del Cliente:*
+Nombre: ${this.orderState.leadData.nombre || "No especificado"}
+Email: ${this.orderState.leadData.email || "No especificado"}
+WhatsApp: ${this.orderState.leadData.whatsapp || "No especificado"}
+
+🍔 *Productos:*
+${data.doggosList.join("\n") || "Sin doggos"}
+
+🧀 *Extras:*
+${data.extrasList.join("\n") || "Sin extras"}
+
+🥤 *Bebidas:*
+${data.bebidasList.join("\n") || "Sin bebidas"}
+
+🚚 *Entrega:* ${data.deliveryText}
+${this.orderState.delivery === "delivery" ? `📍 Dirección: ${this.orderState.direccion || "No especificada"}\n📝 Referencias: ${this.orderState.referencias || "No especificadas"}\n` : ""}
+💳 *Método de Pago:* WhatsApp
+
+💰 *Subtotal:* $${(data.total - data.deliveryCost).toLocaleString()}
+${data.deliveryCost > 0 ? `🚚 *Delivery:* $${data.deliveryCost.toLocaleString()}\n` : ""}
+✅ *TOTAL:* $${data.total.toLocaleString()}
+
+_Gracias por tu pedido! 🐕_
+  `.trim();
+}
 
   /**
    * Construye el resumen del pedido
@@ -917,5 +1014,5 @@ showOrderConfirmation(orderNumber, total) {
     content: message,
     confirmText: 'Entendido',
     showCancel: false
-  });
+  });   
 }}
