@@ -603,36 +603,35 @@ clearOrderState() {
  */
 buildWhatsAppMessageWithOrderNumber(data, orderNumber) {
   return `
-🌭 *Nuevo Pedido Doggo* 🌭
+*Nuevo Pedido Doggo*
 
-📋 *Número de Pedido:* ${orderNumber}
+*Numero de Pedido:* ${orderNumber}
 
-👤 *Datos del Cliente:*
+*Datos del Cliente:*
 Nombre: ${this.orderState.leadData.nombre || "No especificado"}
 Email: ${this.orderState.leadData.email || "No especificado"}
 WhatsApp: ${this.orderState.leadData.whatsapp || "No especificado"}
 
-🍔 *Productos:*
+*Productos:*
 ${data.doggosList.join("\n") || "Sin doggos"}
 
-🧀 *Extras:*
+*Extras:*
 ${data.extrasList.join("\n") || "Sin extras"}
 
-🥤 *Bebidas:*
+*Bebidas:*
 ${data.bebidasList.join("\n") || "Sin bebidas"}
 
-🚚 *Entrega:* ${data.deliveryText}
-${this.orderState.delivery === "delivery" ? `📍 Dirección: ${this.orderState.direccion || "No especificada"}\n📝 Referencias: ${this.orderState.referencias || "No especificadas"}\n` : ""}
-💳 *Método de Pago:* WhatsApp
+*Entrega:* ${data.deliveryText}
+${this.orderState.delivery === "delivery" ? `Direccion: ${this.orderState.direccion || "No especificada"}\nReferencias: ${this.orderState.referencias || "No especificadas"}\n` : ""}
+*Metodo de Pago:* WhatsApp
 
-💰 *Subtotal:* $${(data.total - data.deliveryCost).toLocaleString()}
-${data.deliveryCost > 0 ? `🚚 *Delivery:* $${data.deliveryCost.toLocaleString()}\n` : ""}
-✅ *TOTAL:* $${data.total.toLocaleString()}
+*Subtotal:* $${(data.total - data.deliveryCost).toLocaleString()}
+${data.deliveryCost > 0 ? `*Delivery:* $${data.deliveryCost.toLocaleString()}\n` : ""}
+*TOTAL:* $${data.total.toLocaleString()}
 
-_Gracias por tu pedido! 🐕_
+_Gracias por tu pedido!_
   `.trim();
 }
-
   /**
    * Construye el resumen del pedido
    */
