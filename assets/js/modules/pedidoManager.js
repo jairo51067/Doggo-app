@@ -2,20 +2,23 @@
 // PEDIDO MANAGER - Lógica del formulario de pedidos
 // ============================================
 
+import { ProductsManager } from "./productsManager.js";
+
 /**
  * Gestiona toda la lógica del formulario de pedidos
  */
-
-import { ProductsManager } from "./productsManager.js";
 export class PedidoManager {
   /**
    * @param {ModalManager} modalManager - Instancia del gestor de modales
    * @param {ToastManager} toastManager - Instancia del gestor de toasts
+   * @param {ProductsManager} productsManager - Instancia del gestor de productos
+   * @param {OrdersManager} ordersManager - Instancia del gestor de órdenes
    */
-  constructor(modalManager, toastManager, productsManager) {
+  constructor(modalManager, toastManager, productsManager, ordersManager) {
     this.modalManager = modalManager;
     this.toastManager = toastManager;
     this.productsManager = productsManager;
+    this.ordersManager = ordersManager;
     this.form = null;
     this.orderState = null;
     this.isInitialized = false;
@@ -43,7 +46,7 @@ export class PedidoManager {
       if (this.toastManager) {
         this.toastManager.error(
           "Error cargando el menú. Recarga la página.",
-          "Error",
+          "Error"
         );
       }
       return;
@@ -72,18 +75,8 @@ export class PedidoManager {
     // Inicializar componentes
     this.initStepper();
     this.initQuantities(".doggo-card", "doggos", ".qty-value", "has-items");
-    this.initQuantities(
-      ".extra-chip",
-      "extras",
-      ".qty-value-mini",
-      "has-items",
-    );
-    this.initQuantities(
-      ".bebida-card",
-      "bebidas",
-      ".qty-value-mini",
-      "has-items",
-    );
+    this.initQuantities(".extra-chip", "extras", ".qty-value-mini", "has-items");
+    this.initQuantities(".bebida-card", "bebidas", ".qty-value-mini", "has-items");
     this.initDeliveryOption();
     this.initDireccionFields();
     this.initLeadFields();
@@ -156,7 +149,6 @@ export class PedidoManager {
 
   /**
    * Actualiza la UI del stepper
-   * @param {number} stepNumber - Número de paso actual
    */
   updateStepperUI(stepNumber) {
     const current = Number(stepNumber) || 1;
@@ -181,10 +173,6 @@ export class PedidoManager {
 
   /**
    * Inicializa los controles de cantidad para un tipo de item
-   * @param {string} selector - Selector de los items
-   * @param {string} stateKey - Clave en orderState
-   * @param {string} qtySelector - Selector del elemento de cantidad
-   * @param {string} activeClass - Clase para items seleccionados
    */
   initQuantities(selector, stateKey, qtySelector, activeClass) {
     this.form.querySelectorAll(selector).forEach((card) => {
@@ -212,7 +200,7 @@ export class PedidoManager {
             this.toastManager.info(
               `${value} añadido (${next}x)`,
               "Agregado",
-              1500,
+              1500
             );
           }
         } else {
@@ -258,7 +246,7 @@ export class PedidoManager {
           this.toastManager.info(
             `Opción seleccionada: ${text}`,
             "Entrega",
-            2000,
+            2000
           );
         }
       });
@@ -287,8 +275,7 @@ export class PedidoManager {
     const referencias = this.form.querySelector("#referencias");
 
     if (direccion) {
-      if (this.orderState.direccion)
-        direccion.value = this.orderState.direccion;
+      if (this.orderState.direccion) direccion.value = this.orderState.direccion;
       direccion.addEventListener("input", () => {
         this.orderState.direccion = direccion.value.trim();
         this.saveOrderState();
@@ -332,7 +319,7 @@ export class PedidoManager {
   }
 
   /**
-   * Inicializa el botón "Vaciar carrito" (✅ CORREGIDO)
+   * Inicializa el botón "Vaciar carrito"
    */
   initClearCart() {
     this.form.querySelectorAll(".btn-clear-cart").forEach((btn) => {
@@ -344,7 +331,7 @@ export class PedidoManager {
               "¿Vaciar todo el pedido?",
               "Sí, vaciar todo",
               "Cancelar",
-              "danger",
+              "danger"
             )
           : true;
         if (confirmed) {
@@ -355,7 +342,7 @@ export class PedidoManager {
   }
 
   /**
-   * ✅ FUNCIÓN CLEAR CART CORREGIDA
+   * Vaciar carrito - versión original corregida
    */
   clearCart() {
     console.log("🗑️ Vaciar carrito ejecutado");
@@ -382,7 +369,7 @@ export class PedidoManager {
       if (this.toastManager) {
         this.toastManager.success(
           "Todos los datos han sido reiniciados.",
-          "Carrito vaciado",
+          "Carrito vaciado"
         );
       }
       return;
@@ -398,7 +385,7 @@ export class PedidoManager {
       if (feedback) feedback.innerHTML = "";
     });
 
-    // 5. Limpiar TODAS las cantidades (qty-value y qty-value-mini)
+    // 5. Limpiar TODAS las cantidades
     form.querySelectorAll(".qty-value, .qty-value-mini").forEach((el) => {
       el.textContent = "0";
     });
@@ -433,45 +420,120 @@ export class PedidoManager {
     if (this.toastManager) {
       this.toastManager.success(
         "Todos los datos han sido reiniciados.",
-        "Carrito vaciado",
+        "Carrito vaciado"
       );
     }
   }
 
   /**
-   * Inicializa el envío del formulario
+   * Inicializa el envío del formulario - VERSIÓN MODIFICADA
    */
   initFormSubmit() {
-    this.form.addEventListener("submit", (e) => {
+    this.form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      if (!this.validateLeadFields()) {
-        this.orderState.currentStep = 1;
-        this.updateStepperUI(1);
-        return;
-      }
-
-      if (!this.validateDoggos()) {
-        this.orderState.currentStep = 2;
-        this.updateStepperUI(2);
-        return;
-      }
-
-      if (!this.validateStep3()) {
-        this.orderState.currentStep = 3;
-        this.updateStepperUI(3);
-        return;
-      }
-
-      const summary = this.buildOrderSummary();
-      const message = this.buildWhatsAppMessage(summary);
-      const phone = this.formatWhatsApp(this.orderState.leadData.whatsapp);
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-      window.open(url, "_blank");
-
-      // Limpiar carrito después de enviar (opcional)
-      this.clearCart();
+      await this.submitOrder();
     });
+  }
+
+  /**
+   * 🆕 NUEVO MÉTODO - Envía el pedido y lo guarda en Firestore
+   */
+  async submitOrder() {
+    console.log("📤 Enviando pedido...");
+
+    // Validar formulario completo
+    if (!this.validateLeadFields()) {
+      this.orderState.currentStep = 1;
+      this.updateStepperUI(1);
+      return;
+    }
+
+    if (!this.validateDoggos()) {
+      this.orderState.currentStep = 2;
+      this.updateStepperUI(2);
+      return;
+    }
+
+    if (!this.validateStep3()) {
+      this.orderState.currentStep = 3;
+      this.updateStepperUI(3);
+      return;
+    }
+
+    // Construir resumen del pedido
+    const summary = this.buildOrderSummary();
+
+    // Preparar URL de WhatsApp
+    const whatsappUrl = this.buildWhatsAppUrl(summary);
+
+    // Preparar datos del pedido
+    const orderData = {
+      customerName: this.orderState.leadData.nombre,
+      phone: this.orderState.leadData.whatsapp,
+      email: this.orderState.leadData.email,
+      items: this.orderState.doggos,
+      extras: this.orderState.extras,
+      bebidas: this.orderState.bebidas,
+      deliveryType: this.orderState.delivery,
+      address: this.orderState.direccion,
+      references: this.orderState.referencias,
+      paymentMethod: "WhatsApp",
+      subtotal: summary.total - summary.deliveryCost,
+      deliveryFee: summary.deliveryCost,
+      total: summary.total,
+      whatsappUrl: whatsappUrl,
+      notes: null,
+    };
+
+    // Mostrar loading
+    if (this.toastManager) {
+      this.toastManager.info("Guardando pedido...", "Procesando");
+    }
+
+    // GUARDAR EN FIRESTORE ANTES DE ABRIR WHATSAPP
+    try {
+      const result = await this.ordersManager.saveOrder(orderData);
+
+      if (!result.success) {
+        if (this.toastManager) {
+          this.toastManager.error(
+            "Error al guardar el pedido. Intenta de nuevo.",
+            "Error"
+          );
+        }
+        return;
+      }
+
+      // ÉXITO - Mostrar confirmación con número de pedido
+      console.log("✅ Pedido guardado:", result.orderNumber);
+
+      if (this.toastManager) {
+        this.toastManager.success(
+          `¡Pedido ${result.orderNumber} confirmado! Abriendo WhatsApp...`,
+          "¡Listo!"
+        );
+      }
+
+      // Mostrar modal de confirmación con el número de pedido
+      this.showOrderConfirmation(result.orderNumber, result.order.total);
+
+      // Limpiar carrito
+      this.clearCart();
+
+      // Esperar 2 segundos para que el usuario vea la confirmación
+      setTimeout(() => {
+        // Abrir WhatsApp
+        window.open(whatsappUrl, "_blank");
+      }, 2000);
+    } catch (error) {
+      console.error("❌ Error en submitOrder:", error);
+      if (this.toastManager) {
+        this.toastManager.error(
+          "Error al procesar el pedido. Intenta de nuevo.",
+          "Error"
+        );
+      }
+    }
   }
 
   /**
@@ -529,10 +591,23 @@ Bebidas:
 ${data.bebidasList.join("\n") || "Sin bebidas"}
 
 Entrega: ${data.deliveryText}
-${this.orderState.delivery === "delivery" ? `Dirección: ${this.orderState.direccion || "No especificada"}\nReferencias: ${this.orderState.referencias || "No especificadas"}\n` : ""}
+${
+  this.orderState.delivery === "delivery"
+    ? `Dirección: ${this.orderState.direccion || "No especificada"}\nReferencias: ${this.orderState.referencias || "No especificadas"}\n`
+    : ""
+}
 
 Total: $${data.total.toLocaleString()}
-        `.trim();
+    `.trim();
+  }
+
+  /**
+   * 🆕 NUEVO MÉTODO - Construye la URL de WhatsApp
+   */
+  buildWhatsAppUrl(summary) {
+    const message = this.buildWhatsAppMessage(summary);
+    const phone = this.formatWhatsApp(this.orderState.leadData.whatsapp);
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   }
 
   /**
@@ -597,7 +672,7 @@ Total: $${data.total.toLocaleString()}
    */
   validateLeadFields() {
     const inputs = this.form.querySelectorAll(
-      '.step-content[data-step="1"] input[required]',
+      '.step-content[data-step="1"] input[required]'
     );
     let ok = true;
 
@@ -608,7 +683,7 @@ Total: $${data.total.toLocaleString()}
     if (!ok && this.toastManager) {
       this.toastManager.warning(
         "Por favor, revisa tus datos.",
-        "Datos incompletos",
+        "Datos incompletos"
       );
     }
 
@@ -621,13 +696,13 @@ Total: $${data.total.toLocaleString()}
   validateDoggos() {
     const total = Object.values(this.orderState.doggos).reduce(
       (a, b) => a + b,
-      0,
+      0
     );
     if (total <= 0) {
       if (this.toastManager) {
         this.toastManager.warning(
           "Agrega al menos un Doggo para continuar.",
-          "Carrito vacío",
+          "Carrito vacío"
         );
       }
       return false;
@@ -647,7 +722,7 @@ Total: $${data.total.toLocaleString()}
         if (this.toastManager) {
           this.toastManager.warning(
             "Por favor, ingresa la dirección de envío.",
-            "Dirección requerida",
+            "Dirección requerida"
           );
         }
         direccion?.focus();
@@ -670,84 +745,98 @@ Total: $${data.total.toLocaleString()}
   /**
    * Actualiza el resumen del pedido
    */
-updateSummary() {
-  console.log('🔄 Actualizando resumen del pedido...');
+  updateSummary() {
+    console.log("🔄 Actualizando resumen del pedido...");
 
-  const summary = this.buildOrderSummary();
-  
-  // Usar los IDs correctos del HTML original
-  const client = document.getElementById('summary-client');
-  const doggos = document.getElementById('summary-doggos');
-  const extras = document.getElementById('summary-extras');
-  const bebidas = document.getElementById('summary-bebidas');
-  const delivery = document.getElementById('summary-delivery');
-  const totalBox = document.getElementById('order-total');
+    const summary = this.buildOrderSummary();
 
-  // Verificar si todos los elementos existen
-  if (!client || !doggos || !extras || !bebidas || !delivery || !totalBox) {
-    console.warn('⚠️ Algunos elementos del resumen no están en el DOM todavía (esto es normal en pasos iniciales)');
-    return;
-  }
+    // Usar los IDs correctos del HTML original
+    const client = document.getElementById("summary-client");
+    const doggos = document.getElementById("summary-doggos");
+    const extras = document.getElementById("summary-extras");
+    const bebidas = document.getElementById("summary-bebidas");
+    const delivery = document.getElementById("summary-delivery");
+    const totalBox = document.getElementById("order-total");
 
-  // Función auxiliar para renderizar items
-  const renderItems = (obj) => {
-    const entries = Object.entries(obj);
-    if (!entries.length) return `<p class="summary-empty">Sin selección</p>`;
-    return entries
-      .map(([name, qty]) => {
-        const price = this.productsManager.getPriceByName(name);
-        const subtotal = price * qty;
-        return `
+    // Verificar si todos los elementos existen
+    if (!client || !doggos || !extras || !bebidas || !delivery || !totalBox) {
+      console.warn(
+        "⚠️ Algunos elementos del resumen no están en el DOM todavía (esto es normal en pasos iniciales)"
+      );
+      return;
+    }
+
+    // Función auxiliar para renderizar items
+    const renderItems = (obj) => {
+      const entries = Object.entries(obj);
+      if (!entries.length) return `<p class="summary-empty">Sin selección</p>`;
+      return entries
+        .map(([name, qty]) => {
+          const price = this.productsManager.getPriceByName(name);
+          const subtotal = price * qty;
+          return `
           <div class="summary-item">
             <span>${qty}x ${name}</span>
             <span>$${subtotal.toLocaleString()}</span>
           </div>
         `;
-      })
-      .join('');
-  };
+        })
+        .join("");
+    };
 
-  // Cliente
-  client.innerHTML = `
+    // Cliente
+    client.innerHTML = `
     <div class="summary-item">
-      <strong>${this.orderState.leadData.nombre || 'Sin nombre'}</strong>
+      <strong>${this.orderState.leadData.nombre || "Sin nombre"}</strong>
     </div>
     <div class="summary-item">
-      <span>${this.orderState.leadData.email || 'Sin email'}</span>
+      <span>${this.orderState.leadData.email || "Sin email"}</span>
     </div>
     <div class="summary-item">
-      <span>${this.orderState.leadData.whatsapp || 'Sin WhatsApp'}</span>
+      <span>${this.orderState.leadData.whatsapp || "Sin WhatsApp"}</span>
     </div>
   `;
 
-  // Items
-  doggos.innerHTML = renderItems(this.orderState.doggos);
-  extras.innerHTML = renderItems(this.orderState.extras);
-  bebidas.innerHTML = renderItems(this.orderState.bebidas);
+    // Items
+    doggos.innerHTML = renderItems(this.orderState.doggos);
+    extras.innerHTML = renderItems(this.orderState.extras);
+    bebidas.innerHTML = renderItems(this.orderState.bebidas);
 
-  // Delivery
-  delivery.innerHTML = `
+    // Delivery
+    delivery.innerHTML = `
     <div class="summary-item">
       <span>${summary.deliveryText}</span>
-      <span>${summary.deliveryCost ? `$${summary.deliveryCost.toLocaleString()}` : 'Gratis'}</span>
+      <span>${
+        summary.deliveryCost
+          ? `$${summary.deliveryCost.toLocaleString()}`
+          : "Gratis"
+      }</span>
     </div>
-    ${this.orderState.delivery === 'delivery' ? `
+    ${
+      this.orderState.delivery === "delivery"
+        ? `
       <div class="summary-item">
         <span>Dirección:</span>
-        <span>${this.orderState.direccion || 'Pendiente'}</span>
+        <span>${this.orderState.direccion || "Pendiente"}</span>
       </div>
-    ` : ''}
+    `
+        : ""
+    }
   `;
 
-  // Total
-  totalBox.innerHTML = `
+    // Total
+    totalBox.innerHTML = `
     <div class="summary-item">
       <span>Subtotal</span>
       <span>$${(summary.total - summary.deliveryCost).toLocaleString()}</span>
     </div>
     <div class="summary-item">
       <span>Delivery</span>
-      <span>${summary.deliveryCost ? `$${summary.deliveryCost.toLocaleString()}` : 'Gratis'}</span>
+      <span>${
+        summary.deliveryCost
+          ? `$${summary.deliveryCost.toLocaleString()}`
+          : "Gratis"
+      }</span>
     </div>
     <div class="summary-item total-final">
       <strong>Total</strong>
@@ -755,8 +844,8 @@ updateSummary() {
     </div>
   `;
 
-  console.log('✅ Resumen actualizado - Total:', summary.total);
-}
+    console.log("✅ Resumen actualizado - Total:", summary.total);
+  }
 
   /**
    * Guarda el estado en localStorage
@@ -795,11 +884,38 @@ updateSummary() {
   }
 
   /**
-   * Destruye la instancia (limpia listeners)
+   * 🆕 NUEVO MÉTODO - Muestra modal de confirmación de pedido
    */
-  destroy() {
-    // Remover listeners si es necesario
-    this.isInitialized = false;
-    console.log("🗑️ PedidoManager destruido");
+showOrderConfirmation(orderNumber, total) {
+  if (!this.modalManager) {
+    // Fallback si no hay modalManager
+    alert(`¡Pedido ${orderNumber} confirmado! Total: $${total.toLocaleString()}`);
+    return;
   }
-}
+
+  const message = `
+    <div style="text-align: center; padding: 20px;">
+      <div style="font-size: 64px; margin-bottom: 20px;">🎉</div>
+      <h2 style="color: #ff6b35; margin-bottom: 10px;">¡Pedido Confirmado!</h2>
+      <p style="font-size: 18px; margin-bottom: 20px;">
+        Tu número de pedido es:
+      </p>
+      <div style="background: #ff6b35; color: white; padding: 15px; border-radius: 10px; font-size: 32px; font-weight: bold; margin-bottom: 20px;">
+        ${orderNumber}
+      </div>
+      <p style="font-size: 16px; margin-bottom: 10px;">
+        Total: <strong>$${total.toLocaleString()}</strong>
+      </p>
+      <p style="font-size: 14px; color: #666; margin-top: 20px;">
+        Te contactaremos por WhatsApp para confirmar los detalles.
+      </p>
+    </div>
+  `;
+
+  this.modalManager.show({
+    title: 'Pedido Guardado',
+    content: message,
+    confirmText: 'Entendido',
+    showCancel: false
+  });
+}}

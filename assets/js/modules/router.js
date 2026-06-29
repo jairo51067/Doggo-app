@@ -2,6 +2,7 @@
 // ROUTER - Sistema de enrutamiento SPA
 // ============================================
 import { ProductsManager } from "./productsManager.js";
+import { OrdersManager } from "./ordersManager.js";
 // ✅ IMPORTACIONES CORREGIDAS (sin ./modules/ porque ya estamos dentro de modules)
 import { StyleManager } from "./styleManager.js";
 import { ModalManager } from "./modalManager.js";
@@ -29,35 +30,31 @@ export class Router {
     this.viewCache = new Map();
 
     // Managers de vistas
-    this.productsManager = new ProductsManager(); // ← AGREGAR ESTA LÍNEA
+    this.productsManager = new ProductsManager();
+    this.ordersManager = new OrdersManager(); // ← AGREGAR ESTA LÍNEA
     this.pedidoManager = null;
     this.homeManager = null;
     this.contactoManager = null;
-
-    // Bind de métodos
-    this.handleHashChange = this.handleHashChange.bind(this);
-    this.handleLinkClick = this.handleLinkClick.bind(this);
-    this.navigate = this.navigate.bind(this);
-
-    this.init();
   }
 
   /**
    * Inicializa el router
    */
-  init() {
-    console.log("🔧 Router.init()");
-    window.addEventListener("hashchange", this.handleHashChange);
-    document.addEventListener("click", this.handleLinkClick);
+ init() {
+  console.log("🔧 Router.init()");
+  
+  // ✅ CORREGIDO: Usar arrow functions para mantener el contexto 'this'
+  window.addEventListener("hashchange", (event) => this.handleHashChange(event));
+  document.addEventListener("click", (event) => this.handleLinkClick(event));
 
-    // Inicializar micro-interacciones globales
-    initMicroInteractions();
+  // Inicializar micro-interacciones globales
+  initMicroInteractions();
 
-    const initialHash = window.location.hash || "#/home";
-    console.log(`📍 Hash inicial: ${initialHash}`);
-    this.processRoute(initialHash);
-    this.updateActiveLink(initialHash);
-  }
+  const initialHash = window.location.hash || "#/home";
+  console.log(`📍 Hash inicial: ${initialHash}`);
+  this.processRoute(initialHash);
+  this.updateActiveLink(initialHash);
+}
 
   /**
    * Procesa una ruta
@@ -105,6 +102,12 @@ export class Router {
       link.classList.toggle("active", linkHref === activeLink);
     });
   }
+
+  /**
+   * mostrar confirmación
+   */
+
+
 
   /**
    * Navega a una vista específica
@@ -279,23 +282,24 @@ export class Router {
    * Inicializa los componentes de una vista
    */
   initViewComponents(viewName) {
-  console.log(`🔧 Inicializando componentes para: ${viewName}`);
+    console.log(`🔧 Inicializando componentes para: ${viewName}`);
 
-  if (viewName === 'pedido') {
-    this.pedidoManager = new PedidoManager(
-      this.modalManager,
-      this.toastManager,
-      this.productsManager // ← AGREGAR ESTE PARÁMETRO
-    );
-    this.pedidoManager.init();
-  } else if (viewName === 'home') {
-    this.homeManager = new HomeManager();
-    this.homeManager.init();
-  } else if (viewName === 'contacto') {
-    this.contactoManager = new ContactoManager(this.toastManager);
-    this.contactoManager.init();
+    if (viewName === "pedido") {
+      this.pedidoManager = new PedidoManager(
+        this.modalManager,
+        this.toastManager,
+        this.productsManager,
+        this.ordersManager, // ← AGREGAR ESTE PARÁMETRO
+      );
+      this.pedidoManager.init();
+    } else if (viewName === "home") {
+      this.homeManager = new HomeManager();
+      this.homeManager.init();
+    } else if (viewName === "contacto") {
+      this.contactoManager = new ContactoManager(this.toastManager);
+      this.contactoManager.init();
+    }
   }
-}
 
   /**
    * Inicializa el toggle del navbar
