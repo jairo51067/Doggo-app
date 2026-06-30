@@ -2,15 +2,21 @@
 // PRODUCTS MANAGER - Lee productos desde Firestore
 // ============================================
 
-import { db } from '../firebase-config.js';
-import { collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { db } from "../firebase-config.js";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 export class ProductsManager {
   constructor() {
     this.products = {
       doggos: [],
       extras: [],
-      bebidas: []
+      bebidas: [],
     };
     this.config = {};
     this.isLoaded = false;
@@ -21,37 +27,39 @@ export class ProductsManager {
    */
   async loadProducts() {
     if (this.isLoaded) {
-      console.log('✅ Productos ya cargados (cache)');
+      console.log("✅ Productos ya cargados (cache)");
       return this.products;
     }
 
     try {
-      console.log('🔄 Cargando productos desde Firestore...');
+      console.log("🔄 Cargando productos desde Firestore...");
 
       // Cargar doggos
       const doggosQuery = query(
         collection(db, "products"),
         where("category", "==", "doggos"),
         where("available", "==", true),
-        orderBy("order")
+        orderBy("order"),
       );
       const doggosSnapshot = await getDocs(doggosQuery);
-      this.products.doggos = doggosSnapshot.docs.map(doc => ({
+      this.products.doggos = doggosSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
+
+      this.businessConfig = this.config.business || {};
 
       // Cargar extras
       const extrasQuery = query(
         collection(db, "products"),
         where("category", "==", "extras"),
         where("available", "==", true),
-        orderBy("order")
+        orderBy("order"),
       );
       const extrasSnapshot = await getDocs(extrasQuery);
-      this.products.extras = extrasSnapshot.docs.map(doc => ({
+      this.products.extras = extrasSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
 
       // Cargar bebidas
@@ -59,31 +67,55 @@ export class ProductsManager {
         collection(db, "products"),
         where("category", "==", "bebidas"),
         where("available", "==", true),
-        orderBy("order")
+        orderBy("order"),
       );
       const bebidasSnapshot = await getDocs(bebidasQuery);
-      this.products.bebidas = bebidasSnapshot.docs.map(doc => ({
+      this.products.bebidas = bebidasSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
 
       // Cargar configuración
       const configDoc = await getDocs(collection(db, "config"));
-      configDoc.docs.forEach(doc => {
+      configDoc.docs.forEach((doc) => {
         this.config[doc.id] = doc.data();
       });
 
+      this.businessConfig = this.config.business || {};
+      console.log("✅ Configuración del negocio cargada:", this.businessConfig);
+
       this.isLoaded = true;
-      console.log('✅ Productos cargados:', this.products);
-      console.log('✅ Configuración cargada:', this.config);
+      console.log("✅ Productos cargados:", this.products);
+      console.log("✅ Configuración cargada:", this.config);
 
       return this.products;
     } catch (error) {
-      console.error('❌ Error cargando productos:', error);
+      console.error("❌ Error cargando productos:", error);
       throw error;
     }
   }
 
+  /**
+   * Obtiene el número de WhatsApp del negocio
+   */
+  getBusinessWhatsApp() {
+    console.log("🔍 getBusinessWhatsApp() llamado");
+    console.log("🔍 businessConfig:", this.businessConfig);
+    console.log("🔍 businessConfig.whatsapp:", this.businessConfig?.whatsapp);
+
+    const whatsapp = this.businessConfig?.whatsapp || "";
+
+    if (!whatsapp) {
+      console.warn("⚠️ WhatsApp del negocio no encontrado en businessConfig");
+      console.warn(
+        '⚠️ Verifica que el documento "business" en Firestore tenga un campo llamado "whatsapp"',
+      );
+    } else {
+      console.log("✅ WhatsApp del negocio:", whatsapp);
+    }
+
+    return whatsapp;
+  }
   /**
    * Obtiene productos por categoría
    */
@@ -96,7 +128,7 @@ export class ProductsManager {
    */
   getById(id) {
     for (const category of Object.values(this.products)) {
-      const product = category.find(p => p.id === id);
+      const product = category.find((p) => p.id === id);
       if (product) return product;
     }
     return null;
@@ -107,7 +139,7 @@ export class ProductsManager {
    */
   getPriceByName(name) {
     for (const category of Object.values(this.products)) {
-      const product = category.find(p => p.name === name);
+      const product = category.find((p) => p.name === name);
       if (product) return product.price;
     }
     return 0;

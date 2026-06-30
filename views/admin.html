@@ -1,0 +1,105 @@
+<section class="admin-section">
+  <div class="admin-container">
+    <!-- Header del Admin -->
+    <div class="admin-header">
+      <div class="admin-header-content">
+        <h1 class="admin-title">
+          <i class="fas fa-chart-line"></i> Panel de Administración
+        </h1>
+        <div class="admin-user-info">
+          <span id="admin-email">admin@doggo.com</span>
+          <button id="btn-logout" class="btn-logout">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="admin-stats">
+      <div class="stat-card">
+        <div class="stat-icon pending">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="stat-pending">0</h3>
+          <p>Pendientes</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon preparing">
+          <i class="fas fa-fire"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="stat-preparing">0</h3>
+          <p>Preparando</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon ready">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="stat-ready">0</h3>
+          <p>Listos</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon delivered">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="stat-delivered">0</h3>
+          <p>Entregados</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="admin-filters">
+      <button class="filter-btn active" data-filter="all">
+        <i class="fas fa-list"></i> Todos
+      </button>
+      <button class="filter-btn" data-filter="pendiente">
+        <i class="fas fa-clock"></i> Pendientes
+      </button>
+      <button class="filter-btn" data-filter="preparando">
+        <i class="fas fa-fire"></i> Preparando
+      </button>
+      <button class="filter-btn" data-filter="listo">
+        <i class="fas fa-check-circle"></i> Listos
+      </button>
+      <button class="filter-btn" data-filter="entregado">
+        <i class="fas fa-box"></i> Entregados
+      </button>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div class="admin-orders">
+      <div id="orders-loading" class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Cargando pedidos...</p>
+      </div>
+      <div id="orders-list" class="orders-list"></div>
+      <div id="orders-empty" class="empty-state" style="display: none;">
+        <i class="fas fa-inbox"></i>
+        <p>No hay pedidos en esta categoría</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal de Detalles del Pedido -->
+<div id="order-detail-modal" class="modal-overlay" style="display: none;">
+  <div class="modal-box order-detail-box">
+    <div class="modal-header">
+      <h2 id="detail-order-number">Pedido #DOG-0001</h2>
+      <button class="modal-close" id="close-detail-modal">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body" id="order-detail-content">
+      <!-- Contenido dinámico -->
+    </div>
+  </div>
+</div>

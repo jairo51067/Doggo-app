@@ -93,83 +93,117 @@ export class PedidoManager {
   /**
    * Inicializa el stepper (pasos del formulario)
    */
-  initStepper() {
-    const showStep = (stepNumber) => {
-      if (stepNumber > this.orderState.currentStep) {
-        const isValid = this.validateCurrentStep(this.orderState.currentStep);
-        if (!isValid) return;
+ /**
+ * Inicializa el stepper (pasos del formulario)
+ */
+initStepper() {
+  const showStep = (stepNumber) => {
+    if (stepNumber > this.orderState.currentStep) {
+      const isValid = this.validateCurrentStep(this.orderState.currentStep);
+      if (!isValid) return;
+    }
+
+    this.orderState.currentStep = stepNumber;
+    this.updateStepperUI(stepNumber);
+    this.toggleDireccionFields();
+    this.saveOrderState();
+    this.updateSummary();
+    this.form.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Botones Siguiente (dentro del form)
+  this.form.querySelectorAll(".btn-next").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const step = parseInt(btn.dataset.next);
+      if (step <= this.orderState.totalSteps) {
+        showStep(step);
       }
-
-      this.orderState.currentStep = stepNumber;
-      this.updateStepperUI(stepNumber);
-      this.toggleDireccionFields();
-      this.saveOrderState();
-      this.updateSummary();
-      this.form.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-
-    // Botones Siguiente
-    this.form.querySelectorAll(".btn-next").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const step = parseInt(btn.dataset.next);
-        if (step <= this.orderState.totalSteps) {
-          showStep(step);
-        }
-      });
     });
+  });
 
-    // Botones Atrás
-    this.form.querySelectorAll(".btn-prev").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const step = parseInt(btn.dataset.prev);
-        if (step >= 1) {
-          showStep(step);
-        }
-      });
+  // Botones Atrás (dentro del form)
+  this.form.querySelectorAll(".btn-prev").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const step = parseInt(btn.dataset.prev);
+      if (step >= 1) {
+        showStep(step);
+      }
     });
+  });
 
-    // Indicadores de pasos (click para ir a pasos completados)
-    this.form.querySelectorAll(".step-indicator").forEach((indicator) => {
-      indicator.addEventListener("click", () => {
-        const step = parseInt(indicator.dataset.step);
-        if (
-          step < this.orderState.currentStep ||
-          indicator.classList.contains("completed")
-        ) {
-          showStep(step);
-        }
-      });
+  // ⬇️ CAMBIO: Buscar indicadores en TODO el documento, no solo en el form
+  document.querySelectorAll(".step-indicator").forEach((indicator) => {
+    indicator.addEventListener("click", () => {
+      const step = parseInt(indicator.dataset.step);
+      if (
+        step < this.orderState.currentStep ||
+        indicator.classList.contains("completed")
+      ) {
+        showStep(step);
+      }
     });
+  });
 
-    // Mostrar el paso inicial
-    this.updateStepperUI(this.orderState.currentStep);
-  }
+  // Mostrar el paso inicial
+  this.updateStepperUI(this.orderState.currentStep);
+}
 
   /**
    * Actualiza la UI del stepper
    */
-  updateStepperUI(stepNumber) {
-    const current = Number(stepNumber) || 1;
-    const steps = this.form.querySelectorAll(".step-content");
-    const indicators = this.form.querySelectorAll(".step-indicator");
+ /**
+ * Actualiza la UI del stepper
+ *//**
+ * Actualiza la UI del stepper
+ *//**
+ * Actualiza la UI del stepper
+ */
+updateStepperUI(stepNumber) {
+  const current = Number(stepNumber) || 1;
+  
+  // ⬇️ CAMBIO: Buscar en TODO el documento, no solo en el form
+  const steps = this.form.querySelectorAll(".step-content");
+  const indicators = document.querySelectorAll(".step-indicator");
+  const lines = document.querySelectorAll(".step-line");
 
-    steps.forEach((step) => {
-      step.classList.toggle("active", Number(step.dataset.step) === current);
-    });
+  console.log('🔄 updateStepperUI() llamado con paso:', current);
+  console.log('🔍 step-content encontrados:', steps.length);
+  console.log('🔍 step-indicator encontrados:', indicators.length);
+  console.log('🔍 step-line encontrados:', lines.length);
 
-    indicators.forEach((indicator) => {
-      const step = Number(indicator.dataset.step);
-      indicator.classList.remove("active", "completed");
-      if (step === current) indicator.classList.add("active");
-      if (step < current) indicator.classList.add("completed");
-    });
+  // Actualizar contenido de pasos
+  steps.forEach((step) => {
+    const stepNum = Number(step.dataset.step);
+    const isActive = stepNum === current;
+    step.classList.toggle("active", isActive);
+    console.log(`  📍 Step ${stepNum}: ${isActive ? 'ACTIVO' : 'inactivo'}`);
+  });
 
-    this.form.querySelectorAll(".step-line").forEach((line, index) => {
-      line.classList.toggle("completed", index < current - 1);
-    });
-  }
+  // Actualizar indicadores
+  indicators.forEach((indicator) => {
+    const step = Number(indicator.dataset.step);
+    indicator.classList.remove("active", "completed");
+    
+    if (step === current) {
+      indicator.classList.add("active");
+      console.log(`  🎯 Indicator ${step}: ACTIVO`);
+    } else if (step < current) {
+      indicator.classList.add("completed");
+      console.log(`  ✅ Indicator ${step}: COMPLETADO`);
+    } else {
+      console.log(`  ⚪ Indicator ${step}: pendiente`);
+    }
+  });
+
+  // Actualizar líneas
+  lines.forEach((line, index) => {
+    const isCompleted = index < current - 1;
+    line.classList.toggle("completed", isCompleted);
+    console.log(`  🔗 Line ${index + 1}: ${isCompleted ? 'COMPLETADA' : 'pendiente'}`);
+  });
+}
 
   /**
    * Inicializa los controles de cantidad para un tipo de item
@@ -321,26 +355,31 @@ export class PedidoManager {
   /**
    * Inicializa el botón "Vaciar carrito"
    */
-  initClearCart() {
-    this.form.querySelectorAll(".btn-clear-cart").forEach((btn) => {
-      btn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        const confirmed = this.modalManager
-          ? await this.modalManager.confirm(
-              "Esta acción eliminará todos los items del carrito y tus datos de contacto.",
-              "¿Vaciar todo el pedido?",
-              "Sí, vaciar todo",
-              "Cancelar",
-              "danger"
-            )
-          : true;
-        if (confirmed) {
-          this.clearCart();
-        }
-      });
+/**
+ * Inicializa el botón "Vaciar carrito"
+ */
+initClearCart() {
+  this.form.querySelectorAll(".btn-clear-cart").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      console.log('🗑️ Click en botón vaciar carrito');
+      
+      // Usar confirm nativo del navegador (funciona 100%)
+      const confirmed = window.confirm(
+        'Esta acción eliminará todos los items del carrito y tus datos de contacto.\n\n¿Estás seguro?'
+      );
+      
+      console.log('🔍 Resultado del confirm:', confirmed);
+      
+      if (confirmed) {
+        console.log('✅ Usuario confirmó vaciar carrito');
+        this.clearCart();
+      } else {
+        console.log('❌ Usuario canceló vaciar carrito');
+      }
     });
-  }
-
+  });
+}
   
 
   /**
@@ -507,7 +546,7 @@ clearOrderState() {
   /**
    * 🆕 NUEVO MÉTODO - Envía el pedido y lo guarda en Firestore
    */
- async submitOrder() {
+async submitOrder() {
   console.log("📤 Enviando pedido...");
 
   // Validar formulario completo
@@ -552,7 +591,7 @@ clearOrderState() {
       subtotal: summary.total - summary.deliveryCost,
       deliveryFee: summary.deliveryCost,
       total: summary.total,
-      whatsappUrl: null, // Se actualizará después
+      whatsappUrl: null,
       notes: null,
     };
 
@@ -569,8 +608,25 @@ clearOrderState() {
 
     // 2. AHORA: Construir el mensaje de WhatsApp CON el número de pedido
     const whatsappMessage = this.buildWhatsAppMessageWithOrderNumber(summary, result.orderNumber);
-    const phone = this.formatWhatsApp(this.orderState.leadData.whatsapp);
+    
+   // ⬇️ CAMBIAR: Usar el número del NEGOCIO, no del cliente
+const phone = this.productsManager.getBusinessWhatsApp();
+
+if (!phone) {
+  console.error("❌ No se ha configurado el WhatsApp del negocio");
+  if (this.toastManager) {
+    this.toastManager.error("Error: WhatsApp del negocio no configurado", "Error");
+  }
+  return;
+}
+    
+    console.log("📱 Número de teléfono formateado:", phone);
+    console.log("📝 Longitud del mensaje:", whatsappMessage.length);
+    
+    // Construir URL de WhatsApp
     const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    console.log("🔗 URL de WhatsApp:", whatsappUrl);
 
     // 3. Mostrar confirmación
     if (this.toastManager) {
@@ -587,7 +643,18 @@ clearOrderState() {
 
     // 5. Esperar 2 segundos y abrir WhatsApp
     setTimeout(() => {
-      window.open(whatsappUrl, "_blank");
+      console.log("🚀 Abriendo WhatsApp...");
+      
+      // Método 1: Intentar con window.open primero
+      const newWindow = window.open(whatsappUrl, '_blank');
+      
+      // Si window.open fue bloqueado, usar window.location
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        console.log("⚠️ window.open bloqueado, usando window.location");
+        window.location.href = whatsappUrl;
+      } else {
+        console.log("✅ WhatsApp abierto en nueva pestaña");
+      }
     }, 2000);
 
   } catch (error) {

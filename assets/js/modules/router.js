@@ -1,10 +1,10 @@
 // ============================================
 // ROUTER - Sistema de enrutamiento SPA
 // ============================================
-import { LoginManager } from './loginManager.js';
+import { AdminManager } from "./adminManager.js";
+import { LoginManager } from "./loginManager.js";
 import { ProductsManager } from "./productsManager.js";
 import { OrdersManager } from "./ordersManager.js";
-// ✅ IMPORTACIONES CORREGIDAS (sin ./modules/ porque ya estamos dentro de modules)
 import { StyleManager } from "./styleManager.js";
 import { ModalManager } from "./modalManager.js";
 import { ToastManager } from "./toastManager.js";
@@ -37,26 +37,29 @@ export class Router {
     this.homeManager = null;
     this.contactoManager = null;
     this.loginManager = null;
+    this.adminManager = null;
   }
 
   /**
    * Inicializa el router
    */
- init() {
-  console.log("🔧 Router.init()");
-  
-  // ✅ CORREGIDO: Usar arrow functions para mantener el contexto 'this'
-  window.addEventListener("hashchange", (event) => this.handleHashChange(event));
-  document.addEventListener("click", (event) => this.handleLinkClick(event));
+  init() {
+    console.log("🔧 Router.init()");
 
-  // Inicializar micro-interacciones globales
-  initMicroInteractions();
+    // ✅ CORREGIDO: Usar arrow functions para mantener el contexto 'this'
+    window.addEventListener("hashchange", (event) =>
+      this.handleHashChange(event),
+    );
+    document.addEventListener("click", (event) => this.handleLinkClick(event));
 
-  const initialHash = window.location.hash || "#/home";
-  console.log(`📍 Hash inicial: ${initialHash}`);
-  this.processRoute(initialHash);
-  this.updateActiveLink(initialHash);
-}
+    // Inicializar micro-interacciones globales
+    initMicroInteractions();
+
+    const initialHash = window.location.hash || "#/home";
+    console.log(`📍 Hash inicial: ${initialHash}`);
+    this.processRoute(initialHash);
+    this.updateActiveLink(initialHash);
+  }
 
   /**
    * Procesa una ruta
@@ -109,14 +112,16 @@ export class Router {
    * mostrar confirmación
    */
 
-
-
   /**
    * Navega a una vista específica
    * @param {string} viewName - Nombre de la vista
    */
   async navigate(viewName) {
     console.log(`📄 Navegando a vista: ${viewName}`);
+    // 🔍 DIAGNÓSTICO TEMPORAL
+    console.log("🔍 viewName es:", viewName);
+    console.log("🔍 ¿Es admin?", viewName === "admin");
+    console.log("🔍 ¿Es /admin?", viewName === "/admin");
     try {
       this.showSkeleton();
 
@@ -164,6 +169,10 @@ export class Router {
     if (this.loginManager) {
       this.loginManager.destroy?.();
       this.loginManager = null;
+    }
+    if (this.adminManager) {
+      this.adminManager.destroy?.();
+      this.adminManager = null;
     }
   }
 
@@ -287,28 +296,35 @@ export class Router {
   /**
    * Inicializa los componentes de una vista
    */
- initViewComponents(viewName) {
-  console.log(`🔧 Inicializando componentes para: ${viewName}`);
+  initViewComponents(viewName) {
+    console.log(`🔧 Inicializando componentes para: ${viewName}`);
 
-  if (viewName === 'pedido') {
-    this.pedidoManager = new PedidoManager(
-      this.modalManager,
-      this.toastManager,
-      this.productsManager,
-      this.ordersManager
-    );
-    this.pedidoManager.init();
-  } else if (viewName === 'home') {
-    this.homeManager = new HomeManager();
-    this.homeManager.init();
-  } else if (viewName === 'contacto') {
-    this.contactoManager = new ContactoManager(this.toastManager);
-    this.contactoManager.init();
-  } else if (viewName === 'login') {
-    this.loginManager = new LoginManager(this.toastManager);
-    this.loginManager.init();
+    if (viewName === "pedido") {
+      this.pedidoManager = new PedidoManager(
+        this.modalManager,
+        this.toastManager,
+        this.productsManager,
+        this.ordersManager,
+      );
+      this.pedidoManager.init();
+    } else if (viewName === "home") {
+      this.homeManager = new HomeManager();
+      this.homeManager.init();
+    } else if (viewName === "contacto") {
+      this.contactoManager = new ContactoManager(this.toastManager);
+      this.contactoManager.init();
+    } else if (viewName === "login") {
+      this.loginManager = new LoginManager(this.toastManager);
+      this.loginManager.init();
+    } else if (viewName === "admin" || viewName === "/admin") {
+      console.log("🔍 Creando instancia de AdminManager...");
+      this.adminManager = new AdminManager(
+        this.toastManager,
+        this.modalManager,
+      );
+      this.adminManager.init();
+    }
   }
-}
 
   /**
    * Inicializa el toggle del navbar

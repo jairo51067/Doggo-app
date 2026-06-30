@@ -1,5 +1,5 @@
 // ============================================
-// AUTH MANAGER - Gestión de autenticación
+// AUTH MANAGER - Gestión de autenticación (Singleton)
 // ============================================
 
 import { auth } from '../firebase-config.js';
@@ -9,16 +9,32 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// Singleton: una sola instancia compartida
+let instance = null;
+
 export class AuthManager {
   constructor() {
+    // Si ya existe una instancia, retornarla
+    if (instance) {
+      return instance;
+    }
+
     this.currentUser = null;
     this.authStateCallbacks = [];
+    this.isInitialized = false;
     
-    // Escuchar cambios de autenticación
-    onAuthStateChanged(auth, (user) => {
-      this.currentUser = user;
-      this.notifyAuthStateChange(user);
-    });
+    // Escuchar cambios de autenticación (solo una vez)
+    if (!this.isInitialized) {
+      onAuthStateChanged(auth, (user) => {
+        console.log('🔔 Auth state changed:', user ? user.email : 'null');
+        this.currentUser = user;
+        this.notifyAuthStateChange(user);
+      });
+      this.isInitialized = true;
+    }
+
+    // Guardar instancia
+    instance = this;
   }
 
   /**
@@ -82,6 +98,7 @@ export class AuthManager {
    * Verifica si el usuario está autenticado
    */
   isAuthenticated() {
+    console.log('🔍 isAuthenticated:', this.currentUser !== null);
     return this.currentUser !== null;
   }
 
