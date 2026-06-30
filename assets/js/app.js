@@ -15,13 +15,15 @@ const ROUTER_CONFIG = {
   defaultView: "home",
   viewsPath: "views/",
   cssPath: "assets/css/",
-  titles: {
-    home: "Doggo - Inicio | No es un perro, es una movida",
-    pedido: "Doggo - Haz tu Pedido | No es un perro, es una movida",
-    metodospagos: "Doggo - Métodos de Pago | No es un perro, es una movida",
-    contacto: "Doggo - Contacto | No es un perro, es una movida",
-    sobre: "Doggo - Sobre este proyecto",
-  },
+ titles: {
+  home: 'Doggo - Inicio | No es un perro, es una movida',
+  pedido: 'Doggo - Haz tu Pedido | No es un perro, es una movida',
+  metodospagos: 'Doggo - Métodos de Pago | No es un perro, es una movida',
+  contacto: 'Doggo - Contacto | No es un perro, es una movida',
+  sobre: 'Doggo - Sobre este proyecto',
+  login: 'Doggo - Login | Panel de Administración',
+  admin: 'Doggo - Panel Admin | Gestión de Pedidos'
+},
 };
 
 console.log("📋 Configuración cargada");

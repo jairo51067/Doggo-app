@@ -6,8 +6,7 @@ import { auth } from '../firebase-config.js';
 import { 
   signInWithEmailAndPassword, 
   signOut, 
-  onAuthStateChanged,
-  currentUser
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 export class AuthManager {

@@ -1,6 +1,7 @@
 // ============================================
 // ROUTER - Sistema de enrutamiento SPA
 // ============================================
+import { LoginManager } from './loginManager.js';
 import { ProductsManager } from "./productsManager.js";
 import { OrdersManager } from "./ordersManager.js";
 // ✅ IMPORTACIONES CORREGIDAS (sin ./modules/ porque ya estamos dentro de modules)
@@ -31,10 +32,11 @@ export class Router {
 
     // Managers de vistas
     this.productsManager = new ProductsManager();
-    this.ordersManager = new OrdersManager(); // ← AGREGAR ESTA LÍNEA
+    this.ordersManager = new OrdersManager();
     this.pedidoManager = null;
     this.homeManager = null;
     this.contactoManager = null;
+    this.loginManager = null;
   }
 
   /**
@@ -159,6 +161,10 @@ export class Router {
       this.contactoManager.destroy?.();
       this.contactoManager = null;
     }
+    if (this.loginManager) {
+      this.loginManager.destroy?.();
+      this.loginManager = null;
+    }
   }
 
   /**
@@ -281,25 +287,28 @@ export class Router {
   /**
    * Inicializa los componentes de una vista
    */
-  initViewComponents(viewName) {
-    console.log(`🔧 Inicializando componentes para: ${viewName}`);
+ initViewComponents(viewName) {
+  console.log(`🔧 Inicializando componentes para: ${viewName}`);
 
-    if (viewName === "pedido") {
-      this.pedidoManager = new PedidoManager(
-        this.modalManager,
-        this.toastManager,
-        this.productsManager,
-        this.ordersManager, // ← AGREGAR ESTE PARÁMETRO
-      );
-      this.pedidoManager.init();
-    } else if (viewName === "home") {
-      this.homeManager = new HomeManager();
-      this.homeManager.init();
-    } else if (viewName === "contacto") {
-      this.contactoManager = new ContactoManager(this.toastManager);
-      this.contactoManager.init();
-    }
+  if (viewName === 'pedido') {
+    this.pedidoManager = new PedidoManager(
+      this.modalManager,
+      this.toastManager,
+      this.productsManager,
+      this.ordersManager
+    );
+    this.pedidoManager.init();
+  } else if (viewName === 'home') {
+    this.homeManager = new HomeManager();
+    this.homeManager.init();
+  } else if (viewName === 'contacto') {
+    this.contactoManager = new ContactoManager(this.toastManager);
+    this.contactoManager.init();
+  } else if (viewName === 'login') {
+    this.loginManager = new LoginManager(this.toastManager);
+    this.loginManager.init();
   }
+}
 
   /**
    * Inicializa el toggle del navbar

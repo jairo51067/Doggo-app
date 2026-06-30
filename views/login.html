@@ -1,0 +1,59 @@
+<section class="login-section">
+  <div class="login-container">
+    <div class="login-header">
+      <img src="assets/img/doggo1.png" alt="Doggo Logo" class="login-logo">
+      <h1 class="login-title">Panel de Administración</h1>
+      <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+    </div>
+
+    <form id="login-form" class="login-form">
+      <div class="form-group">
+        <label for="login-email" class="form-label">
+          <i class="fas fa-envelope"></i> Email
+        </label>
+        <input 
+          type="email" 
+          id="login-email" 
+          class="form-input" 
+          placeholder="admin@doggo.com"
+          required
+          autocomplete="email"
+        >
+        <div class="field-feedback"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="login-password" class="form-label">
+          <i class="fas fa-lock"></i> Contraseña
+        </label>
+        <input 
+          type="password" 
+          id="login-password" 
+          class="form-input" 
+          placeholder="••••••••"
+          required
+          autocomplete="current-password"
+        >
+        <div class="field-feedback"></div>
+      </div>
+
+      <div id="login-error" class="login-error" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="login-error-text">Error</span>
+      </div>
+
+      <button type="submit" class="btn-login" id="btn-login">
+        <span class="btn-text">Iniciar Sesión</span>
+        <span class="btn-loader" style="display: none;">
+          <i class="fas fa-spinner fa-spin"></i>
+        </span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <a href="#/home" class="login-link">
+        <i class="fas fa-arrow-left"></i> Volver al inicio
+      </a>
+    </div>
+  </div>
+</section>
