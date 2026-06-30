@@ -1,6 +1,7 @@
 // Firebase Configuration - Doggo App
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // ⚠️ PEGA AQUÍ TUS CREDENCIALES DEL PASO 2
 const firebaseConfig = {
@@ -18,5 +19,8 @@ const app = initializeApp(firebaseConfig);
 // Inicializar Firestore
 const db = getFirestore(app);
 
+// Inicializar Auth ← AGREGAR ESTA LÍNEA
+const auth = getAuth(app);
+
 // Exportar para usar en otros módulos
-export { app, db };
+export { app, db, auth };
