@@ -43,23 +43,26 @@ export class Router {
   /**
    * Inicializa el router
    */
-  init() {
-    console.log("🔧 Router.init()");
+init() {
+  console.log("🔧 Router.init()");
+  
+  // Event listeners existentes
+  window.addEventListener("hashchange", (event) => this.handleHashChange(event));
+  document.addEventListener("click", (event) => this.handleLinkClick(event));
 
-    // ✅ CORREGIDO: Usar arrow functions para mantener el contexto 'this'
-    window.addEventListener("hashchange", (event) =>
-      this.handleHashChange(event),
-    );
-    document.addEventListener("click", (event) => this.handleLinkClick(event));
+  // Inicializar micro-interacciones globales
+  initMicroInteractions();
 
-    // Inicializar micro-interacciones globales
-    initMicroInteractions();
+  // ⬇️ NUEVAS INICIALIZACIONES - FASE 1
+  this.initScheduleButton();
+  this.initMiniCart();
+  this.initSecretAdminAccess();
 
-    const initialHash = window.location.hash || "#/home";
-    console.log(`📍 Hash inicial: ${initialHash}`);
-    this.processRoute(initialHash);
-    this.updateActiveLink(initialHash);
-  }
+  const initialHash = window.location.hash || "#/home";
+  console.log(`📍 Hash inicial: ${initialHash}`);
+  this.processRoute(initialHash);
+  this.updateActiveLink(initialHash);
+}
 
   /**
    * Procesa una ruta
@@ -84,6 +87,201 @@ export class Router {
     this.updateActiveLink(newHash);
   }
 
+  // ============================================
+// MÉTODOS AGREGADOS - FASE 1
+// ============================================
+
+/**
+ * Inicializa el botón de horario (abierto/cerrado)
+ */
+initScheduleButton() {
+  const btnSchedule = document.getElementById('btn-schedule');
+  const businessModal = document.getElementById('business-info-modal');
+  const closeModal = document.getElementById('close-business-modal');
+  
+  if (!btnSchedule) return;
+  
+  // Verificar horario actual
+  this.updateScheduleStatus();
+  
+  // Actualizar cada minuto
+  setInterval(() => {
+    this.updateScheduleStatus();
+  }, 60000);
+  
+  // Click para abrir modal
+  btnSchedule.addEventListener('click', () => {
+    if (businessModal) {
+      businessModal.style.display = 'flex';
+    }
+  });
+  
+  // Cerrar modal
+  if (closeModal && businessModal) {
+    closeModal.addEventListener('click', () => {
+      businessModal.style.display = 'none';
+    });
+    
+    businessModal.addEventListener('click', (e) => {
+      if (e.target === businessModal) {
+        businessModal.style.display = 'none';
+      }
+    });
+  }
+  
+  console.log('✅ Botón de horario inicializado');
+}
+
+/**
+ * Actualiza el estado del botón de horario según la hora actual
+ */
+updateScheduleStatus() {
+  const btnSchedule = document.getElementById('btn-schedule');
+  const scheduleText = btnSchedule?.querySelector('.schedule-text');
+  const statusModal = document.getElementById('business-status-modal');
+  
+  if (!btnSchedule) return;
+  
+  const now = new Date();
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  const currentTime = hour * 60 + minute; // Minutos desde medianoche
+  
+  // Horario: 11am (660 min) - 10pm (1320 min)
+  const openTime = 11 * 60; // 660
+  const closeTime = 22 * 60; // 1320
+  const closingSoonTime = closeTime - 30; // 30 min antes de cerrar
+  
+  let status, text, modalStatus;
+  
+  if (currentTime >= openTime && currentTime < closingSoonTime) {
+    // Abierto
+    status = 'open';
+    text = 'Abierto';
+    modalStatus = 'Abierto ahora';
+    btnSchedule.classList.remove('closed', 'closing-soon');
+  } else if (currentTime >= closingSoonTime && currentTime < closeTime) {
+    // Por cerrar
+    status = 'closing-soon';
+    text = 'Por cerrar';
+    modalStatus = 'Por cerrar pronto';
+    btnSchedule.classList.remove('closed');
+    btnSchedule.classList.add('closing-soon');
+  } else {
+    // Cerrado
+    status = 'closed';
+    text = 'Cerrado';
+    modalStatus = 'Cerrado ahora';
+    btnSchedule.classList.remove('closing-soon');
+    btnSchedule.classList.add('closed');
+  }
+  
+  if (scheduleText) {
+    scheduleText.textContent = text;
+  }
+  
+  if (statusModal) {
+    statusModal.className = `business-status ${status}`;
+    const statusText = statusModal.querySelector('.status-text');
+    if (statusText) {
+      statusText.textContent = modalStatus;
+    }
+  }
+}
+
+/**
+ * Inicializa el mini-carrito
+ */
+initMiniCart() {
+  const cartBtn = document.getElementById('btn-cart');
+  const cartCount = document.getElementById('cart-count');
+  
+  if (!cartBtn || !cartCount) return;
+  
+  // Verificar si hay pedido en localStorage
+  const updateCart = () => {
+    const orderState = localStorage.getItem('doggo_order_state');
+    
+    if (orderState) {
+      try {
+        const order = JSON.parse(orderState);
+        const totalItems = 
+          Object.values(order.doggos || {}).reduce((a, b) => a + b, 0) +
+          Object.values(order.extras || {}).reduce((a, b) => a + b, 0) +
+          Object.values(order.bebidas || {}).reduce((a, b) => a + b, 0);
+        
+        if (totalItems > 0) {
+          cartBtn.style.display = 'flex';
+          cartCount.textContent = totalItems;
+        } else {
+          cartBtn.style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Error leyendo estado del pedido:', error);
+        cartBtn.style.display = 'none';
+      }
+    } else {
+      cartBtn.style.display = 'none';
+    }
+  };
+  
+  // Actualizar al cargar
+  updateCart();
+  
+  // Actualizar cada 2 segundos
+  setInterval(updateCart, 2000);
+  
+  console.log('✅ Mini-carrito inicializado');
+}
+
+/**
+ * Inicializa el acceso secreto al admin
+ */
+initSecretAdminAccess() {
+  // Combinación de teclas: Ctrl + Shift + A
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+      e.preventDefault();
+      console.log('🔐 Acceso secreto al admin activado');
+      window.location.hash = '#/login';
+    }
+  });
+  
+  // URL secreta: #/admin-8f7k2
+  const hash = window.location.hash;
+  if (hash === '#/admin-8f7k2') {
+    console.log('🔐 URL secreta detectada');
+    window.location.hash = '#/login';
+  }
+  
+  // 5 clicks en el logo para abrir admin (móvil)
+  let clickCount = 0;
+  let clickTimer = null;
+  
+  const logo = document.querySelector('.nav-logo');
+  if (logo) {
+    logo.addEventListener('click', (e) => {
+      clickCount++;
+      
+      if (clickCount === 1) {
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+        }, 2000);
+      }
+      
+      if (clickCount >= 5) {
+        e.preventDefault();
+        clearTimeout(clickTimer);
+        clickCount = 0;
+        console.log('🔐 Acceso secreto por clicks activado');
+        window.location.hash = '#/login';
+      }
+    });
+  }
+  
+  console.log('✅ Acceso secreto al admin inicializado');
+}
+
   /**
    * Maneja clics en enlaces internos
    */
@@ -100,17 +298,24 @@ export class Router {
   /**
    * Actualiza el enlace activo en el navbar
    */
-  updateActiveLink(hash) {
-    const activeLink = hash.replace("#/", "");
-    document.querySelectorAll(".nav-link").forEach((link) => {
-      const linkHref = link.getAttribute("href").replace("#/", "");
-      link.classList.toggle("active", linkHref === activeLink);
-    });
-  }
-
-  /**
-   * mostrar confirmación
-   */
+ /**
+ * Actualiza el enlace activo en el navbar
+ */
+updateActiveLink(hash) {
+  const activeLink = hash.replace("#/", "");
+  
+  // Links del menú central (desktop)
+  document.querySelectorAll(".nav-btn-elegant").forEach((link) => {
+    const linkHref = link.getAttribute("href").replace("#/", "");
+    link.classList.toggle("active", linkHref === activeLink);
+  });
+  
+  // Links del menú móvil
+  document.querySelectorAll(".mobile-menu-link").forEach((link) => {
+    const linkHref = link.getAttribute("href").replace("#/", "");
+    link.classList.toggle("active", linkHref === activeLink);
+  });
+}
 
   /**
    * Navega a una vista específica
@@ -329,69 +534,73 @@ export class Router {
   /**
    * Inicializa el toggle del navbar
    */
-  initNavbarToggle() {
-    const toggle = document.querySelector(".nav-toggle");
-    const navMenu = document.querySelector(".nav-menu");
+/**
+ * Inicializa el toggle del navbar (menú hamburguesa)
+ */
+initNavbarToggle() {
+  const toggle = document.getElementById('nav-toggle');
+  const mobileMenu = document.getElementById('nav-mobile-menu');
+  const overlay = document.getElementById('nav-mobile-overlay');
+  const closeBtn = document.getElementById('mobile-menu-close');
+  const mobileLinks = mobileMenu?.querySelectorAll('.mobile-menu-link');
 
-    if (toggle && navMenu) {
-      if (toggle._listenerAdded) return;
-
-      const toggleScroll = (disable) => {
-        document.body.style.overflow = disable ? "hidden" : "";
-        document.body.style.touchAction = disable ? "none" : "";
-      };
-
-      const handleToggle = (e) => {
-        e.stopPropagation();
-        const isOpen = navMenu.classList.toggle("active");
-        toggle.classList.toggle("active");
-        toggle.setAttribute("aria-expanded", isOpen);
-        toggleScroll(isOpen);
-
-        if (isOpen) {
-          const links = navMenu.querySelectorAll(".nav-link");
-          links.forEach((link, index) => {
-            link.style.transitionDelay = `${0.05 * index}s`;
-          });
-        }
-      };
-
-      toggle.addEventListener("click", handleToggle);
-      toggle._listenerAdded = true;
-
-      const links = navMenu.querySelectorAll(".nav-link");
-      links.forEach((link) => {
-        link.addEventListener("click", () => {
-          navMenu.classList.remove("active");
-          toggle.classList.remove("active");
-          toggle.setAttribute("aria-expanded", "false");
-          toggleScroll(false);
-        });
-      });
-
-      document.addEventListener("click", (e) => {
-        if (
-          navMenu.classList.contains("active") &&
-          !navMenu.contains(e.target) &&
-          !toggle.contains(e.target)
-        ) {
-          navMenu.classList.remove("active");
-          toggle.classList.remove("active");
-          toggle.setAttribute("aria-expanded", "false");
-          toggleScroll(false);
-        }
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && navMenu.classList.contains("active")) {
-          navMenu.classList.remove("active");
-          toggle.classList.remove("active");
-          toggle.setAttribute("aria-expanded", "false");
-          toggleScroll(false);
-        }
-      });
-
-      console.log("✅ Navbar toggle inicializado");
-    }
+  if (!toggle || !mobileMenu || !overlay) {
+    console.warn('⚠️ Elementos del menú móvil no encontrados');
+    return;
   }
+
+  // Prevenir múltiples listeners
+  if (toggle._listenerAdded) return;
+
+  const openMenu = () => {
+    toggle.classList.add('active');
+    toggle.setAttribute('aria-expanded', 'true');
+    mobileMenu.classList.add('active');
+    overlay.classList.add('active');
+    document.body.classList.add('menu-open');
+  };
+
+  const closeMenu = () => {
+    toggle.classList.remove('active');
+    toggle.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  };
+
+  // Abrir menú
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (mobileMenu.classList.contains('active')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // Cerrar con botón X
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMenu);
+  }
+
+  // Cerrar al hacer click en overlay
+  overlay.addEventListener('click', closeMenu);
+
+  // Cerrar al hacer click en un link del menú
+  mobileLinks?.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
+
+  // Cerrar con tecla Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+      closeMenu();
+    }
+  });
+
+  toggle._listenerAdded = true;
+  console.log('✅ Menú hamburguesa inicializado correctamente');
+}
 }

@@ -1004,3 +1004,48 @@
         transition: none !important;
     }
 }
+
+/* ========================================== */
+/* AJUSTES RESPONSIVE - FASE 1               */
+/* ========================================== */
+
+/* Asegurar que hero y doggos-destacados sean visibles en móvil */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 50vh !important;
+        height: 50vh !important;
+        max-height: 450px !important;
+    }
+    
+    .doggos-destacados {
+        padding-top: var(--spacing-sm) !important;
+    }
+    
+    .section-header {
+        margin-bottom: var(--spacing-sm) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        min-height: 45vh !important;
+        height: 45vh !important;
+        max-height: 380px !important;
+    }
+    
+    .doggos-destacados {
+        padding-top: var(--spacing-xs) !important;
+    }
+}
+
+/* Animaciones de scroll para elementos */
+.fade-in-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
