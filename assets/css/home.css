@@ -225,6 +225,40 @@
     transition: var(--transition-normal);
     position: relative;
     overflow: hidden;
+    display: inline-block;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+/* Hero botón primario */
+.btn-hero.btn-primary {
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    border-color: var(--color-accent);
+}
+
+.btn-hero.btn-primary:hover {
+    background: var(--color-accent-light);
+    border-color: var(--color-accent-light);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(244, 196, 48, 0.5);
+}
+
+/* Hero botón secundario */
+.btn-hero.btn-secondary {
+    background: transparent;
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+}
+
+.btn-hero.btn-secondary:hover {
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(244, 196, 48, 0.4);
 }
 
 .btn-hero::after {
@@ -576,11 +610,20 @@
     font-size: 1.2rem;
     border-radius: var(--border-radius-lg);
     transition: var(--transition-normal);
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    border: 2px solid var(--color-accent);
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
 }
 
 .btn-cta:hover {
+    background: var(--color-accent-light);
+    border-color: var(--color-accent-light);
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 40px rgba(244, 196, 48, 0.35);
+    box-shadow: 0 8px 40px rgba(244, 196, 48, 0.5);
 }
 
 /* ========================================== */
@@ -702,6 +745,22 @@
     padding: var(--spacing-sm) var(--spacing-lg);
     font-size: 0.9rem;
     border-radius: var(--border-radius-md);
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    border: 2px solid var(--color-accent);
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition-normal);
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-small:hover {
+    background: var(--color-accent-light);
+    border-color: var(--color-accent-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(244, 196, 48, 0.4);
 }
 
 /* ========================================== */
