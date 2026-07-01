@@ -68,7 +68,7 @@ body {
 
 .navbar {
     background: linear-gradient(180deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
     border-bottom: 3px solid var(--color-accent);
     position: sticky;
     top: 0;
@@ -114,7 +114,7 @@ body {
 .brand-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 6px;
 }
 
 .brand-text {
@@ -660,7 +660,7 @@ body {
 
 @media (max-width: 768px) {
     .navbar {
-        padding: var(--spacing-sm) var(--spacing-md);
+        padding: var(--spacing-md) var(--spacing-md);
     }
     
     .nav-container {
@@ -1307,4 +1307,251 @@ body.menu-open {
     .credits-text {
         font-size: 0.7rem;
     }
+}
+
+/* ============================================
+   BOTÓN FLOTANTE DE WHATSAPP
+   ============================================ */
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: #25d366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.5);
+    z-index: 998;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    animation: whatsappFloat 3s ease-in-out infinite;
+}
+
+@keyframes whatsappFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.15) !important;
+    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.7);
+    animation: none;
+    background: #20bd5a;
+}
+
+.whatsapp-float:active {
+    transform: scale(1.05);
+}
+
+/* Efecto ripple/pulse */
+.whatsapp-float::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #25d366;
+    opacity: 0.4;
+    animation: whatsappRipple 2s ease-out infinite;
+    z-index: -1;
+}
+
+@keyframes whatsappRipple {
+    0% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(1.6);
+        opacity: 0;
+    }
+}
+
+/* Tooltip al hacer hover (opcional) */
+.whatsapp-float::after {
+    content: '¡Escríbenos!';
+    position: absolute;
+    right: 75px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-primary-dark);
+    color: white;
+    padding: 8px 14px;
+    border-radius: var(--border-radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+.whatsapp-float:hover::after {
+    opacity: 1;
+    visibility: visible;
+    right: 80px;
+}
+
+/* ========================================== */
+/* RESPONSIVE - WHATSAPP FLOTANTE            */
+/* ========================================== */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .whatsapp-float {
+        width: 55px;
+        height: 55px;
+        font-size: 1.8rem;
+        bottom: 25px;
+        right: 25px;
+    }
+    
+    .whatsapp-float::after {
+        display: none; /* Ocultar tooltip en tablet */
+    }
+}
+
+/* Móvil */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        width: 55px;
+        height: 55px;
+        font-size: 1.7rem;
+        bottom: 25px;
+        right: 20px;
+    }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 15px;
+    }
+}
+
+/* Ocultar cuando el menú móvil está abierto */
+body.menu-open .whatsapp-float {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* ============================================
+   PREVENIR FLASH DE CONTENIDO SIN ESTILOS
+   ============================================ */
+
+/* Ocultar contenido mientras carga */
+#app-content.loading {
+  position: relative;
+  min-height: 60vh;
+}
+
+/* Skeleton loader visible durante carga */
+#app-content.loading .skeleton-loader {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ocultar contenido real durante carga */
+#app-content.loading > *:not(.skeleton-loader):not(.loading-state) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Transición suave para todo el contenido */
+#app-content {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Prevenir flash en elementos individuales */
+#app-content * {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Asegurar que las imágenes no causen layout shift */
+#app-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Prevenir flash en secciones comunes */
+.hero-section,
+.doggos-destacados,
+.benefits-section,
+.cta-section,
+.pedido-container,
+.admin-section,
+.login-section {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Estado de carga inicial */
+body.loading-initial #app-content {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Smooth transitions para cambios de vista */
+.view-transition-enter {
+  animation: viewEnter 0.3s ease forwards;
+}
+
+.view-transition-exit {
+  animation: viewExit 0.2s ease forwards;
+}
+
+@keyframes viewEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes viewExit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Prevenir FOUC (Flash of Unstyled Content) */
+.style-loading {
+  visibility: hidden;
+}
+
+.style-loaded {
+  visibility: visible;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

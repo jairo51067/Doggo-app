@@ -324,39 +324,51 @@ updateActiveLink(hash) {
    * Navega a una vista específica
    * @param {string} viewName - Nombre de la vista
    */
-  async navigate(viewName) {
-    console.log(`📄 Navegando a vista: ${viewName}`);
-    // 🔍 DIAGNÓSTICO TEMPORAL
-    console.log("🔍 viewName es:", viewName);
-    console.log("🔍 ¿Es admin?", viewName === "admin");
-    console.log("🔍 ¿Es /admin?", viewName === "/admin");
-    try {
-      this.showSkeleton();
 
-      const [html] = await Promise.all([
-        this.fetchView(viewName),
-        this.styleManager.switchToViewStyle(viewName, this.config.cssPath),
-      ]);
-
-      await this.renderViewSmooth(html, viewName);
-
-      this.updateTitle(viewName);
-
-      // Destruir managers anteriores antes de crear nuevos
-      this.destroyViewManagers();
-
-      this.initViewComponents(viewName);
-
-      this.hideSkeleton();
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-
-      console.log(`✅ Vista "${viewName}" cargada exitosamente`);
-    } catch (error) {
-      console.error(`❌ Error al cargar la vista "${viewName}":`, error);
-      this.showErrorState(viewName);
-    }
+  /**
+ * Navega a una vista específica
+ */
+async navigate(viewName) {
+  console.log(`📄 Navegando a vista: ${viewName}`);
+  
+  try {
+    // 1. Mostrar skeleton inmediatamente
+    this.showSkeleton();
+    
+    // 2. Cargar HTML y CSS en paralelo
+    const [html] = await Promise.all([
+      this.fetchView(viewName),
+      this.styleManager.switchToViewStyle(viewName, this.config.cssPath),
+    ]);
+    
+    // 3. Esperar un momento extra para que el CSS se aplique completamente
+    await new Promise(resolve => setTimeout(resolve, 50));
+    
+    // 4. Renderizar con transición suave
+    await this.renderViewSmooth(html, viewName);
+    
+    // 5. Actualizar título
+    this.updateTitle(viewName);
+    
+    // 6. Destruir managers anteriores
+    this.destroyViewManagers();
+    
+    // 7. Inicializar nuevos componentes
+    this.initViewComponents(viewName);
+    
+    // 8. Ocultar skeleton
+    this.hideSkeleton();
+    
+    // 9. Scroll al inicio
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    
+    console.log(`✅ Vista "${viewName}" cargada exitosamente`);
+    
+  } catch (error) {
+    console.error(`❌ Error al cargar la vista "${viewName}":`, error);
+    this.showErrorState(viewName);
   }
+}
 
   /**
    * Destruye todos los managers de vistas
@@ -385,51 +397,76 @@ updateActiveLink(hash) {
   }
 
   /**
-   * Muestra el skeleton loader
-   */
-  showSkeleton() {
-    this.appContent.classList.add("loading");
-    this.appContent.style.opacity = "1";
+ * Muestra el skeleton loader
+ */
+showSkeleton() {
+  this.appContent.classList.add("loading");
+  this.appContent.style.opacity = "1";
+  this.appContent.style.visibility = "visible";
+  
+  // Asegurar que el skeleton sea visible inmediatamente
+  const skeleton = this.appContent.querySelector('.skeleton-loader');
+  if (skeleton) {
+    skeleton.style.display = 'block';
   }
+}
 
-  /**
-   * Oculta el skeleton loader
-   */
-  hideSkeleton() {
-    this.appContent.classList.remove("loading");
-    this.appContent.style.opacity = "1";
+/**
+ * Oculta el skeleton loader
+ */
+hideSkeleton() {
+  this.appContent.classList.remove("loading");
+  
+  // Ocultar skeleton completamente
+  const skeleton = this.appContent.querySelector('.skeleton-loader');
+  if (skeleton) {
+    skeleton.style.display = 'none';
   }
+}
 
-  /**
-   * Renderiza una vista con transición suave
-   */
-  renderViewSmooth(html, viewName) {
-    return new Promise((resolve) => {
-      this.appContent.style.transition = "opacity 0.3s ease";
-      this.appContent.style.opacity = "0";
-
-      setTimeout(() => {
-        this.appContent.innerHTML = html;
-
-        if (viewName === "home" || viewName === "/home") {
-          const hero = this.appContent.querySelector(".hero-section");
-          if (hero) {
-            hero.style.minHeight = "100vh";
-            hero.style.display = "flex";
-          }
+ /**
+ * Renderiza una vista con transición suave (SIN FLASH)
+ */
+renderViewSmooth(html, viewName) {
+  return new Promise((resolve) => {
+    // 1. Ocultar completamente el contenido (visibility + opacity)
+    this.appContent.style.transition = "opacity 0.25s ease, visibility 0.25s ease";
+    this.appContent.style.opacity = "0";
+    this.appContent.style.visibility = "hidden";
+    
+    // 2. Esperar a que se oculte completamente
+    setTimeout(() => {
+      // 3. Inyectar el HTML (aún oculto)
+      this.appContent.innerHTML = html;
+      
+      // 4. Aplicar estilos específicos del hero si es home
+      if (viewName === "home" || viewName === "/home") {
+        const hero = this.appContent.querySelector(".hero-section");
+        if (hero) {
+          hero.style.minHeight = "100vh";
+          hero.style.display = "flex";
         }
-
-        this.appContent.offsetHeight;
+      }
+      
+      // 5. Forzar reflow para asegurar que los estilos se apliquen
+      void this.appContent.offsetHeight;
+      
+      // 6. Esperar un momento más para que el CSS se aplique completamente
+      setTimeout(() => {
+        // 7. Hacer visible el contenido con fade in
+        this.appContent.style.visibility = "visible";
         this.appContent.style.opacity = "1";
-
+        
+        // 8. Limpiar transiciones después de completar
         setTimeout(() => {
           this.appContent.style.transition = "";
           resolve();
-        }, 350);
-      }, 200);
-    });
-  }
-
+        }, 100);
+      }, 80); // ⬅️ Tiempo extra para que el CSS se aplique
+      
+    }, 150); // Tiempo para el fade out
+  });
+}
   /**
    * Obtiene el HTML de una vista (con caché)
    */

@@ -393,7 +393,7 @@
     .hero-content {
         padding: var(--spacing-sm);
         min-height: 160px;
-        gap: 4px;
+        gap: 10px;
     }
 
     .hero-badge {

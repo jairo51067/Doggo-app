@@ -49,25 +49,52 @@ export class StyleManager {
         });
     }
 
-    async switchToViewStyle(viewName, cssPath = 'assets/css/') {
-        try {
-            this.unloadDynamicStyles();
-            
-            if (viewName === 'home' || viewName === '/home') {
-                await this.loadStyle('home', cssPath);
-            } else if (viewName !== 'home') {
-                await this.loadStyle(viewName, cssPath);
-            }
-            
-            return true;
-        } catch (error) {
-            console.error('Error al cambiar estilos:', error);
-            return false;
-        }
-    }
+   /**
+ * Cambia al estilo de una vista específica
+ */
+async switchToViewStyle(viewName, cssPath) {
+  return new Promise((resolve, reject) => {
+    // Remover estilos anteriores (excepto global.css)
+    document.querySelectorAll('link[data-view-style]').forEach(link => {
+      link.remove();
+    });
 
-    isStyleLoaded(styleName, cssPath = 'assets/css/') {
-        const href = `${cssPath}${styleName}.css`;
-        return this.loadedStyles.has(href);
-    }
+    // Crear nuevo link de estilo
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `${cssPath}${viewName}.css`;
+    link.dataset.viewStyle = viewName;
+    
+    // Marcar body como cargando estilos
+    document.body.classList.add('style-loading');
+    
+    // Cuando el CSS esté completamente cargado
+    link.onload = () => {
+      console.log(`✅ Estilo "${viewName}" cargado`);
+      
+      // Esperar un momento para que el navegador aplique los estilos
+      setTimeout(() => {
+        document.body.classList.remove('style-loading');
+        document.body.classList.add('style-loaded');
+        
+        // Limpiar clase después de la animación
+        setTimeout(() => {
+          document.body.classList.remove('style-loaded');
+        }, 300);
+        
+        resolve();
+      }, 50);
+    };
+    
+    // Manejar errores
+    link.onerror = () => {
+      console.error(`❌ Error cargando estilo: ${link.href}`);
+      document.body.classList.remove('style-loading');
+      reject(new Error(`Failed to load style: ${link.href}`));
+    };
+    
+    // Agregar al head
+    document.head.appendChild(link);
+  });
+}
 }

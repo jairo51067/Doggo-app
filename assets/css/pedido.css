@@ -37,120 +37,432 @@
     font-size: 1.2rem
 }
 
+/* ============================================
+   STEPPER PROFESIONAL - VERSIÓN PREMIUM
+   ============================================ */
+
 .stepper-progress {
     margin-bottom: var(--spacing-xl);
-    padding: 0 var(--spacing-md)
+    padding: var(--spacing-lg); 
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(244, 196, 48, 0.1);
+    position: relative;
 }
 
 .step-indicators {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    max-width: 600px;
-    margin: 0 auto
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 13px;
+    position: relative;
 }
+
+/* ========================================== */
+/* INDICADORES DE PASO                       */
+/* ========================================== */
 
 .step-indicator {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
     cursor: pointer;
-    transition: var(--transition-normal);
-    flex: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    flex: 0 0 auto;
     position: relative;
-    z-index: 2
+    z-index: 2;
 }
 
+.step-indicator:hover {
+    transform: translateY(-3px);
+}
+
+/* Círculo del número */
 .step-number {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: var(--color-primary);
-    border: 3px solid rgba(255, 255, 255, .2);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border: 3px solid rgba(255, 255, 255, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--color-text-secondary)
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Efecto de anillo exterior para paso activo */
 .step-indicator.active .step-number {
-    background: var(--color-accent);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
     border-color: var(--color-accent);
     color: var(--color-primary-dark);
-    transform: scale(1.1)
+    transform: scale(1.15);
+    box-shadow: 
+        0 0 0 4px rgba(244, 196, 48, 0.2),
+        0 0 20px rgba(244, 196, 48, 0.4),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+    animation: activePulse 2s ease-in-out infinite;
 }
 
-.step-indicator.completed .step-number {
-    background: #2ecc71;
-    border-color: #2ecc71;
-    color: #fff
+@keyframes activePulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 0 4px rgba(244, 196, 48, 0.2),
+            0 0 20px rgba(244, 196, 48, 0.4),
+            0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 0 8px rgba(244, 196, 48, 0.1),
+            0 0 30px rgba(244, 196, 48, 0.6),
+            0 8px 25px rgba(0, 0, 0, 0.3);
+    }
 }
+
+/* Paso completado con checkmark */
+.step-indicator.completed .step-number {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    border-color: #2ecc71;
+    color: white;
+    box-shadow: 
+        0 4px 15px rgba(46, 204, 113, 0.3),
+        0 0 20px rgba(46, 204, 113, 0.2);
+}
+
+/* Animación del checkmark */
+.step-indicator.completed .step-number::after {
+    content: '✓';
+    position: absolute;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: white;
+    animation: checkmarkPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.step-indicator.completed .step-number span {
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+
+@keyframes checkmarkPop {
+    0% {
+        transform: scale(0) rotate(-45deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.3) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* ========================================== */
+/* LABELS DE PASO                            */
+/* ========================================== */
 
 .step-label {
-    font-size: .75rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--color-text-secondary);
-    text-align: center
+    text-align: center;
+    max-width: 100px;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    line-height: 1.3;
+}
+
+.step-indicator:hover .step-label {
+    opacity: 1;
+    transform: translateY(2px);
 }
 
 .step-indicator.active .step-label {
-    color: var(--color-accent)
+    color: var(--color-accent);
+    opacity: 1;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(244, 196, 48, 0.3);
 }
+
+.step-indicator.completed .step-label {
+    color: #2ecc71;
+    opacity: 1;
+}
+
+/* ========================================== */
+/* LÍNEAS CONECTORAS PROFESIONALES           */
+/* ========================================== */
 
 .step-line {
+    display: none; /* Ocultar líneas por defecto, se mostrarán en tablet y desktop */
     flex: 1;
-    height: 3px;
-    background: rgba(255, 255, 255, .2);
-    margin: 0 var(--spacing-xs);
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 23px var(--spacing-sm) 0;
     position: relative;
-    top: -20px;
-    z-index: 1
+    z-index: 1;
+    border-radius: 2px;
+    overflow: hidden;
 }
 
-.step-line.completed {
-    background: var(--color-accent)
+/* Línea base con gradiente sutil */
+.step-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.05) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.05) 100%);
 }
+
+/* Línea completada con gradiente dorado animado */
+.step-line.completed {
+    background: linear-gradient(90deg, 
+        #2ecc71 0%, 
+        var(--color-accent) 100%);
+    position: relative;
+}
+
+/* Efecto de brillo animado en línea completada */
+.step-line.completed::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.4) 50%, 
+        transparent 100%);
+    animation: lineShimmer 2s ease-in-out infinite;
+}
+
+@keyframes lineShimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* ========================================== */
+/* CONTENIDO DE PASOS                        */
+/* ========================================== */
 
 .step-content {
     display: none;
-    animation: fadeSlideIn .4s ease
+    animation: fadeSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .step-content.active {
-    display: block
+    display: block;
 }
 
 @keyframes fadeSlideIn {
     from {
         opacity: 0;
-        transform: translateY(20px)
+        transform: translateY(20px);
     }
-
     to {
         opacity: 1;
-        transform: translateY(0)
+        transform: translateY(0);
     }
 }
 
 .step-header {
     margin-bottom: var(--spacing-lg);
-    text-align: center
+    text-align: center;
 }
 
 .step-title {
     font-family: var(--font-primary);
     font-size: 2rem;
     color: var(--color-text);
-    margin-bottom: var(--spacing-sm)
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    display: inline-block;
+}
+
+.step-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light));
+    border-radius: 2px;
 }
 
 .step-description {
     color: var(--color-text-secondary);
-    font-size: 1rem
+    font-size: 1rem;
+    margin-top: var(--spacing-md);
 }
+
+/* ========================================== */
+/* RESPONSIVE - STEPPER PROFESIONAL          */
+/* ========================================== */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .step-number {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+    
+    .step-label {
+        font-size: 0.8rem;
+        max-width: 90px;
+    }
+    
+    .step-line {
+        display: none; /* Ocultar líneas en tablet para un diseño más limpio */
+        margin: 20px var(--spacing-xs) 0;
+    }
+}
+
+/* Móvil - Stepper compacto */
+@media (max-width: 768px) {
+    .stepper-progress {
+        padding: var(--spacing-sm);
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .step-indicators {
+        max-width: 100%;
+        padding: 30px 10px;
+        gap: 0;
+    }
+    
+    .step-indicator {
+        gap: var(--spacing-xs);
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        border-width: 2px;
+    }
+    
+    .step-indicator.active .step-number {
+        transform: scale(1.1);
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+        max-width: 70px;
+        line-height: 1.2;
+    }
+    
+    .step-line {
+        height: 3px;
+        margin: 18px 4px 0;
+    }
+    
+    .step-title {
+        font-size: 1.5rem;
+    }
+    
+    .step-description {
+        font-size: 0.9rem;
+    }
+}
+
+/* Móvil pequeño - Ultra compacto */
+@media (max-width: 480px) {
+    .stepper-progress {
+        padding: var(--spacing-xs);
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .step-number {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    
+    .step-indicator.active .step-number {
+        transform: scale(1.08);
+    }
+    
+    .step-label {
+        font-size: 0.65rem;
+        max-width: 60px;
+    }
+    
+    .step-line {
+        height: 2px;
+        margin: 16px 2px 0;
+    }
+    
+    .step-title {
+        font-size: 1.3rem;
+    }
+    
+    .step-description {
+        font-size: 0.85rem;
+    }
+}
+
+/* Móvil muy pequeño */
+@media (max-width: 380px) {
+    .step-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+    
+    .step-label {
+        font-size: 0.6rem;
+        max-width: 50px;
+    }
+    
+    .step-line {
+        margin: 14px 2px 0;
+    }
+}
+
+/* ========================================== */
+/* ACCESIBILIDAD - REDUCIR MOVIMIENTO        */
+/* ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .step-indicator,
+    .step-number,
+    .step-label,
+    .step-line {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .step-indicator.active .step-number {
+        animation: none;
+    }
+    
+    .step-line.completed::after {
+        animation: none;
+    }
+}
+------------------------------------------
 
 .form-group {
     margin-bottom: var(--spacing-lg)
@@ -751,7 +1063,7 @@
   bottom: -25px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 12px;
+  /* font-size: 12px; */
   color: #666;
   white-space: nowrap;
 }
