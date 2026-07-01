@@ -57,6 +57,9 @@ init() {
   this.initScheduleButton();
   this.initMiniCart();
   this.initSecretAdminAccess();
+  
+  // ⬇️ AGREGAR ESTA LÍNEA - Menú hamburguesa
+  this.initNavbarToggle();
 
   const initialHash = window.location.hash || "#/home";
   console.log(`📍 Hash inicial: ${initialHash}`);
@@ -537,6 +540,9 @@ updateActiveLink(hash) {
 /**
  * Inicializa el toggle del navbar (menú hamburguesa)
  */
+/**
+ * Inicializa el toggle del navbar (menú hamburguesa)
+ */
 initNavbarToggle() {
   const toggle = document.getElementById('nav-toggle');
   const mobileMenu = document.getElementById('nav-mobile-menu');
@@ -544,15 +550,24 @@ initNavbarToggle() {
   const closeBtn = document.getElementById('mobile-menu-close');
   const mobileLinks = mobileMenu?.querySelectorAll('.mobile-menu-link');
 
+  console.log('🔍 initNavbarToggle() ejecutado');
+  console.log('🔍 toggle existe?', !!toggle);
+  console.log('🔍 mobileMenu existe?', !!mobileMenu);
+  console.log('🔍 overlay existe?', !!overlay);
+
   if (!toggle || !mobileMenu || !overlay) {
     console.warn('⚠️ Elementos del menú móvil no encontrados');
     return;
   }
 
   // Prevenir múltiples listeners
-  if (toggle._listenerAdded) return;
+  if (toggle._listenerAdded) {
+    console.log('⚠️ Listener ya agregado, saltando...');
+    return;
+  }
 
   const openMenu = () => {
+    console.log('📂 Abriendo menú móvil');
     toggle.classList.add('active');
     toggle.setAttribute('aria-expanded', 'true');
     mobileMenu.classList.add('active');
@@ -561,6 +576,7 @@ initNavbarToggle() {
   };
 
   const closeMenu = () => {
+    console.log('📁 Cerrando menú móvil');
     toggle.classList.remove('active');
     toggle.setAttribute('aria-expanded', 'false');
     mobileMenu.classList.remove('active');
@@ -568,7 +584,7 @@ initNavbarToggle() {
     document.body.classList.remove('menu-open');
   };
 
-  // Abrir menú
+  // Abrir/cerrar menú con botón hamburguesa
   toggle.addEventListener('click', (e) => {
     e.stopPropagation();
     if (mobileMenu.classList.contains('active')) {
@@ -580,7 +596,10 @@ initNavbarToggle() {
 
   // Cerrar con botón X
   if (closeBtn) {
-    closeBtn.addEventListener('click', closeMenu);
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeMenu();
+    });
   }
 
   // Cerrar al hacer click en overlay
