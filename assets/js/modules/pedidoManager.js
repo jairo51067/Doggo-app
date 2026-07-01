@@ -1051,25 +1051,31 @@ Total: $${data.total.toLocaleString()}
    */
 showOrderConfirmation(orderNumber, total) {
   if (!this.modalManager) {
-    // Fallback si no hay modalManager
     alert(`¡Pedido ${orderNumber} confirmado! Total: $${total.toLocaleString()}`);
     return;
   }
 
   const message = `
-    <div style="text-align: center; padding: 20px;">
-      <div style="font-size: 64px; margin-bottom: 20px;">🎉</div>
-      <h2 style="color: #ff6b35; margin-bottom: 10px;">¡Pedido Confirmado!</h2>
-      <p style="font-size: 18px; margin-bottom: 20px;">
+    <div style="text-align: center; padding: var(--spacing-md) 0;">
+      <div style="font-size: 80px; margin-bottom: var(--spacing-md); animation: modalIconBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">
+        🎉
+      </div>
+      <h2 style="color: var(--color-accent); font-family: var(--font-primary); font-size: 2rem; margin-bottom: var(--spacing-sm); text-shadow: 0 2px 10px rgba(244, 196, 48, 0.3);">
+        ¡Pedido Confirmado!
+      </h2>
+      <p style="font-size: 1.1rem; margin-bottom: var(--spacing-lg); color: var(--color-text-secondary);">
         Tu número de pedido es:
       </p>
-      <div style="background: #ff6b35; color: white; padding: 15px; border-radius: 10px; font-size: 32px; font-weight: bold; margin-bottom: 20px;">
+      <div style="background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%); color: var(--color-primary-dark); padding: var(--spacing-lg); border-radius: var(--border-radius-lg); font-size: 2.5rem; font-weight: 900; margin-bottom: var(--spacing-lg); box-shadow: 0 8px 30px rgba(244, 196, 48, 0.4); font-family: var(--font-primary); letter-spacing: 2px;">
         ${orderNumber}
       </div>
-      <p style="font-size: 16px; margin-bottom: 10px;">
-        Total: <strong>$${total.toLocaleString()}</strong>
-      </p>
-      <p style="font-size: 14px; color: #666; margin-top: 20px;">
+      <div style="background: rgba(255, 255, 255, 0.05); padding: var(--spacing-md); border-radius: var(--border-radius-md); margin-bottom: var(--spacing-lg); border: 1px solid rgba(244, 196, 48, 0.2);">
+        <p style="font-size: 1.2rem; margin: 0; color: var(--color-text);">
+          Total: <strong style="color: var(--color-accent); font-size: 1.5rem;">$${total.toLocaleString()}</strong>
+        </p>
+      </div>
+      <p style="font-size: 0.95rem; color: var(--color-text-secondary); margin-top: var(--spacing-md); line-height: 1.6;">
+        <i class="fab fa-whatsapp" style="color: #25d366; margin-right: 8px;"></i>
         Te contactaremos por WhatsApp para confirmar los detalles.
       </p>
     </div>
@@ -1080,5 +1086,5 @@ showOrderConfirmation(orderNumber, total) {
     content: message,
     confirmText: 'Entendido',
     showCancel: false
-  });   
+  });
 }}
