@@ -232,6 +232,22 @@ body {
     background: transparent;
 }
 
+.nav-btn-action-estado{
+     display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: var(--transition-normal);
+    cursor: pointer;
+    white-space: nowrap;
+    background: transparent;
+}
+
 
 /* Botón Horario - CON BACKGROUND BLANCO */
 .nav-btn-schedule {
